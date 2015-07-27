@@ -77,7 +77,7 @@ This output specification is formally encoded in the file `output_schema.json`.
 ## Flags
 ### Time flag
 `mhs` MUST accept the `-t` flag.
-If the `-t` flag is given, `mhs` MUST print to stdout the running time of its algorithm on the input data set in [hours]:minutes:seconds.subseconds format.
+If the `-t` flag is given, `mhs` MUST print to stdout the running time of its algorithm on the input data set in seconds.subseconds format.
 The time printed SHOULD represent the running time of the algorithm itself, omitting any time spent on input and output conversion.
 
 ### Other flags
