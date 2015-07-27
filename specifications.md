@@ -2,6 +2,7 @@
 Each implementation MUST provide an executable file `mhs` in its `src` directory.
 This executable MUST be runnable in the Linux container environment; any required interpreter MUST be built into the container.
 `mhs` MUST accept arguments in the following format:
+
     mhs input_file [FLAGS] [-f output_file]
 
 ## Input file
