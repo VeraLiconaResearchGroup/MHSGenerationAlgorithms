@@ -54,7 +54,7 @@ If the `-f` option is not given, `mhs` MUST write this output to `out.dat`.
 
 ### Example output file
 Consider the hypergraph from the input file example above.
-Some minimal transversals of this hypergraph are {2}, {3, 4}, and {4, 5}.
+Some minimal transversals of this hypergraph are {2} and {3, 4}.
 The following output file represents this incomplete set of minimal hitting sets in the specified format:
 
     {
@@ -68,8 +68,7 @@ The following output file represents this incomplete set of minimal hitting sets
         "guaranteedComplete": false,
         "transversals": [
                         [2],
-                        [3, 4],
-                        [4, 5]
+                        [3, 4]
                         ]
     }
 
