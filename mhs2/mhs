@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+# MHS2 algorithm runner
+# Copyright Andrew Gainer-Dewar, Ph.D. (C) 2015 <andrew.gainer.dewar@gmail.com>
+
+import json
+import argparse
+import tempfile
+import timeit
+
+# Set up argument processing
+parser = argparse.ArgumentParser(description='MHS runner')
+
+# Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+parser.add_argument("input_file", action="store", help="Input file to process")
+parser.add_argument("-t", action="store_true", dest="time_alg", default=False, help="Print run time of algorithm")
+parser.add_argument('-f', nargs=1, action="store", dest="output_file", default="out.dat", help="Output destination")
+
+args = parser.parse_args()
+
+# Read the input file
+with open(args.input_file) as input_file:
+    input_json = json.load(input_file)
+
+# Set up temporary files for input and output
+with tempfile.NamedTemporaryFile() as temp_input_file:
+    with tempfile.NamedTemporaryFile() as temp_output_file:
+        # Generate the input file
+        M = max(vert for edge in input_json["sets"] for vert in edge)
+        N = len(input_json["sets"])
+        temp_input_file.write("{0} {1}".format(M, N))
+
+        for edge in input_json["sets"]:
+            edge_as_string = " ".join(str(vert) for vert in edge) + " 0"
+            temp_input_file.write(edge_as_string + "\n")
+
+        temp_input_file.flush()
+
+        # Process the input file
+        alg_call_string = "['./src/build/mhs2', '{0}', '{1}']".format(temp_input_file.name, temp_output_file.name)
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull)".format(alg_call_string),
+                                   setup="import subprocess, os; devnull=open(os.devnull, 'w')",
+                                   number=1)
+
+        if args.time_alg:
+            print time_taken
+
+        # Generate the results
+        temp_output_file.seek(0)
+        transversal_lines = temp_output_file.readlines()[:-1]
+        transversals = [map(int, line.split()[:-1]) for line in transversal_lines]
+        results = input_json
+        results["guaranteedMinimal"] = True
+        results["guaranteedComplete"] = True
+        results["transversals"] = transversals
+
+# Write the results to the output file
+with open(args.output_file, 'w') as output_file:
+    json.dump(results, output_file)
+
+### Emacs configuration
+# Local Variables:
+# mode: python
+# End:
