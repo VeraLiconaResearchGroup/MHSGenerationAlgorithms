@@ -30,7 +30,7 @@ The following input file represents this hypergraph in the specified format:
         "sets": [
                 [1, 2, 4],
                 [3, 2, 5],
-                [2, 4],
+                [2, 4]
                 ]
     }
                 
@@ -62,14 +62,14 @@ The following output file represents this incomplete set of minimal hitting sets
         "sets": [
                 [1, 2, 4],
                 [3, 2, 5],
-                [2, 4],
+                [2, 4]
                 ],
         "guaranteedMinimal": true,
         "guaranteedComplete": false,
         "transversals": [
                         [2],
                         [3, 4],
-                        [4, 5],
+                        [4, 5]
                         ]
     }
 
