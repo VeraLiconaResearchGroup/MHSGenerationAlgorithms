@@ -7,10 +7,10 @@
             "items": {
                 "type": "array",
                 "items": {
-                    "type": "number",
+                    "type": "number"
                 }
             }
         }
     },
-    "required": ["sets"],
+    "required": ["sets"]
 }

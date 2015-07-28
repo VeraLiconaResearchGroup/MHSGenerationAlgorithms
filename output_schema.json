@@ -7,25 +7,25 @@
             "items": {
                 "type": "array",
                 "items": {
-                    "type": "number",
+                    "type": "number"
                 }
             }
         },
         "guaranteedMinimal": {
-            "type": "boolean",
+            "type": "boolean"
         },
         "guaranteedComplete": {
-            "type": "boolean",
+            "type": "boolean"
         },
         "transversals": {
             "type": "array",
             "items": {
                 "type": "array",
                 "items": {
-                    "type": "number",
+                    "type": "number"
                 }
             }
         }
     },
-    "required": ["guaranteedMinimal", "guaranteedComplete", "transversals"],
+    "required": ["guaranteedMinimal", "guaranteedComplete", "transversals"]
 }
