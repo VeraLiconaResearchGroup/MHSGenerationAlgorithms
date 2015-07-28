@@ -15,7 +15,8 @@ parser = argparse.ArgumentParser(description='MHS runner')
 # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
 parser.add_argument("input_file", help="Input file to process")
 parser.add_argument("-t", action="store_true", dest="time_alg", default=False, help="Print run time of algorithm")
-parser.add_argument('-f', nargs=1, dest="output_file", default="out.dat", help="Output destination")
+parser.add_argument("-f", nargs=1, dest="output_file", default="out.dat", help="Output destination")
+parser.add_argument("-j", type=int, dest="threads", default=1, help="Number of threads to run in parallel")
 
 args = parser.parse_args()
 
@@ -24,7 +25,7 @@ with open(args.input_file) as input_file:
     input_json = json.load(input_file)
 
 # Validate the input
-with open("../input_schema.json") as input_schema_file:
+with open("../../input_schema.json") as input_schema_file:
     input_schema = json.load(input_schema_file)
     jsonschema.validate(input_json, input_schema)
 
@@ -34,16 +35,21 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         # Generate the input file
         M = max(vert for edge in input_json["sets"] for vert in edge)
         N = len(input_json["sets"])
-        temp_input_file.write("{0} {1}".format(M, N))
+        temp_input_file.write("{0} {1}\n".format(M, N))
 
         for edge in input_json["sets"]:
-            edge_as_string = " ".join(str(vert) for vert in edge) + " 0"
+            edge.sort() # Just to be safe
+            edge_as_string = ""
+            edge_as_bitlist = [0]*M
+            for vert in edge:
+                edge_as_bitlist[vert-1] = 1
+            edge_as_string = " ".join(str(bit) for bit in edge_as_bitlist) + " x"
             temp_input_file.write(edge_as_string + "\n")
 
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_string = "['./src/build/mhs2', '{0}', '{1}']".format(temp_input_file.name, temp_output_file.name)
+        alg_call_string = "['./src/build/mhs2', '-i', '{0}', '-o', '{1}', '-T', '{2}']".format(temp_input_file.name, temp_output_file.name, args.threads)
         time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull)".format(alg_call_string),
                                    setup="import subprocess, os; devnull=open(os.devnull, 'w')",
                                    number=1)
@@ -54,14 +60,15 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         # Generate the results
         temp_output_file.seek(0)
         transversal_lines = temp_output_file.readlines()[:-1]
-        transversals = [map(int, line.split()[:-1]) for line in transversal_lines]
+        lineprocessor = lambda line: sorted(map(int, line.split()[:-1]))
+        transversals = map(lineprocessor, transversal_lines)
         results = input_json
         results["guaranteedMinimal"] = True
         results["guaranteedComplete"] = True
         results["transversals"] = transversals
 
 # Validate the output
-with open("../output_schema.json") as output_schema_file:
+with open("../../output_schema.json") as output_schema_file:
     output_schema = json.load(output_schema_file)
     jsonschema.validate(results, output_schema)
 
