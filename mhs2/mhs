@@ -60,6 +60,11 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         results["guaranteedComplete"] = True
         results["transversals"] = transversals
 
+# Validate the output
+with open("../output_schema.json") as output_schema_file:
+    output_schema = json.load(output_schema_file)
+    jsonschema.validate(results, output_schema)
+
 # Write the results to the output file
 with open(args.output_file, 'w') as output_file:
     json.dump(results, output_file)
