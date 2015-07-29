@@ -35,6 +35,8 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         num_verts = max(vert for edge in input_json["sets"] for vert in edge)
 
         for edge in input_json["sets"]:
+            # thg represents each set as a row vector where '0' means an element
+            # is included and any other character (such as '*') means it is not
             edge_as_charlist = ['*'] * num_verts
             for vert in edge:
                 edge_as_charlist[vert-1] = '0'
@@ -54,7 +56,8 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         # Generate the results
         temp_output_file.seek(0)
-        transversal_lines = temp_output_file.readlines()[4:-4]
+        # Only use lines that don't start with '#'
+        transversal_lines = filter(lambda line: not line.startswith('#'), temp_output_file.readlines())
         # Extract the indices of the '0' characters in the line
         lineprocessor = lambda line: [i for (i, c) in enumerate(line, start=1) if c=='0']
         transversals = map(lineprocessor, transversal_lines)
