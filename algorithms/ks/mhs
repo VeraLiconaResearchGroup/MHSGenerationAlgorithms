@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+
+# MHS algorithm runner: KS
+# Copyright Andrew Gainer-Dewar, Ph.D. (C) 2015 <andrew.gainer.dewar@gmail.com>
+
+import json
+import argparse
+import tempfile
+import timeit
+import jsonschema
+
+# Set up argument processing
+parser = argparse.ArgumentParser(description='MHS runner: KS')
+
+# Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+parser.add_argument("input_file", help="Input file to process")
+parser.add_argument("-t", action="store_true", dest="time_alg", default=False, help="Print run time of algorithm")
+parser.add_argument("-f", nargs=1, dest="output_file", default="out.dat", help="Output destination")
+
+args = parser.parse_args()
+
+# Read the input file
+with open(args.input_file) as input_file:
+    input_json = json.load(input_file)
+
+# Validate the input
+with open("../../input_schema.json") as input_schema_file:
+    input_schema = json.load(input_schema_file)
+    jsonschema.validate(input_json, input_schema)
+
+# Set up temporary files for input and output
+with tempfile.NamedTemporaryFile() as temp_input_file:
+    with tempfile.NamedTemporaryFile() as temp_output_file:
+        # Generate the input file
+        num_verts = max(vert for edge in input_json["sets"] for vert in edge)
+
+        for edge in input_json["sets"]:
+            edge_as_charlist = ['*'] * num_verts
+            for vert in edge:
+                edge_as_charlist[vert-1] = '0'
+            edge_as_string = "".join(edge_as_charlist)
+            temp_input_file.write(edge_as_string + "\n")
+
+        temp_input_file.flush()
+
+        # Process the input file
+        alg_call_string = "['./src/thg', '-i', '{0}', '-o', '{1}']".format(temp_input_file.name, temp_output_file.name)
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull)".format(alg_call_string),
+                                   setup="import subprocess, os; devnull=open(os.devnull, 'w')",
+                                   number=1)
+
+        if args.time_alg:
+            print time_taken
+
+        # Generate the results
+        temp_output_file.seek(0)
+        transversal_lines = temp_output_file.readlines()[4:-4]
+        # Extract the indices of the '0' characters in the line
+        lineprocessor = lambda line: [i for (i, c) in enumerate(line, start=1) if c=='0']
+        transversals = map(lineprocessor, transversal_lines)
+        results = input_json
+        results["guaranteedMinimal"] = True
+        results["guaranteedComplete"] = True
+        results["transversals"] = transversals
+
+# Validate the output
+with open("../../output_schema.json") as output_schema_file:
+    output_schema = json.load(output_schema_file)
+    jsonschema.validate(results, output_schema)
+
+# Write the results to the output file
+with open(args.output_file, 'w') as output_file:
+    json.dump(results, output_file)
+
+### Emacs configuration
+# Local Variables:
+# mode: python
+# End:
