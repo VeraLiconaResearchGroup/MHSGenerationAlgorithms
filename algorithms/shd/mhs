@@ -49,7 +49,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         if args.time_alg:
             print time_taken
 
-        # Generate the results
+        # Process the results
         temp_output_file.seek(0)
         transversal_lines = temp_output_file.readlines()
         transversals = [map(int, line.split()) for line in transversal_lines]

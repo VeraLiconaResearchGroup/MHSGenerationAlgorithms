@@ -38,8 +38,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.write("{0} {1}\n".format(M, N))
 
         for edge in input_json["sets"]:
-            edge.sort() # Just to be safe
-            edge_as_string = ""
             edge_as_bitlist = [0]*M
             for vert in edge:
                 edge_as_bitlist[vert-1] = 1
@@ -57,7 +55,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         if args.time_alg:
             print time_taken
 
-        # Generate the results
+        # Process the results
         temp_output_file.seek(0)
         transversal_lines = temp_output_file.readlines()[:-1]
         lineprocessor = lambda line: sorted(map(int, line.split()[:-1]))
