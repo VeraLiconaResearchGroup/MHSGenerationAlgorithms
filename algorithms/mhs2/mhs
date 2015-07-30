@@ -8,6 +8,7 @@ import argparse
 import tempfile
 import timeit
 import jsonschema
+import sys
 
 # Set up argument processing
 parser = argparse.ArgumentParser(description='MHS runner')
@@ -48,7 +49,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         # Process the input file
         alg_call_string = "['./src/build/mhs2', '-i', '{0}', '-o', '{1}', '-T', '{2}']".format(temp_input_file.name, temp_output_file.name, args.threads)
-        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull)".format(alg_call_string),
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, sys.path[0]),
                                    setup="import subprocess, os; devnull=open(os.devnull, 'w')",
                                    number=1)
 
