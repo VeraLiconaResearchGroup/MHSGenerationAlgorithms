@@ -1,3 +1,0 @@
-[submodule "mhs2/src"]
-	path = algorithms/mhs2/src
-	url = https://github.com/npcardoso/MHS2.git

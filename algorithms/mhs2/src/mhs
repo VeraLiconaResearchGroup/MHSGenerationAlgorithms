@@ -3,12 +3,12 @@
 # MHS2 algorithm runner
 # Copyright Andrew Gainer-Dewar, Ph.D. (C) 2015 <andrew.gainer.dewar@gmail.com>
 
-import json
+import json, jsonschema
 import argparse
 import tempfile
 import timeit
-import jsonschema
 import sys
+import os
 
 # Set up argument processing
 parser = argparse.ArgumentParser(description='MHS runner')
@@ -21,12 +21,17 @@ parser.add_argument("-j", type=int, dest="threads", default=1, help="Number of t
 
 args = parser.parse_args()
 
+# Configure path and validation
+script_dir = sys.path[0]
+input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+
 # Read the input file
 with open(args.input_file) as input_file:
     input_json = json.load(input_file)
 
 # Validate the input
-with open("../../input_schema.json") as input_schema_file:
+with open(input_schema_path) as input_schema_file:
     input_schema = json.load(input_schema_file)
     jsonschema.validate(input_json, input_schema)
 
@@ -48,8 +53,8 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_string = "['./src/build/mhs2', '-i', '{0}', '-o', '{1}', '-T', '{2}']".format(temp_input_file.name, temp_output_file.name, args.threads)
-        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, sys.path[0]),
+        alg_call_string = "['./alg/build/mhs2', '-i', '{0}', '-o', '{1}', '-T', '{2}']".format(temp_input_file.name, temp_output_file.name, args.threads)
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, script_dir),
                                    setup="import subprocess, os; devnull=open(os.devnull, 'w')",
                                    number=1)
 
@@ -67,7 +72,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         results["transversals"] = transversals
 
 # Validate the output
-with open("../../output_schema.json") as output_schema_file:
+with open(output_schema_path) as output_schema_file:
     output_schema = json.load(output_schema_file)
     jsonschema.validate(results, output_schema)
 
