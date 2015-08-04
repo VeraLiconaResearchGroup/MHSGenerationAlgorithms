@@ -1,0 +1,15 @@
+{
+    "algo_name": "BMR",
+    "algo_summary": "BMR algorithm for minimal hitting set computations",
+    "algo_website": "http://www.computer.org/csdl/proceedings/icdm/2003/1978/00/19780485.pdf",
+    "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
+    "authors": [
+        {
+            "name": "Keisuke Murakami",
+            "email": "murakami@nii.ac.jp",
+            "organization": "National Institute of Informatics, Tokyo"
+        }
+    ],
+    "algo_exec": "./mhs",
+    "algo_output_filename": "out.dat"
+}
