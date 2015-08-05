@@ -11,7 +11,6 @@ RUN apt-get update && \
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
 WORKDIR /home/algorithm/src/alg
-ENV TERM xterm
 RUN g++ -O3 -o BMR BMR.cpp
 WORKDIR /home/algorithm/src
 
