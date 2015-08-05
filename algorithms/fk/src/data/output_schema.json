@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "sets": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                }
+            }
+        },
+        "timeTaken": {
+            "type": "number"
+        },
+        "guaranteedMinimal": {
+            "type": "boolean"
+        },
+        "guaranteedComplete": {
+            "type": "boolean"
+        },
+        "transversals": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "number"
+                }
+            }
+        }
+    },
+    "required": ["guaranteedMinimal", "guaranteedComplete", "transversals"]
+}
