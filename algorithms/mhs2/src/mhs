@@ -15,7 +15,6 @@ parser = argparse.ArgumentParser(description='MHS runner')
 
 # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
 parser.add_argument("input_file", help="Input file to process")
-parser.add_argument("-t", action="store_true", dest="time_alg", default=False, help="Print run time of algorithm")
 parser.add_argument("-f", nargs=1, dest="output_file", default="out.dat", help="Output destination")
 parser.add_argument("-j", type=int, dest="threads", default=1, help="Number of threads to run in parallel")
 
@@ -58,9 +57,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
                                    setup="import subprocess, os; devnull=open(os.devnull, 'w')",
                                    number=1)
 
-        if args.time_alg:
-            print time_taken
-
         # Process the results
         temp_output_file.seek(0)
         transversal_lines = temp_output_file.readlines()[:-1]
@@ -70,6 +66,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         results["guaranteedMinimal"] = True
         results["guaranteedComplete"] = True
         results["transversals"] = transversals
+        results["timeTaken"] = time_taken
 
 # Validate the output
 with open(output_schema_path) as output_schema_file:
@@ -78,7 +75,7 @@ with open(output_schema_path) as output_schema_file:
 
 # Write the results to the output file
 with open(args.output_file, 'w') as output_file:
-    json.dump(results, output_file)
+    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
 
 ### Emacs configuration
 # Local Variables:

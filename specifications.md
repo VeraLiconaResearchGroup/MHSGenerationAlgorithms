@@ -3,7 +3,10 @@ Each implementation MUST provide an executable file `mhs` in its `src` directory
 This executable MUST be runnable in the Linux container environment; any required interpreter MUST be built into the container.
 `mhs` MUST accept arguments in the following format:
 
-    mhs input_file [FLAGS] [-f output_file]
+    mhs input_file [-f output_file]
+
+Any other configuration SHOULD be handled using environment variables.
+Each such environment variable SHOULD be documented appropriately in the `README.md` file.
 
 ## Input file
 An input file represents a collection of sets whose minimal hitting sets are to be calculated.
@@ -42,6 +45,8 @@ An output file represents a collection of hitting sets of the input collection.
 The output file SHOULD contain all data from the input.
 In addition, it MUST contain the following key/value pairs:
 
+* `timeTaken'`: a (positive) number giving the execution time of the algorithm.
+  This value SHOULD represent the running time of the algorithm itself, omitting any time spend on input and output conversion.
 * `guaranteedMinimal`: a boolean, `true` if every hitting set in the file is guaranteed to be minimal and `false` otherwise.
 * `guaranteedComplete`: a boolean, `true` if the collection of hitting sets is guaranteed to contain all minimal hitting sets and `false` otherwise.
 * `transversals`: a nonempty array of nonempty arrays of positive integers.
@@ -74,13 +79,3 @@ The following output file represents this incomplete set of minimal hitting sets
     }
 
 This output specification is formally encoded in the file `output_schema.json`.
-
-## Flags
-### Time flag
-`mhs` MUST accept the `-t` flag.
-If the `-t` flag is given, `mhs` MUST print to stdout the running time of its algorithm on the input data set in seconds.subseconds format.
-The time printed SHOULD represent the running time of the algorithm itself, omitting any time spent on input and output conversion.
-
-### Other flags
-`mhs` MAY accept any other flags that are appropriate to the algorithm implemented.
-Each of these flags SHOULD be documented in the `README.md` file.
