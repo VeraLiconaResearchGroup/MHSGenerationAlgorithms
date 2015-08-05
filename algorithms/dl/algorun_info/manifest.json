@@ -1,0 +1,15 @@
+{
+    "algo_name": "DL",
+    "algo_summary": "DL algorithm for minimal hitting set computations",
+    "algo_website": "http://link.springer.com/article/10.1007/s10115-004-0178-1",
+    "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
+    "authors": [
+        {
+            "name": "Keisuke Murakami",
+            "email": "murakami@nii.ac.jp",
+            "organization": "National Institute of Informatics, Tokyo"
+        }
+    ],
+    "algo_exec": "./mhs",
+    "algo_output_filename": "out.dat"
+}
