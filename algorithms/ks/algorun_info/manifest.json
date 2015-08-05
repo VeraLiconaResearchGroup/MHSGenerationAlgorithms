@@ -1,0 +1,16 @@
+{
+    "algo_name": "KS",
+    "algo_summary": "KS algorithm for minimal hitting set computations",
+    "algo_description": "Introduced in <a href=\"http://dx.doi.org/10.7155/jgaa.00107\">An efficient algorithm for the transversal hypergraph generation</a> by Kavvadias and Stavropoulos.",
+    "algo_website": "http://research.nii.ac.jp/~uno/dualization.html",
+    "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
+    "authors": [
+        {
+            "name": "Keisuke Murakami",
+            "email": "murakami@nii.ac.jp",
+            "organization": "National Institute of Informatics, Tokyo"
+        }
+    ],
+    "algo_exec": "./mhs",
+    "algo_output_filename": "out.dat"
+}
