@@ -3,25 +3,35 @@
 # MHS algorithm runner: DL
 # Copyright Andrew Gainer-Dewar, Ph.D. (C) 2015 <andrew.gainer.dewar@gmail.com>
 
-import json
+import json, jsonschema
 import argparse
 import tempfile
 import timeit
 import sys
+import os
 
 # Set up argument processing
 parser = argparse.ArgumentParser(description='MHS runner: DL')
 
 # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
 parser.add_argument("input_file", action="store", help="Input file to process")
-parser.add_argument("-t", action="store_true", dest="time_alg", default=False, help="Print run time of algorithm")
 parser.add_argument('-f', nargs=1, action="store", dest="output_file", default="out.dat", help="Output destination")
 
 args = parser.parse_args()
 
+# Configure path and validation
+script_dir = sys.path[0]
+input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+
 # Read the input file
 with open(args.input_file) as input_file:
     input_json = json.load(input_file)
+
+# Validate the input
+with open(input_schema_path) as input_schema_file:
+    input_schema = json.load(input_schema_file)
+    jsonschema.validate(input_json, input_schema)
 
 # Set up temporary files for input and output
 with tempfile.NamedTemporaryFile() as temp_input_file:
@@ -34,13 +44,10 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_string = "['./src/DL', '{0}', '{1}']".format(temp_input_file.name, temp_output_file.name)
-        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, sys.path[0]),
+        alg_call_string = "['./alg/DL', '{0}', '{1}']".format(temp_input_file.name, temp_output_file.name)
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, script_dir),
                                    setup="import subprocess, os; devnull=open(os.devnull, 'w')",
                                    number=1)
-
-        if args.time_alg:
-            print time_taken
 
         # Process the results
         temp_output_file.seek(0)
@@ -50,10 +57,16 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         results["guaranteedMinimal"] = True
         results["guaranteedComplete"] = True
         results["transversals"] = transversals
+        results["timeTaken"] = time_taken
+
+# Validate the output
+with open(output_schema_path) as output_schema_file:
+    output_schema = json.load(output_schema_file)
+    jsonschema.validate(results, output_schema)
 
 # Write the results to the output file
 with open(args.output_file, 'w') as output_file:
-    json.dump(results, output_file)
+    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
 
 ### Emacs configuration
 # Local Variables:
