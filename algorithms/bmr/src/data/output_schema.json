@@ -11,6 +11,9 @@
                 }
             }
         },
+        "timeTaken": {
+            "type": "number"
+        },
         "guaranteedMinimal": {
             "type": "boolean"
         },
