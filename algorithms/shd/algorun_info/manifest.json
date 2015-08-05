@@ -1,0 +1,16 @@
+{
+    "algo_name": "SHD",
+    "algo_summary": "SHD algorithm for minimal hitting set computations",
+    "algo_description": "Introduced in <a href=\"http://dx.doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno.",
+    "algo_website": "http://research.nii.ac.jp/~uno/code/shd.html",
+    "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
+    "authors": [
+        {
+            "name": "Takeaki Uno",
+            "email": "uno@nii.ac.jp",
+            "organization": "National Institute of Informatics, Tokyo"
+        }
+    ],
+    "algo_exec": "./mhs",
+    "algo_output_filename": "out.dat"
+}
