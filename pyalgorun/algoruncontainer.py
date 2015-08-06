@@ -104,3 +104,10 @@ class AlgorunContainer:
 
         # Return the result
         return r.json()
+
+    def interface_url(self):
+        """
+        Return the URL for the browser interface
+        """
+
+        return self._api_url_base
