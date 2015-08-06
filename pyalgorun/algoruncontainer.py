@@ -14,9 +14,10 @@ class AlgorunContainer:
 
     Keyword arguments:
     container_name -- an Algorun container to wrap
+    schema -- the JSON schema that the container's input must conform to (optional)
     docker_client -- a Docker client object (optional)
     """
-    def __init__(self, container_name, docker_client = None):
+    def __init__(self, container_name, input_schema = None, docker_client = None):
         if docker_client == None:
             docker_client = docker.Client()
 
@@ -42,6 +43,7 @@ class AlgorunContainer:
 
         # Store the container and port as attributes
         self._name = container_name
+        self._input_schema = input_schema
         self._container = container
         self._client = docker_client
         self._local_port = local_port
@@ -51,17 +53,16 @@ class AlgorunContainer:
         # Kill the underlying Docker container when this is destroyed
         self._client.kill(self._container)
 
-    def run_alg(self, data, schema = None):
+    def run_alg(self, data):
         """
         Run the algorithm on some data
 
         Keyword arguments:
         data -- a JSON representation of the data (suitable for input to :func:`~json.dumps`)
-        schema -- the JSON schema that `data` must conform to (optional)
         """
         # Validate the input if appropriate
         # TODO: Should we handle this exception or just let it bubble up?
-        if schema is not None:
+        if self._input_schema is not None:
             jsonschema.validate(schema, data)
 
         # Build the API url
