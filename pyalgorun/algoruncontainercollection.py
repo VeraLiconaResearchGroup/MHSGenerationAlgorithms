@@ -44,8 +44,10 @@ class AlgorunContainerCollection:
 
     Keyword arguments:
     alg_set -- the collection of algorithms to run
+    input_schema -- the input schema for these algorithms (optional)
+    docker_client -- a Docker client object to host the containers (optional)
     """
-    def __init__(self, alg_set, docker_client = None):
+    def __init__(self, alg_set, input_schema = None, docker_client = None):
         # Make sure the input matches the schema
         jsonschema.validate(ALG_SET_SCHEMA, alg_set)
 
@@ -53,10 +55,11 @@ class AlgorunContainerCollection:
         containers = alg_set["containers"]
         for container in containers:
             container_name = container["containerName"]
-            container["container"] = AlgorunContainer(container_name, docker_client)
+            container["container"] = AlgorunContainer(container_name, input_schema, docker_client)
 
         # Store the container collection in a member
         self._containers = containers
+        self._input_schema = input_schema
 
     def __getitem__(self, alg_name):
         """
@@ -79,3 +82,16 @@ class AlgorunContainerCollection:
         Print a human-readable string representing this object
         """
         return "Algorun container collection: " + str([str(container) for container in self])
+
+    def run_all_with_input(self, data):
+        """
+        Run all containers in the collection with the given input data
+
+        Returns a dict mapping the `algName` attribute of each container to its output
+
+        Keyword arguments:
+        data -- a JSON data object compatible with the underlying containers
+        """
+
+        results = {container["algName"]: container["container"].run_alg(data) for container in self._containers}
+        return results
