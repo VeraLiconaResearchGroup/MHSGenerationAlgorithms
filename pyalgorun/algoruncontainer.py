@@ -41,6 +41,7 @@ class AlgorunContainer:
         local_port = docker_client.port(container, ALGORUN_PORT)[0]["HostPort"]
 
         # Store the container and port as attributes
+        self._name = container_name
         self._container = container
         self._client = docker_client
         self._local_port = local_port
@@ -111,3 +112,9 @@ class AlgorunContainer:
         """
 
         return self._api_url_base
+
+    def __str__(self):
+        """
+        Print a human-readable string representing this object
+        """
+        return self._name
