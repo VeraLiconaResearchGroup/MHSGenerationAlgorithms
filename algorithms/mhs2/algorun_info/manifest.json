@@ -1,14 +1,22 @@
 {
     "algo_name": "MHS2",
     "algo_summary": "Parallel heuristic approximation method for minimum hitting set calculation",
+    "algo_description": "",
     "algo_website": "https://github.com/npcardoso/MHS2",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS", "parallel"],
-    "authors": [
+    "algo_authors": [
         {
             "name": "Nuno Cardoso",
-            "organization": "University of Porto"
+            "email": "nunopcardoso@gmail.com",
+            "personal_website": "https://github.com/npcardoso",
+            "organization": "University of Porto",
+            "org_website": ""
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat"
+    "algo_output_filename": "out.dat",
+    "algo_parameters": {
+        "THREADS": "1"
+    },
+    "algo_image": ""
 }
