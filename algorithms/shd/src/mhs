@@ -16,10 +16,14 @@ parser = argparse.ArgumentParser(description='MHS runner: SHD')
 # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
 parser.add_argument("input_file", help="Input file to process")
 parser.add_argument("-f", nargs=1, dest="output_file", default="out.dat", help="Output destination")
-parser.add_argument("-d", action="store_true", dest="depth_first", default=False, help="Run depth-first search version")
-# TODO: Change to an environment flag
 
 args = parser.parse_args()
+
+# Fetch the relevant environment variables
+try:
+    cutoff_size = int(os.environ.get("CUTOFF_SIZE"))
+except (ValueError, TypeError): # Invalid or no value
+    cutoff_size = 0
 
 # Configure path and validation
 script_dir = sys.path[0]
@@ -48,12 +52,15 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        if args.depth_first:
-            shd_argstring = 'Dq'
-        else:
-            shd_argstring = '0q'
+        alg_call_parts = ['./alg/shd', '0q']
 
-        alg_call_string = "['./alg/shd', '{0}', '{1}', '{2}']".format(shd_argstring, temp_input_file.name, temp_output_file.name)
+        if cutoff_size > 0:
+            alg_call_parts += ['-u', cutoff_size]
+
+        alg_call_parts += [temp_input_file.name, temp_output_file.name]
+
+        alg_call_string = [str(arg) for arg in alg_call_parts]
+
         time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, script_dir),
                                    setup="import subprocess, os; devnull=open(os.devnull, 'w')",
                                    number=1)

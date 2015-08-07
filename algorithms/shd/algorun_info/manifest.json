@@ -4,13 +4,19 @@
     "algo_description": "Introduced in <a href=\"http://dx.doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno.",
     "algo_website": "http://research.nii.ac.jp/~uno/code/shd.html",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
-    "authors": [
+    "algo_authors": [
         {
             "name": "Takeaki Uno",
             "email": "uno@nii.ac.jp",
-            "organization": "National Institute of Informatics, Tokyo"
+            "personal_website": "",
+            "organization": "National Institute of Informatics, Tokyo",
+            "org_website": ""
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat"
+    "algo_output_filename": "out.dat",
+    "algo_parameters": {
+        "CUTOFF_SIZE": "0"
+    },
+    "algo_image": ""
 }
