@@ -14,12 +14,18 @@ class AlgorunContainer:
 
     Keyword arguments:
     container_name -- an Algorun container to wrap
+    algorithm_name -- a human-readable name for the algorithm
     schema -- the JSON schema that the container's input must conform to (optional)
     docker_client -- a Docker client object (optional)
     """
-    def __init__(self, container_name, input_schema = None, docker_client = None):
+    def __init__(self, container_name, algorithm_name = None, input_schema = None, docker_client = None):
         if docker_client == None:
             docker_client = docker.Client()
+
+        if algorithm_name is not None:
+            alg_name = algorithm_name
+        else:
+            alg_name = container_name
 
         # Configure port mapping
         port_map = {ALGORUN_PORT: ('',)}
@@ -42,7 +48,8 @@ class AlgorunContainer:
         local_port = docker_client.port(container, ALGORUN_PORT)[0]["HostPort"]
 
         # Store the container and port as attributes
-        self._name = container_name
+        self._name = alg_name
+        self._container_name = container_name
         self._input_schema = input_schema
         self._container = container
         self._client = docker_client
@@ -63,7 +70,7 @@ class AlgorunContainer:
         # Validate the input if appropriate
         # TODO: Should we handle this exception or just let it bubble up?
         if self._input_schema is not None:
-            jsonschema.validate(schema, data)
+            jsonschema.validate(self._input_schema, data)
 
         # Build the API url
         run_url = self._api_url_base + RUN_URL_SUFFIX
@@ -113,6 +120,12 @@ class AlgorunContainer:
         """
 
         return self._api_url_base
+
+    def name(self):
+        """
+        Return the algorithm name of this container
+        """
+        return self._name
 
     def __str__(self):
         """

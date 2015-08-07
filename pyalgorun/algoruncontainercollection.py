@@ -55,7 +55,8 @@ class AlgorunContainerCollection:
         containers = alg_set["containers"]
         for container in containers:
             container_name = container["containerName"]
-            container["container"] = AlgorunContainer(container_name, input_schema, docker_client)
+            alg_name = container["algName"]
+            container["container"] = AlgorunContainer(container_name, alg_name, input_schema, docker_client)
 
         # Store the container collection in a member
         self._containers = containers
