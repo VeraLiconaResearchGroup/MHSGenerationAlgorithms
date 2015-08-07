@@ -33,7 +33,7 @@ class AlgorunContainerCollection:
     """
     A collection of Algorun containers for shared benchmarking
 
-    Its primary input is a JSON object with a single key "containers"
+    Its primary input is a dict with a single key "containers"
     whose value is a list representing the containers to be run.
     Each container is represented by an object with key "name" giving its name,
     "container" giving its Docker container tag, and optionally "config"
