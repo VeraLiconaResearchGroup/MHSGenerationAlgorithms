@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# Python interface to a collection of Algorun containers
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
 from algoruncontainer import AlgorunContainer
 import json
 import jsonschema

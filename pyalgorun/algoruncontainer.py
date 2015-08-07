@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# Python interface to Algorun containers
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
 import docker
 import requests
 import json
