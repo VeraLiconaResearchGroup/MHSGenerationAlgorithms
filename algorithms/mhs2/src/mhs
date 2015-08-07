@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 # MHS2 algorithm runner
-# Copyright Andrew Gainer-Dewar, Ph.D. (C) 2015 <andrew.gainer.dewar@gmail.com>
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 import json, jsonschema
 import argparse

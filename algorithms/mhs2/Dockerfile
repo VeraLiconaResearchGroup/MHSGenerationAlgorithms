@@ -1,0 +1,26 @@
+# Set up variables
+FROM ahosny/algorun
+MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
+# Add any algorithm dependencies here
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    git \
+    libboost-system-dev \
+    python-jsonschema \
+    scons \
+    && rm -rf /var/lib/apt/lists/
+
+# Fetch and build the code
+COPY ./src /home/algorithm/src/
+WORKDIR /home/algorithm/src/alg
+ENV TERM xterm
+RUN scons
+WORKDIR /home/algorithm/src
+
+# Add the Algorun manifest and examples
+COPY ./algorun_info /home/algorithm/web/algorun_info/
+
+# Add your command to execute an algorithm as environment variable EXEC_COMMAND
+ENV EXEC_COMMAND "mhs"
