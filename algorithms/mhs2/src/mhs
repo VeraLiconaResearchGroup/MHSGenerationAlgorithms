@@ -28,6 +28,11 @@ except ValueError:
 if threads < 1:
     threads = 1
 
+try:
+    cutoff_size = int(os.environ.get("CUTOFF_SIZE"))
+except (ValueError, TypeError): # Invalid or no value
+    cutoff_size = 0
+
 # Configure path and validation
 script_dir = sys.path[0]
 input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
@@ -60,7 +65,12 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_string = "['./alg/build/mhs2', '-i', '{0}', '-o', '{1}', '-T', '{2}']".format(temp_input_file.name, temp_output_file.name, threads)
+        alg_call_parts = ['./alg/build/mhs2', '-i', temp_input_file.name, '-o', temp_output_file.name, '-T', threads]
+        if cutoff_size > 0:
+            alg_call_parts += ['-d', cutoff_size]
+
+        alg_call_string = [str(arg) for arg in alg_call_parts]
+
         time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, script_dir),
                                    setup="import subprocess, os; devnull=open(os.devnull, 'w')",
                                    number=1)

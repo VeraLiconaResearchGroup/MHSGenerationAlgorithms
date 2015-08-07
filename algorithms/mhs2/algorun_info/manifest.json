@@ -16,7 +16,8 @@
     "algo_exec": "./mhs",
     "algo_output_filename": "out.dat",
     "algo_parameters": {
-        "THREADS": "1"
+        "THREADS": "1",
+        "CUTOFF_SIZE": "0"
     },
     "algo_image": ""
 }
