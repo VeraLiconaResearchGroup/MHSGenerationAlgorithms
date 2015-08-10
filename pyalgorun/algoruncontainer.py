@@ -8,6 +8,8 @@ import docker
 import requests
 import json
 import jsonschema
+import logging
+import time
 
 ALGORUN_PORT = 8765
 RUN_URL_SUFFIX = "/do/run"
@@ -31,6 +33,8 @@ class AlgorunContainer:
             alg_name = algorithm_name
         else:
             alg_name = container_name
+
+        logging.debug("Spawning container {0} from image {1}".format(algorithm_name, container_name))
 
         # Configure port mapping
         port_map = {ALGORUN_PORT: ('',)}
@@ -59,7 +63,19 @@ class AlgorunContainer:
         self._container = container
         self._client = docker_client
         self._local_port = local_port
-        self._api_url_base = "http://localhost:" + local_port
+        self._api_url_base = "http://localhost:" + local_port #TODO: Support remote clients
+
+        # Wait for the server to spin up to avoid other problems
+        while True:
+            try:
+                # When the container server is up, this will succeed
+                requests.get(self._api_url_base)
+                break
+            except requests.exceptions.ConnectionError:
+                # If the GET failed, take a breath and try again
+                time.sleep(1)
+                continue
+
 
     def __del__(self):
         # Kill the underlying Docker container when this is destroyed
@@ -72,6 +88,8 @@ class AlgorunContainer:
         Keyword arguments:
         data -- a JSON representation of the data (suitable for input to :func:`~json.dumps`)
         """
+        logging.debug("Running algorithm {0}".format(self._name))
+
         # Validate the input if appropriate
         # TODO: Should we handle this exception or just let it bubble up?
         if self._input_schema is not None:
@@ -106,18 +124,20 @@ class AlgorunContainer:
         # Build the API url
         conf_url = self._api_url_base + CONF_URL_SUFFIX
 
+        logging.debug("Sending config {0} to algorithm {1} at URL {2}".format(config, self._name, conf_url))
+
         # Stringify the input
-        payload = json.dumps(conf)
+        payload = json.dumps(config)
         headers = {"content-type": "application/json"}
 
         # Submit the request
-        r = requests.post(run_url, data = json.dumps(payload), headers = headers)
+        r = requests.post(conf_url, data = payload)#, headers = headers)
 
         # Check for errors
         r.raise_for_status()
 
         # Return the result
-        return r.json()
+        return r.text
 
     def interface_url(self):
         """

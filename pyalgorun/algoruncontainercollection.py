@@ -7,6 +7,7 @@
 from algoruncontainer import AlgorunContainer
 import json
 import jsonschema
+import requests
 
 # Define the schema for an input object
 ALG_SET_SCHEMA = {
@@ -57,11 +58,18 @@ class AlgorunContainerCollection:
         jsonschema.validate(ALG_SET_SCHEMA, alg_set)
 
         # Set up the containers
-        containers = alg_set["containers"]
-        for container in containers:
-            container_name = container["containerName"]
-            alg_name = container["algName"]
-            container["container"] = AlgorunContainer(container_name, alg_name, input_schema, docker_client)
+        containers = []
+        algs = alg_set["containers"]
+        for alg in algs:
+            container_name = alg["containerName"]
+            alg_name = alg["algName"]
+            container = AlgorunContainer(container_name, alg_name, input_schema, docker_client)
+            try:
+                container.change_config(alg["config"])
+            except KeyError:
+                pass
+
+            containers.append(container)
 
         # Store the container collection in a member
         self._containers = containers
@@ -76,12 +84,12 @@ class AlgorunContainerCollection:
         """
 
         try:
-            return next(container for container in self._containers if container["algName"] == alg_name)
+            return next(container for container in self._containers if container._name == alg_name)
         except StopIteration:
             raise ValueError("No container named {0}".format(alg_name))
 
     def __iter__(self):
-        return (container["container"] for container in self._containers)
+        return iter(self._containers)
 
     def __str__(self):
         """
@@ -99,5 +107,10 @@ class AlgorunContainerCollection:
         data -- a JSON data object compatible with the underlying containers
         """
 
-        results = {container["algName"]: container["container"].run_alg(data) for container in self._containers}
+        results = {}
+
+        for container in self:
+            result = container.run_alg(data)
+            results[container._name] = result
+
         return results
