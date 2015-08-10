@@ -21,6 +21,11 @@ Point your web browser to [//localhost:31331] to access the Web interface for th
 We also provide a Python package for managing Algorun containers in a convenient, procedural way.
 It requires the [jsonschema] Python library, which is available in the Debian `python-jsonschema` package or with `pip install jsonschema`.
 
+## License
+Code in this repository is distributed under a mixture of licenses.
+See each file for details.
+(In particular, code written by AGD for this project is typically released under the Artistic License 2.0, while upstream algorithm code is distributed under a variety of licenses.)
+
 [docker]: //docker.io "Docker"
 [algorun]: //algorun.org "Algorun"
 [jsonschema]: //pypi.python.org/pypi/jsonschema "Python-jsonschema"
