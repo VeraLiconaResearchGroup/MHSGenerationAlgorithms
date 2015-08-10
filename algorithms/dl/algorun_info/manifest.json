@@ -1,7 +1,8 @@
 {
     "algo_name": "DL",
     "algo_summary": "DL algorithm for minimal hitting set computations",
-    "algo_website": "http://link.springer.com/article/10.1007/s10115-004-0178-1",
+    "algo_description": "Introduced in <a href=\"//doi.org/10.1007/s10115-004-0178-1\">Mining border descriptions of emerging patterns from dataset pairs</a> by Dong and Li.",
+    "algo_website": "http://research.nii.ac.jp/~uno/code/shd.html",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "authors": [
         {
@@ -11,5 +12,6 @@
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat"
+    "algo_output_filename": "out.dat",
+    "algo_image": ""
 }
