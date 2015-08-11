@@ -8,32 +8,22 @@ from algoruncontainer import AlgorunContainer
 import json
 import jsonschema
 import requests
+import multiprocessing
+import docker
 
-# Define the schema for an input object
-ALG_SET_SCHEMA = {
-    "definitions": {
-        "container": {
-            "type": "object",
-            "properties": {
-                "algName": {"type": "string"},
-                "containerName": {"type": "string"},
-                "config": {"type": "object"}
-            },
-            "required": ["name", "container"]
-        }
-    },
-    "$schema": "http://json-schema.org/schema#",
-    "type": "object",
-    "properties": {
-        "containers": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/container"
-            }
-        }
-    },
-    "required": ["containers"]
-}
+# Helper function to build a single container
+def build_container(arg_tuple):
+    container_name, alg_name, conf, docker_base_url = arg_tuple
+    container = AlgorunContainer(container_name, alg_name, docker_base_url)
+    if conf is not None:
+        container.change_config(conf)
+
+    return container
+
+# Helper function to run an algorithm on some data
+def result_pair(arg_tuple):
+    container, data = arg_tuple
+    return (container.name(), container.run_alg(data))
 
 class AlgorunContainerCollection:
     """
@@ -49,31 +39,25 @@ class AlgorunContainerCollection:
     In addition, iteration over this class returns the underlying `AlgorunContainer`s.
 
     Keyword arguments:
-    alg_set -- the collection of algorithms to run
-    input_schema -- the input schema for these algorithms (optional)
-    docker_client -- a Docker client object to host the containers (optional)
+    alg_set -- Iterable of algorithms to run, each a dict with key "containerName" and "algName" and optionally "config"
+    docker_base_url -- base URL for the Docker client (optional)
+    num_threads -- number of jobs to run in parallel (optional)
     """
-    def __init__(self, alg_set, input_schema = None, docker_client = None):
-        # Make sure the input matches the schema
-        jsonschema.validate(ALG_SET_SCHEMA, alg_set)
+    def __init__(self, alg_set, docker_base_url = None, num_threads = 1):
+        # Set up the job pool
+        pool = multiprocessing.Pool(processes = num_threads)
 
         # Set up the containers
-        containers = []
-        algs = alg_set["containers"]
-        for alg in algs:
-            container_name = alg["containerName"]
-            alg_name = alg["algName"]
-            container = AlgorunContainer(container_name, alg_name, input_schema, docker_client)
-            try:
-                container.change_config(alg["config"])
-            except KeyError:
-                pass
-
-            containers.append(container)
+        containers = pool.map(build_container, ((alg.get("containerName"),
+                                                 alg.get("algName"),
+                                                 alg.get("config"),
+                                                 docker_base_url)
+                                                for alg in alg_set))
 
         # Store the container collection in a member
         self._containers = containers
-        self._input_schema = input_schema
+        self._pool = pool
+        self._docker_base_url = docker_base_url
 
     def __getitem__(self, alg_name):
         """
@@ -104,13 +88,25 @@ class AlgorunContainerCollection:
         Returns a dict mapping the `algName` attribute of each container to its output
 
         Keyword arguments:
-        data -- a JSON data object compatible with the underlying containers
+        data -- a data object compatible with the underlying containers
         """
 
-        results = {}
+        results = self._pool.map(result_pair, ((container, data) for container in self))
+        return dict(results)
 
-        for container in self:
-            result = container.run_alg(data)
-            results[container._name] = result
+    def stopall(self):
+        """
+        Stop all the containers
+        """
+        # We centralize the Docker client to save time
+        docker_client = docker.Client(base_url = self._docker_base_url)
+        for container in self._containers:
+            docker_client.stop(container._docker_container)
 
-        return results
+    def close(self):
+        """
+        Terminate the pool and shut down the containers
+        """
+        self._pool.close()
+        self._pool.join()
+        self.stopall()

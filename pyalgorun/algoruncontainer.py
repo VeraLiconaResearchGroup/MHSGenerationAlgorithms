@@ -6,10 +6,9 @@
 
 import docker
 import requests
-import json
-import jsonschema
 import logging
 import time
+import json
 
 ALGORUN_PORT = 8765
 RUN_URL_SUFFIX = "/do/run"
@@ -22,12 +21,10 @@ class AlgorunContainer:
     Keyword arguments:
     container_name -- an Algorun container to wrap
     algorithm_name -- a human-readable name for the algorithm
-    schema -- the JSON schema that the container's input must conform to (optional)
-    docker_client -- a Docker client object (optional)
+    docker_base_url -- base URL for the Docker client (optional)
     """
-    def __init__(self, container_name, algorithm_name = None, input_schema = None, docker_client = None):
-        if docker_client == None:
-            docker_client = docker.Client()
+    def __init__(self, container_name, algorithm_name = None, docker_base_url = None):
+        docker_client = docker.Client(base_url = docker_base_url)
 
         if algorithm_name is not None:
             alg_name = algorithm_name
@@ -42,26 +39,25 @@ class AlgorunContainer:
 
         # Create the container
         try:
-            container = docker_client.create_container(image = container_name,
-                                                       ports = [ALGORUN_PORT],
-                                                       host_config = host_config)
-        except NotFound:
+            docker_container = docker_client.create_container(image = container_name,
+                                                              ports = [ALGORUN_PORT],
+                                                              host_config = host_config)
+        except docker.errors.NotFound:
             raise ValueError("Invalid image name {0}".format(container_name))
 
         # Start the container
-        docker_client.start(container)
+        docker_client.start(docker_container)
 
         # Get the local port for accessing the API.
         # For some reason, .port() returns a list of dicts, so we have to
         # play some games with indices.
-        local_port = docker_client.port(container, ALGORUN_PORT)[0]["HostPort"]
+        local_port = docker_client.port(docker_container, ALGORUN_PORT)[0]["HostPort"]
 
         # Store the container and port as attributes
         self._name = alg_name
         self._container_name = container_name
-        self._input_schema = input_schema
-        self._container = container
-        self._client = docker_client
+        self._docker_container = docker_container
+        self._docker_base_url = docker_base_url
         self._local_port = local_port
         self._api_url_base = "http://localhost:" + local_port #TODO: Support remote clients
 
@@ -76,40 +72,40 @@ class AlgorunContainer:
                 time.sleep(1)
                 continue
 
-
-    def __del__(self):
-        # Kill the underlying Docker container when this is destroyed
-        self._client.kill(self._container)
+    def stop(self):
+        """
+        Stop the underlying Docker container
+        """
+        # Note: spinning up a Docker client is expensive, so this
+        # should not be used in a loop on many containers.
+        docker_client = docker.Client(base_url = self._docker_base_url)
+        logging.debug("Stopping container {0}".format(self.name()))
+        docker_client.stop(self._docker_container)
 
     def run_alg(self, data):
         """
         Run the algorithm on some data
 
         Keyword arguments:
-        data -- a JSON representation of the data (suitable for input to :func:`~json.dumps`)
+        data -- input data for the algorithm, ready to urlencode
         """
         logging.debug("Running algorithm {0}".format(self._name))
-
-        # Validate the input if appropriate
-        # TODO: Should we handle this exception or just let it bubble up?
-        if self._input_schema is not None:
-            jsonschema.validate(self._input_schema, data)
 
         # Build the API url
         run_url = self._api_url_base + RUN_URL_SUFFIX
 
-        # Stringify the input
-        payload = {"input": json.dumps(data)}
-        headers = {"content-type": "application/json"}
+        # Set up the HTTP request payload
+        payload = {"input": data}
+        headers = {"content-type": "application/x-www-form-urlencoded"}
 
         # Submit the request
-        r = requests.post(run_url, data = json.dumps(payload), headers = headers)
+        r = requests.post(run_url, data = payload, headers = headers)
 
         # Check for errors
         r.raise_for_status()
 
         # Return the result
-        return r.json()
+        return r.content
 
     def change_config(self, config):
         """
@@ -119,7 +115,7 @@ class AlgorunContainer:
         This will change the state of the container!
 
         Keyword arguments:
-        config -- a dict representation of a JSON object storing the configuration variables to change
+        config -- a dict representation of configuration variables to change
         """
         # Build the API url
         conf_url = self._api_url_base + CONF_URL_SUFFIX
@@ -131,13 +127,13 @@ class AlgorunContainer:
         headers = {"content-type": "application/json"}
 
         # Submit the request
-        r = requests.post(conf_url, data = payload)#, headers = headers)
+        r = requests.post(conf_url, data = payload, headers = headers)
 
         # Check for errors
         r.raise_for_status()
 
         # Return the result
-        return r.text
+        return r.content
 
     def interface_url(self):
         """
