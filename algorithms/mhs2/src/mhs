@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description='MHS runner')
 
 # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
 parser.add_argument("input_file", help="Input file to process")
-parser.add_argument("-f", nargs=1, dest="output_file", default="out.dat", help="Output destination")
+parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
 
 args = parser.parse_args()
 
