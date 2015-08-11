@@ -6,7 +6,7 @@
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "authors": [
         {
-            "name": "François Rioult"
+            "name": "François Rioult",
             "email": "francois.rioult@unicaen.fr",
             "personal_website": "//www.greyc.fr/users/rioultf",
             "organization": "Université de Caen (GREYC)",
