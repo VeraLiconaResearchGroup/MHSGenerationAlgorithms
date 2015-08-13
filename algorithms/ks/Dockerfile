@@ -1,5 +1,5 @@
 # Set up variables
-FROM ahosny/algorun
+FROM algorun/algorun
 MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 # Add any algorithm dependencies here
