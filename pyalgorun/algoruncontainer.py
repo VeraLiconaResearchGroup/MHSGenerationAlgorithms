@@ -11,8 +11,8 @@ import time
 import json
 
 ALGORUN_PORT = 8765
-RUN_URL_SUFFIX = "/do/run"
-CONF_URL_SUFFIX = "/do/config"
+RUN_URL_SUFFIX = "/run"
+CONF_URL_SUFFIX = "/config"
 
 class AlgorunContainer:
     """
@@ -99,7 +99,11 @@ class AlgorunContainer:
         headers = {"content-type": "application/x-www-form-urlencoded"}
 
         # Submit the request
-        r = requests.post(run_url, data = payload, headers = headers)
+        try:
+            r = requests.post(run_url, data = payload, headers = headers)
+        except:
+            logging.critical("Container {0} threw an exception on analysis POST!".format({self._name}))
+            raise
 
         # Check for errors
         r.raise_for_status()
@@ -127,7 +131,11 @@ class AlgorunContainer:
         headers = {"content-type": "application/json"}
 
         # Submit the request
-        r = requests.post(conf_url, data = payload, headers = headers)
+        try:
+            r = requests.post(conf_url, data = payload, headers = headers)
+        except:
+            logging.critical("Container {0} threw an exception on config POST!".format({self._name}))
+            raise
 
         # Check for errors
         r.raise_for_status()
