@@ -20,8 +20,6 @@ def indices_in_bitset(edge):
 def index_in_bitset(vert, edge):
     return edge[vert]
 
-# TODO: implement uncov as bitarray over edgelist
-
 @app.task
 def extend_or_confirm_set(H, S, CAND, crit, uncov):
     """
