@@ -3,12 +3,15 @@
 # Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 from celery import Celery, group
+from kombu import Queue
 
 from hypergraph import Hypergraph
 from bitarray import bitarray
 
-app = Celery('mmcs', backend='amqp://', broker='amqp://')
-app.conf.update(CELERY_ACCEPT_CONTENT=['pickle'])
+app = Celery('mmcs', backend='cache+memcached://', broker='amqp://')
+app.conf.update(
+    CELERY_ACCEPT_CONTENT=['pickle']
+)
 
 # Helper methods to find vertices in edges
 def indices_in_bitset(edge):
@@ -20,7 +23,7 @@ def index_in_bitset(vert, edge):
 # TODO: implement uncov as bitarray over edgelist
 
 @app.task
-def gen_verts(H, S, CAND, crit, uncov):
+def extend_or_confirm_set(H, S, CAND, crit, uncov):
     """
     Generate extended vertex sets to test
 
@@ -66,7 +69,8 @@ def test_vert(H, S, CAND, crit, uncov, v):
     for e in filter(lambda e: index_in_bitset(v, e), H.edges()):
         e_ind = H.edges().index(e)
         for vert in H.vertices():
-            if index_in_bitset(e_ind, crit[vert]): crit[vert][e_ind] = False
+            if index_in_bitset(e_ind, crit[vert]):
+                crit[vert][e_ind] = False
         if index_in_bitset(e_ind, uncov):
             uncov[e_ind] = False
             crit[v][e_ind] = True
@@ -77,7 +81,7 @@ def test_vert(H, S, CAND, crit, uncov, v):
         if uncov.count() == 0:
             return S
         else:
-            gen_verts.delay(H, S, CAND, crit, uncov)
+            extend_or_confirm_set.delay(H, S, CAND, crit, uncov)
 
 def run_mmcs(H):
     # Initialize variables
@@ -87,7 +91,7 @@ def run_mmcs(H):
     uncov = bitarray([True]*H.n_edges())
 
     # Run the algorithm
-    r = gen_verts.delay(H, S, CAND, crit, uncov)
+    r = extend_or_confirm_set.delay(H, S, CAND, crit, uncov)
 
     # Gather the results and return them
     hitting_sets = filter(lambda result: result is not None, (result[1] for result in r.collect()))
