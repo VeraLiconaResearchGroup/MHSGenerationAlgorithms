@@ -42,7 +42,7 @@ class AlgorunContainer:
             docker_container = docker_client.create_container(image = container_name,
                                                               ports = [ALGORUN_PORT],
                                                               host_config = host_config)
-        except docker.errors.NotFound:
+        except docker.errors.APIError:
             raise ValueError("Invalid image name {0}".format(container_name))
 
         # Start the container
