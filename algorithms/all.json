@@ -1,0 +1,42 @@
+{
+    "containers": [
+        {
+            "algName": "bmr",
+            "containerName": "agdphd/bmr"
+        },
+        {
+            "algName": "dl",
+            "containerName": "agdphd/dl"
+        },
+        {
+            "algName": "fka-begk",
+            "containerName": "agdphd/fka-begk"
+        },
+        {
+            "algName": "hbc",
+            "containerName": "agdphd/hbc"
+        },
+        {
+            "algName": "ks",
+            "containerName": "agdphd/ks"
+        },
+        {
+            "algName": "mhs2",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "1"
+            }
+        },
+        {
+            "algName": "partran",
+            "containerName": "agdphd/partran",
+            "config": {
+                "THREADS": "1"
+            }
+        },
+        {
+            "algName": "shd",
+            "containerName": "agdphd/shd"
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+{
+    "containers": [
+        {
+            "algName": "mhs2-c3",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "1",
+                "CUTOFF": "3"
+            }
+        },
+        {
+            "algName": "mhs2-c5",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "1",
+                "CUTOFF": "5"
+            }
+        },
+        {
+            "algName": "partran-c3",
+            "containerName": "agdphd/partran",
+            "config": {
+                "THREADS": "1",
+                "CUTOFF": "3"
+            }
+        },
+        {
+            "algName": "partran-c5",
+            "containerName": "agdphd/partran",
+            "config": {
+                "THREADS": "1",
+                "CUTOFF": "5"
+            }
+        },
+        {
+            "algName": "shd-c3",
+            "containerName": "agdphd/shd",
+            "config": {
+                "CUTOFF": 3
+            }
+        },
+        {
+            "algName": "shd-c5",
+            "containerName": "agdphd/shd",
+            "config": {
+                "CUTOFF": 5
+            }
+        }
+    ]
+}
