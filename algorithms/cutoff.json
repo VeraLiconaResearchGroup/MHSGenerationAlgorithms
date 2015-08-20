@@ -45,6 +45,86 @@
             "config": {
                 "CUTOFF": 5
             }
+        },
+        {
+            "algName": "bool-iterative-c3",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "bool-iterative",
+                "CUTOFF": 3
+            }
+        },
+        {
+            "algName": "bool-recursive-c3",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "bool-recursive",
+                "CUTOFF": 3
+            }
+        },
+        {
+            "algName": "hsdag-c3",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "hsdag",
+                "CUTOFF": 3
+            }
+        },
+        {
+            "algName": "hst-c3",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "hst",
+                "CUTOFF": 3
+            }
+        },
+        {
+            "algName": "staccato-c3",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "staccato",
+                "CUTOFF": 3
+            }
+        },
+        {
+            "algName": "bool-iterative-c5",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "bool-iterative",
+                "CUTOFF": 5
+            }
+        },
+        {
+            "algName": "bool-recursive-c5",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "bool-recursive",
+                "CUTOFF": 5
+            }
+        },
+        {
+            "algName": "hsdag-c5",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "hsdag",
+                "CUTOFF": 5
+            }
+        },
+        {
+            "algName": "hst-c5",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "hst",
+                "CUTOFF": 5
+            }
+        },
+        {
+            "algName": "staccato-c5",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "staccato",
+                "CUTOFF": 5
+            }
         }
     ]
 }

@@ -1,0 +1,91 @@
+#!/usr/bin/env python
+
+# PyMBD algorithms runner
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
+from pymbd.diagnosis.problem import Problem
+from pymbd.diagnosis.description import Description
+import sys, os
+import json, jsonschema
+import argparse
+
+algname_map  = {
+    'hsdag': 'hsdag',
+    'hst': 'hst',
+    'bool-iterative': 'bool-it-h5-stop',
+    'bool-recursive': 'bool-rec-h1-oldr4',
+    'staccato': 'staccato'
+    }
+
+# Set up argument processing
+parser = argparse.ArgumentParser(description='MHS runner')
+
+# Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+parser.add_argument("input_file", help="Input file to process")
+parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
+
+args = parser.parse_args()
+
+# Fetch the relevant environment variables
+try:
+    cutoff_size = int(os.environ.get("CUTOFF_SIZE"))
+except (ValueError, TypeError): # Invalid or no value
+    cutoff_size = sys.maxint
+
+if cutoff_size == 0:
+    cutoff_size = sys.maxint
+
+algarg = os.environ.get("ALGORITHM_NAME")
+try:
+    alg = algname_map[algarg]
+except KeyError: # Invalid option
+    raise ValueError("Invalid argument name {0} from environment variable ALGORITHM_NAME".format(algarg))
+
+# Configure path and validation
+script_dir = sys.path[0]
+input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+
+# Read the input file
+with open(args.input_file) as input_file:
+    input_json = json.load(input_file)
+
+# Validate the input
+with open(input_schema_path) as input_schema_file:
+    input_schema = json.load(input_schema_file)
+    jsonschema.validate(input_json, input_schema)
+
+# Build the input to the PyMBD functions
+sets = frozenset(frozenset(setlist) for setlist in input_json['sets'])
+description = Description(sets)
+
+# Run the chosen algorithm
+problem = Problem()
+MBDresult = problem.compute_with_description(description, alg, prune=True, max_time=None, max_card=cutoff_size)
+
+# Process the results
+hs = MBDresult.get_diagnoses()
+stats = MBDresult.get_stats()
+formatted_hs = [list(h) for h in hs]
+total_time = float(stats['total_time'])
+results = input_json
+results['transversals'] = formatted_hs
+results['timeTaken'] = total_time
+results['guaranteedMinimal'] = False
+results['guaranteedComplete'] = True
+results['algName'] = algarg
+
+# Validate the output
+with open(output_schema_path) as output_schema_file:
+    output_schema = json.load(output_schema_file)
+    jsonschema.validate(results, output_schema)
+
+# Write the results to the output file
+with open(args.output_file, 'w') as output_file:
+    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+
+### Emacs configuration
+# Local Variables:
+# mode: python
+# End:

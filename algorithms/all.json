@@ -37,6 +37,41 @@
         {
             "algName": "shd",
             "containerName": "agdphd/shd"
+        },
+        {
+            "algName": "bool-iterative",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "bool-iterative"
+            }
+        },
+        {
+            "algName": "bool-recursive",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "bool-recursive"
+            }
+        },
+        {
+            "algName": "hsdag",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "hsdag"
+            }
+        },
+        {
+            "algName": "hst",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "hst"
+            }
+        },
+        {
+            "algName": "staccato",
+            "containerName": "agdphd/pymbd",
+            "config": {
+                "ALGORITHM_NAME": "staccato"
+            }
         }
     ]
 }
