@@ -72,6 +72,41 @@
             "config": {
                 "ALGORITHM_NAME": "staccato"
             }
+        },
+        {
+            "algName": "pMMCS-j1",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "1"
+            }
+        },
+        {
+            "algName": "pMMCS-j2",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "2"
+            }
+        },
+        {
+            "algName": "pMMCS-j4",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "4"
+            }
+        },
+        {
+            "algName": "pMMCS-j8",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "8"
+            }
+        },
+        {
+            "algName": "pMMCS-j16",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "16"
+            }
         }
     ]
 }

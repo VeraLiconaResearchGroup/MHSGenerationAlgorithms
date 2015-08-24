@@ -125,6 +125,54 @@
                 "ALGORITHM_NAME": "staccato",
                 "CUTOFF": 5
             }
+        },
+        {
+            "algName": "pMMCS-j1-c3",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "1",
+                "CUTOFF": "3"
+            }
+        },
+        {
+            "algName": "pMMCS-j2-c3",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "2",
+                "CUTOFF": "3"
+            }
+        },
+        {
+            "algName": "pMMCS-j4-c3",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "4",
+                "CUTOFF": "3"
+            }
+        },
+        {
+            "algName": "pMMCS-j1-c5",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "1",
+                "CUTOFF": "5"
+            }
+        },
+        {
+            "algName": "pMMCS-j2-c5",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "2",
+                "CUTOFF": "5"
+            }
+        },
+        {
+            "algName": "pMMCS-j4-c5",
+            "containerName": "agdphd/pmmcs",
+            "config": {
+                "THREADS": "4",
+                "CUTOFF": "5"
+            }
         }
     ]
 }
