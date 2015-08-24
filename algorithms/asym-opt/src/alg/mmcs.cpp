@@ -80,9 +80,11 @@ int main(int argc, char * argv[]) {
 #pragma omp parallel shared(H)
 #pragma omp single
         extend_or_confirm_set(H, S, CAND, crit, uncov);
+#pragma omp taskwait
     }
 
     // Print results
+    std::cout << "Found " << HittingSets.size_approx() << " hitting sets." << std::endl;
     std::string output_file(vm["output"].as<std::string>());
     write_results_to_file(output_file);
 }
@@ -149,18 +151,7 @@ void extend_or_confirm_set(bsvector H,
                            bitset S,
                            bitset CAND,
                            bsvector crit,
-                           bitset uncov,
-                           int current_recursion_depth) {
-    // Handle recursion depth
-    bool do_fork;
-    if (current_recursion_depth <= 0) {
-        current_recursion_depth = fork_at_depth;
-        do_fork = true;
-    } else {
-        --current_recursion_depth;
-        do_fork = false;
-    }
-
+                           bitset uncov){
     // if uncov is empty, S is a hitting set
     if (uncov.none()) {
         HittingSets.enqueue(S);
@@ -181,55 +172,48 @@ void extend_or_confirm_set(bsvector H,
     // Test all the vertices in C
     auto vert_index = C.find_first();
     while (vert_index != bitset::npos) {
-#pragma omp task untied if (do_fork) shared(H)
-        test_vertex(H, S, CAND, crit, uncov, vert_index, current_recursion_depth);
+        // Update uncov and crit by iterating over edges containing the vertex
+        bitset new_uncov = uncov;
+        bsvector new_crit = crit;
+        for (bsvindex edge_index = 0; edge_index < H.size(); ++edge_index) {
+            // If the vertex is in this edge, proceed
+            if (H[edge_index][vert_index]) {
+                // Remove e from all crit[v]'s
+                for (bindex v = 0; v < new_crit.size(); ++v) {
+                    new_crit[v][edge_index] = false;
+                }
+
+                // If this edge was new_uncovered, it is no longer, but v is now new_critical for it
+                if (new_uncov[edge_index] == true) {
+                    new_uncov[edge_index] = false;
+                    new_crit[vert_index][edge_index] = true;
+                }
+            }
+        }
+
+        // Construct the new candidate hitting set
+        bitset newS = S;
+        newS[vert_index] = true;
+
+        // Test the minimality condition on newS
+        auto v = newS.find_first();
+        while (v != bitset::npos) {
+            if (new_crit[v].none()) {
+                return;
+            }
+            v = newS.find_next(v);
+        }
+
+        // If we made it this far, minimality holds, so we process newS
+        if (new_uncov.none()) {
+            HittingSets.enqueue(newS);
+        } else {
+#pragma omp task untied
+            extend_or_confirm_set(H, newS, CAND, new_crit, new_uncov);
+        }
+
+        // Update CAND and proceed to new vertex
         CAND[vert_index] = true;
         vert_index = C.find_next(vert_index);
-    }
-#pragma omp taskwait
-}
-
-void test_vertex(bsvector H,
-                 bitset S,
-                 bitset CAND,
-                 bsvector crit,
-                 bitset uncov,
-                 bindex vertex_to_test,
-                 int current_recursion_depth) {
-    // Update uncov and crit by iterating over edges containing the vertex
-    for (bsvindex edge_index = 0; edge_index < H.size(); ++edge_index) {
-        // If the vertex is in this edge, proceed
-        if (H[edge_index][vertex_to_test]) {
-            // Remove e from all crit[v]'s
-            for (bindex v = 0; v < crit.size(); ++v) {
-                crit[v][edge_index] = false;
-            }
-
-            // If this edge was uncovered, it is no longer, but v is now critical for it
-            if (uncov[edge_index] == true) {
-                uncov[edge_index] = false;
-                crit[vertex_to_test][edge_index] = true;
-            }
-        }
-    }
-
-    // Construct the new candidate hitting set
-    bitset newS = S;
-    newS[vertex_to_test] = true;
-
-    // Test the minimality condition on newS
-    auto v = newS.find_first();
-    while (v != bitset::npos) {
-        if (crit[v].none()) {
-            return;
-        }
-        v = newS.find_next(v);
-    }
-
-    // If we made it this far, minimality holds, so we process newS
-    if (uncov.none()) {
-        HittingSets.enqueue(newS);
-    } else {
-        extend_or_confirm_set(H, newS, CAND, crit, uncov, current_recursion_depth);
     }
 }
