@@ -61,8 +61,8 @@ for algname, algresult in results.iteritems():
     # Test the result for correctness and write diagnostics in case of failure
     if transversals != correct_transversals:
         dumppath = "{0}.errors.json".format(algname)
-        false_excludes = list(list(transversal) for transversal in transversals.difference(correct_transversals))
-        false_includes = list(list(transversal) for transversal in correct_transversals.difference(transversals))
+        false_includes = list(list(transversal) for transversal in transversals.difference(correct_transversals))
+        false_excludes = list(list(transversal) for transversal in correct_transversals.difference(transversals))
 
         logging.error("Algorithm {0} failed! Dumping diagnostics to {1}.".format(algname, dumppath))
         errors = {
