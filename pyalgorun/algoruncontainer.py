@@ -11,8 +11,8 @@ import time
 import json
 
 ALGORUN_PORT = 8765
-RUN_URL_SUFFIX = "/run"
-CONF_URL_SUFFIX = "/config"
+RUN_URL_SUFFIX = "/v1/run"
+CONF_URL_SUFFIX = "/v1/config"
 
 class AlgorunContainer:
     """
@@ -32,7 +32,6 @@ class AlgorunContainer:
             alg_name = container_name
 
         logging.debug("Spawning container {0} from image {1}".format(algorithm_name, container_name))
-
         # Configure port mapping
         port_map = {ALGORUN_PORT: ('',)}
         host_config = docker.utils.create_host_config(port_bindings = port_map)
@@ -68,9 +67,14 @@ class AlgorunContainer:
                 requests.get(self._api_url_base)
                 break
             except requests.exceptions.ConnectionError:
-                # If the GET failed, take a breath and try again
+                # If the GET failed, take a breath and try again, unless the container is dead
+                if not docker_client.inspect_container(docker_container)['State']['Running']:
+                    raise RuntimeError("Container {0} died unexpectedly during startup poll loop".format(container_name))
                 time.sleep(1)
                 continue
+
+        print "done"
+
 
     def stop(self):
         """
@@ -130,15 +134,13 @@ class AlgorunContainer:
         payload = json.dumps(config)
         headers = {"content-type": "application/json"}
 
-        # Submit the request
+        # Submit the request and check for errors
         try:
             r = requests.post(conf_url, data = payload, headers = headers)
+            r.raise_for_status()
         except:
             logging.critical("Container {0} threw an exception on config POST!".format({self._name}))
             raise
-
-        # Check for errors
-        r.raise_for_status()
 
         # Return the result
         return r.content
