@@ -37,7 +37,8 @@ int main(int argc, char * argv[]) {
     desc.add_options()
         ("input", po::value<std::string>()->required(), "Input hypergraph file")
         ("output", po::value<std::string>()->default_value("out.dat"), "Output transversals file")
-        ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel");
+        ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel")
+        ("cutoff-size,c", po::value<int>()->default_value(0), "Maximum size set to return (0: no limit)");
 
     po::positional_options_description p;
     p.add("input", 1);
@@ -50,8 +51,10 @@ int main(int argc, char * argv[]) {
         return 1;
     };
 
-    size_t num_threads = (vm["num-threads"].as<int>());
+    const size_t num_threads = (vm["num-threads"].as<int>());
     omp_set_num_threads(num_threads);
+
+    const size_t cutoff_size = (vm["cutoff-size"].as<int>());
 
     po::notify(vm);
 
@@ -85,7 +88,7 @@ int main(int argc, char * argv[]) {
     {
 #pragma omp parallel shared(H)
 #pragma omp single
-        extend_or_confirm_set(H, S, CAND, crit, uncov);
+        extend_or_confirm_set(H, S, CAND, crit, uncov, cutoff_size);
 #pragma omp taskwait
     }
 
@@ -157,14 +160,15 @@ void extend_or_confirm_set(bsvector H,
                            bitset S,
                            bitset CAND,
                            bsvector crit,
-                           bitset uncov){
+                           bitset uncov,
+                           size_t cutoff_size){
     // if uncov is empty, S is a hitting set
     if (uncov.none()) {
         HittingSets.enqueue(S);
         return;
     }
 
-    // If CAND is empty, S cannot be extended, so we're done
+    // If CAND is empty or S is too big, S cannot be extended, so we're done
     if (CAND.none()) {
         return;
     }
@@ -211,11 +215,11 @@ void extend_or_confirm_set(bsvector H,
         }
 
         // If we made it this far, minimality holds, so we process newS
-        if (new_uncov.none()) {
+        if (new_uncov.none() and (cutoff_size == 0 or newS.count() <= cutoff_size)) {
             HittingSets.enqueue(newS);
-        } else if (newS.count() < cutoff){
+        } else if (cutoff_size == 0 or newS.count() < cutoff_size) {
 #pragma omp task untied
-            extend_or_confirm_set(H, newS, CAND, new_crit, new_uncov);
+            extend_or_confirm_set(H, newS, CAND, new_crit, new_uncov, cutoff_size);
         }
 
         // Update CAND and proceed to new vertex
