@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <omp.h>
 
 #include <boost/program_options.hpp>
 
@@ -35,10 +36,12 @@ int main(int argc, char * argv[]) {
     po::options_description desc("Options");
     desc.add_options()
         ("input", po::value<std::string>()->required(), "Input hypergraph file")
-        ("output", po::value<std::string>()->default_value("out.dat"), "Output transversals file");
+        ("output", po::value<std::string>()->default_value("out.dat"), "Output transversals file")
+        ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel");
 
     po::positional_options_description p;
-    p.add("input", -1);
+    p.add("input", 1);
+    p.add("output", 1);
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
 
@@ -46,6 +49,9 @@ int main(int argc, char * argv[]) {
         std::cout << desc << std::endl;
         return 1;
     };
+
+    size_t num_threads = (vm["num-threads"].as<int>());
+    omp_set_num_threads(num_threads);
 
     po::notify(vm);
 
@@ -207,7 +213,7 @@ void extend_or_confirm_set(bsvector H,
         // If we made it this far, minimality holds, so we process newS
         if (new_uncov.none()) {
             HittingSets.enqueue(newS);
-        } else {
+        } else if (newS.count() < cutoff){
 #pragma omp task untied
             extend_or_confirm_set(H, newS, CAND, new_crit, new_uncov);
         }
