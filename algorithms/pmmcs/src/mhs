@@ -1,0 +1,100 @@
+#!/usr/bin/env python
+
+# MHS algorithm runner: SHD
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
+import json, jsonschema
+import argparse
+import tempfile
+import timeit
+import sys
+import os
+
+# Set up argument processing
+parser = argparse.ArgumentParser(description='MHS runner: SHD')
+
+# Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+parser.add_argument("input_file", help="Input file to process")
+parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
+
+args = parser.parse_args()
+
+# Fetch the relevant environment variables
+try:
+    threads = int(os.environ.get("THREADS", 1))
+except ValueError:
+    threads = 1
+
+if threads < 1:
+    threads = 1
+
+try:
+    cutoff_size = int(os.environ.get("CUTOFF_SIZE"))
+except (ValueError, TypeError): # Invalid or no value
+    cutoff_size = 0
+
+# Configure path and validation
+script_dir = sys.path[0]
+input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+
+# Read the input file
+with open(args.input_file) as input_file:
+    input_json = json.load(input_file)
+
+# Validate the input
+with open(input_schema_path) as input_schema_file:
+    input_schema = json.load(input_schema_file)
+    jsonschema.validate(input_json, input_schema)
+
+# Set up temporary files for input and output
+with tempfile.NamedTemporaryFile() as temp_input_file:
+    with tempfile.NamedTemporaryFile() as temp_output_file:
+        # Generate the input file
+        num_verts = max(vert for edge in input_json["sets"] for vert in edge)
+
+        for edge in input_json["sets"]:
+            edge_as_string = " ".join(map(str, edge))
+            temp_input_file.write(edge_as_string + "\n")
+
+        temp_input_file.flush()
+
+        # Process the input file
+        alg_call_parts = ['./alg/mmcs', temp_input_file.name, temp_output_file.name]
+
+        if cutoff_size > 0:
+            alg_call_parts += ['-c', cutoff_size]
+
+        if threads > 1:
+            alg_call_parts += ['-t', threads]
+
+        alg_call_string = [str(arg) for arg in alg_call_parts]
+
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, script_dir),
+                                   setup="import subprocess, os; devnull=open(os.devnull, 'w')",
+                                   number=1)
+
+        # Process the results
+        temp_output_file.seek(0)
+        transversal_lines = temp_output_file.readlines()
+        transversals = [map(int, line.split()) for line in transversal_lines]
+        results = input_json
+        results["guaranteedMinimal"] = True
+        results["guaranteedComplete"] = True
+        results["transversals"] = transversals
+        results["timeTaken"] = time_taken
+
+# Validate the output
+with open(output_schema_path) as output_schema_file:
+    output_schema = json.load(output_schema_file)
+    jsonschema.validate(results, output_schema)
+
+    # Write the results to the output file
+with open(args.output_file, 'w') as output_file:
+    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+
+### Emacs configuration
+# Local Variables:
+# mode: python
+# End:
