@@ -63,8 +63,8 @@
             }
         },
         {
-            "algName": "shd",
-            "containerName": "agdphd/shd"
+            "algName": "mmcs",
+            "containerName": "agdphd/mmcs"
         },
         {
             "algName": "bool-iterative",
