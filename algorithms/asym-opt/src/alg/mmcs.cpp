@@ -26,8 +26,7 @@ typedef bsvector::size_type bsvindex;
 
 namespace po = boost::program_options;
 
-int n_verts = 5;
-int n_edges = 3;
+int fork_at_depth = 0; // Tuneable parameter
 
 moodycamel::ConcurrentQueue<bitset> HittingSets;
 
@@ -77,7 +76,11 @@ int main(int argc, char * argv[]) {
     uncov.set(); // Initially full
 
     // RUN ALGORITHM
-    extend_or_confirm_set(H, S, CAND, crit, uncov);
+    {
+#pragma omp parallel shared(H)
+#pragma omp single
+        extend_or_confirm_set(H, S, CAND, crit, uncov);
+    }
 
     // Print results
     std::string output_file(vm["output"].as<std::string>());
@@ -142,11 +145,22 @@ void write_results_to_file(const std::string & output_file) {
     }
 }
 
-void extend_or_confirm_set(const bsvector & H,
-                           const bitset & S,
+void extend_or_confirm_set(bsvector H,
+                           bitset S,
                            bitset CAND,
-                           const bsvector & crit,
-                           const bitset & uncov) {
+                           bsvector crit,
+                           bitset uncov,
+                           int current_recursion_depth) {
+    // Handle recursion depth
+    bool do_fork;
+    if (current_recursion_depth <= 0) {
+        current_recursion_depth = fork_at_depth;
+        do_fork = true;
+    } else {
+        --current_recursion_depth;
+        do_fork = false;
+    }
+
     // if uncov is empty, S is a hitting set
     if (uncov.none()) {
         HittingSets.enqueue(S);
@@ -167,18 +181,21 @@ void extend_or_confirm_set(const bsvector & H,
     // Test all the vertices in C
     auto vert_index = C.find_first();
     while (vert_index != bitset::npos) {
-        test_vertex(H, S, CAND, crit, uncov, vert_index);
+#pragma omp task untied if (do_fork) shared(H)
+        test_vertex(H, S, CAND, crit, uncov, vert_index, current_recursion_depth);
         CAND[vert_index] = true;
         vert_index = C.find_next(vert_index);
     }
+#pragma omp taskwait
 }
 
-void test_vertex(const bsvector & H,
-                 const bitset & S,
-                 const bitset & CAND,
+void test_vertex(bsvector H,
+                 bitset S,
+                 bitset CAND,
                  bsvector crit,
                  bitset uncov,
-                 const bindex & vertex_to_test) {
+                 bindex vertex_to_test,
+                 int current_recursion_depth) {
     // Update uncov and crit by iterating over edges containing the vertex
     for (bsvindex edge_index = 0; edge_index < H.size(); ++edge_index) {
         // If the vertex is in this edge, proceed
@@ -213,6 +230,6 @@ void test_vertex(const bsvector & H,
     if (uncov.none()) {
         HittingSets.enqueue(newS);
     } else {
-        extend_or_confirm_set(H, newS, CAND, crit, uncov);
+        extend_or_confirm_set(H, newS, CAND, crit, uncov, current_recursion_depth);
     }
 }
