@@ -12,12 +12,10 @@ import multiprocessing
 import docker
 
 # Helper function to build a single container
-def build_container(arg_tuple):
-    container_name, alg_name, conf, docker_base_url = arg_tuple
+def build_container(container_name, alg_name, conf, docker_base_url):
     container = AlgorunContainer(container_name, alg_name, docker_base_url)
     if conf is not None:
         container.change_config(conf)
-
     return container
 
 # Helper function to run an algorithm on some data
@@ -44,15 +42,16 @@ class AlgorunContainerCollection:
     num_threads -- number of jobs to run in parallel (optional)
     """
     def __init__(self, alg_set, docker_base_url = None, num_threads = 1):
+        # Set up the containers
+        # Note: Docker build doesn't parallelize well, so we do this serially
+        containers = (build_container(alg.get("containerName"),
+                                            alg.get("algName"),
+                                            alg.get("config"),
+                                            docker_base_url)
+                      for alg in alg_set)
+
         # Set up the job pool
         pool = multiprocessing.Pool(processes = num_threads)
-
-        # Set up the containers
-        containers = pool.map(build_container, ((alg.get("containerName"),
-                                                 alg.get("algName"),
-                                                 alg.get("config"),
-                                                 docker_base_url)
-                                                for alg in alg_set))
 
         # Store the container collection in a member
         self._containers = containers

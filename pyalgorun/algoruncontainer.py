@@ -73,9 +73,6 @@ class AlgorunContainer:
                 time.sleep(1)
                 continue
 
-        print "done"
-
-
     def stop(self):
         """
         Stop the underlying Docker container
