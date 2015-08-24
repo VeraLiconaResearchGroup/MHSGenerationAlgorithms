@@ -64,7 +64,17 @@
         },
         {
             "algName": "mmcs",
-            "containerName": "agdphd/mmcs"
+            "containerName": "agdphd/shd",
+            "config": {
+                "MODE": "mmcs"
+            }
+        },
+        {
+            "algName": "rs",
+            "containerName": "agdphd/shd",
+            "config": {
+                "MODE": "rs"
+            }
         },
         {
             "algName": "bool-iterative",

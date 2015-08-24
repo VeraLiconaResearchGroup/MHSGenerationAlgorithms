@@ -1,7 +1,7 @@
 {
     "algo_name": "SHD",
     "algo_summary": "SHD algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"//doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno.",
+    "algo_description": "Introduced in <a href=\"//doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno. Can be run in 'mmcs' or 'rs' mode.",
     "algo_website": "//research.nii.ac.jp/~uno/code/shd.html",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [
@@ -16,7 +16,8 @@
     "algo_exec": "./mhs",
     "algo_output_filename": "out.dat",
     "algo_parameters": {
-        "CUTOFF_SIZE": "0"
+        "CUTOFF_SIZE": "0",
+        "MODE": "mmcs"
     },
     "algo_image": ""
 }

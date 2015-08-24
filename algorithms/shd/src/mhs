@@ -26,6 +26,10 @@ try:
 except (ValueError, TypeError): # Invalid or no value
     cutoff_size = 0
 
+mode = os.environ.get("mode")
+if mode not in ["mmcs", "rs"]:
+    mode = "mmcs"
+
 # Configure path and validation
 script_dir = sys.path[0]
 input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
@@ -53,7 +57,14 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_parts = ['./alg/shd', '0q']
+        alg_call_parts = ['./alg/shd']
+
+        if mode == "rs":
+            alg_call_parts.append('D')
+        else:
+            alg_call_parts.append('0')
+
+        alg_call_parts.append('q')
 
         if cutoff_size > 0:
             alg_call_parts += ['-u', cutoff_size]
