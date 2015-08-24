@@ -169,7 +169,7 @@ void extend_or_confirm_set(bsvector H,
     }
 
     // If CAND is empty or S is too big, S cannot be extended, so we're done
-    if (CAND.none()) {
+    if (CAND.none() or (cutoff_size > 0 and S.count() >= cutoff_size)) {
         return;
     }
 
@@ -206,18 +206,21 @@ void extend_or_confirm_set(bsvector H,
         newS[vert_index] = true;
 
         // Test the minimality condition on newS
+        bool is_minimal = true;
         auto v = newS.find_first();
-        while (v != bitset::npos) {
+        while (v != bitset::npos and is_minimal) {
             if (new_crit[v].none()) {
-                return;
+                is_minimal = false;
             }
             v = newS.find_next(v);
         }
 
         // If we made it this far, minimality holds, so we process newS
-        if (new_uncov.none() and (cutoff_size == 0 or newS.count() <= cutoff_size)) {
+        if (is_minimal and new_uncov.none() and (cutoff_size == 0 or newS.count() <= cutoff_size)) {
+            // In this case, newS is a valid hitting set, so we store it
             HittingSets.enqueue(newS);
-        } else if (cutoff_size == 0 or newS.count() < cutoff_size) {
+        } else if (is_minimal and CAND.count() > 0 and (cutoff_size == 0 or newS.count() < cutoff_size)) {
+            // In this case, newS is not yet a hitting set but is not too large either
 #pragma omp task untied
             extend_or_confirm_set(H, newS, CAND, new_crit, new_uncov, cutoff_size);
         }
