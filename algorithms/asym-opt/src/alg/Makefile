@@ -1,6 +1,6 @@
-SRC := $(wildcard src/*.cpp)
+SRC := $(wildcard *.cpp)
 OBJ := $(SRC:.cpp=.o)
-DEP := $(SRC:.cc=.P)
+DEP := $(SRC:.cpp=.P)
 BIN = mmcs
 
 # C++ compiler flags
