@@ -21,10 +21,38 @@
             "containerName": "agdphd/ks"
         },
         {
-            "algName": "mhs2",
+            "algName": "mhs2-j1",
             "containerName": "agdphd/mhs2",
             "config": {
                 "THREADS": "1"
+            }
+        },
+        {
+            "algName": "mhs2-j2",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "2"
+            }
+        },
+        {
+            "algName": "mhs2-j4",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "4"
+            }
+        },
+        {
+            "algName": "mhs2-j8",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "8"
+            }
+        },
+        {
+            "algName": "mhs2-j16",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "16"
             }
         },
         {
