@@ -24,6 +24,7 @@ parser.add_argument("-n", dest="num_tests", type=int, default=1, help="Number of
 parser.add_argument("-j", dest="num_threads", type=int, default=1, help="Number of concurrent tests to run")
 parser.add_argument("-d", dest="docker_base_url", default=None, help="Base URL for Docker client")
 parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
+parser.add_argument('-s', '--slow', dest="slow", action="store_true", help="Include slow algorithms (be careful!)")
 
 # Process the arguments
 args = parser.parse_args()
@@ -41,16 +42,19 @@ alg_list = json.load(args.algorithm_list_file)["containers"]
 input_dict = json.load(args.input_data_file)
 input_str = json.dumps(input_dict)
 
+# Filter out slow algorithms if requested
+if not args.slow:
+    alg_list = filter(lambda alg: not alg.get("slow"), alg_list)
+
 # Launch containers
 logging.info("Launching containers")
 alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url, num_threads = args.num_threads)
-
-time.sleep(1)
 
 # Set up a dict to store the timing results
 runtimes = {alg.name(): [] for alg in alg_collection}
 
 # Run the tests and store the timing results
+logging.info("Running algorithms")
 for i in range(args.num_tests):
     logging.info("Running panel {0}/{1}".format(i+1, args.num_tests))
 

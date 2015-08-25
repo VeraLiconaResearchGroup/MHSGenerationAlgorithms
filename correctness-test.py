@@ -21,6 +21,7 @@ parser.add_argument("test_data_file", type=argparse.FileType('r'), help="Test in
 parser.add_argument("-j", dest="num_threads", type=int, default=1, help="Number of concurrent tests to run")
 parser.add_argument("-d", dest="docker_base_url", default=None, help="Base URL for Docker client")
 parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
+parser.add_argument('-s', '--slow', dest="slow", action="store_true", help="Include slow algorithms (be careful!)")
 
 # Process the arguments
 args = parser.parse_args()
@@ -40,6 +41,10 @@ test_data_dict = json.load(args.test_data_file)
 input_str = json.dumps(test_data_dict)
 
 correct_transversals = frozenset(frozenset(transversal) for transversal in test_data_dict["transversals"])
+
+# Filter out slow algorithms if requested
+if not args.slow:
+    alg_list = filter(lambda alg: not alg.get("slow"), alg_list)
 
 # Launch containers
 logging.info("Launching containers")

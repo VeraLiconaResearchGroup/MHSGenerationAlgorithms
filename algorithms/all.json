@@ -91,22 +91,25 @@
             }
         },
         {
-            "algName": "hsdag",
-            "containerName": "agdphd/pymbd",
-            "config": {
-                "ALGORITHM_NAME": "hsdag"
-            }
-        },
-        {
             "algName": "hst",
             "containerName": "agdphd/pymbd",
+            "slow": true,
             "config": {
                 "ALGORITHM_NAME": "hst"
             }
         },
         {
+            "algName": "hsdag",
+            "containerName": "agdphd/pymbd",
+            "slow": true,
+            "config": {
+                "ALGORITHM_NAME": "hsdag"
+            }
+        },
+        {
             "algName": "staccato",
             "containerName": "agdphd/pymbd",
+            "slow": true,
             "config": {
                 "ALGORITHM_NAME": "staccato"
             }
