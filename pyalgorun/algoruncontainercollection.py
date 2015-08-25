@@ -44,11 +44,11 @@ class AlgorunContainerCollection:
     def __init__(self, alg_set, docker_base_url = None, num_threads = 1):
         # Set up the containers
         # Note: Docker build doesn't parallelize well, so we do this serially
-        containers = (build_container(alg.get("containerName"),
+        containers = [build_container(alg.get("containerName"),
                                             alg.get("algName"),
                                             alg.get("config"),
                                             docker_base_url)
-                      for alg in alg_set)
+                      for alg in alg_set]
 
         # Set up the job pool
         pool = multiprocessing.Pool(processes = num_threads)
