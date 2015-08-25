@@ -78,7 +78,7 @@ bool t_diag_options::short_opt (int c, char * param) {
         return verb_strtoi(optarg, cutoff->max_candidates, true);
 
     case 'd': // Candidate size cutoff
-        return verb_strtoi(optarg, cutoff->max_candidate_size, true);
+        return verb_strtoi(optarg, cutoff->max_depth, true);
 
     case 'l': // Lambda cutoff
         return verb_strtof(optarg, cutoff->lambda, true);
@@ -133,7 +133,7 @@ std::ostream & t_diag_options::print (std::ostream & out) const {
     out << ", threads: " << threads;
     out << ", cutoff_time: " << cutoff->max_time;
     out << ", cutoff_max_candidates: " << cutoff->max_candidates;
-    out << ", cutoff_max_candidate_size: " << cutoff->max_candidate_size;
+    out << ", cutoff_max_depth: " << cutoff->max_depth;
     out << ", cutoff_lambda: " << cutoff->lambda;
 
 
