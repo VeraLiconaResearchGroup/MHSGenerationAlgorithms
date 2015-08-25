@@ -21,50 +21,22 @@
             "containerName": "agdphd/ks"
         },
         {
-            "algName": "mhs2-j1",
+            "algName": "mhs2",
             "containerName": "agdphd/mhs2",
-            "config": {
-                "THREADS": "1"
-            }
-        },
-        {
-            "algName": "mhs2-j2",
-            "containerName": "agdphd/mhs2",
-            "config": {
-                "THREADS": "2"
-            }
-        },
-        {
-            "algName": "mhs2-j4",
-            "containerName": "agdphd/mhs2",
-            "config": {
-                "THREADS": "4"
-            }
-        },
-        {
-            "algName": "mhs2-j8",
-            "containerName": "agdphd/mhs2",
-            "config": {
-                "THREADS": "8"
-            }
-        },
-        {
-            "algName": "mhs2-j16",
-            "containerName": "agdphd/mhs2",
-            "config": {
-                "THREADS": "16"
-            }
+            "threads": true,
+            "cutoff": true
         },
         {
             "algName": "partran",
             "containerName": "agdphd/partran",
-            "config": {
-                "THREADS": "1"
-            }
+            "cutoff": true,
+            "threads": true,
+            "slow": true
         },
         {
             "algName": "mmcs",
             "containerName": "agdphd/shd",
+            "cutoff": true,
             "config": {
                 "MODE": "mmcs"
             }
@@ -72,6 +44,7 @@
         {
             "algName": "rs",
             "containerName": "agdphd/shd",
+            "cutoff": true,
             "config": {
                 "MODE": "rs"
             }
@@ -79,6 +52,7 @@
         {
             "algName": "bool-iterative",
             "containerName": "agdphd/pymbd",
+            "cutoff": true,
             "config": {
                 "ALGORITHM_NAME": "bool-iterative"
             }
@@ -86,6 +60,7 @@
         {
             "algName": "bool-recursive",
             "containerName": "agdphd/pymbd",
+            "cutoff": true,
             "config": {
                 "ALGORITHM_NAME": "bool-recursive"
             }
@@ -93,6 +68,7 @@
         {
             "algName": "hst",
             "containerName": "agdphd/pymbd",
+            "cutoff": true,
             "slow": true,
             "config": {
                 "ALGORITHM_NAME": "hst"
@@ -101,6 +77,7 @@
         {
             "algName": "hsdag",
             "containerName": "agdphd/pymbd",
+            "cutoff": true,
             "slow": true,
             "config": {
                 "ALGORITHM_NAME": "hsdag"
@@ -109,44 +86,19 @@
         {
             "algName": "staccato",
             "containerName": "agdphd/pymbd",
+            "cutoff": true,
             "slow": true,
             "config": {
                 "ALGORITHM_NAME": "staccato"
             }
         },
         {
-            "algName": "pMMCS-j1",
+            "algName": "pMMCS",
             "containerName": "agdphd/pmmcs",
+            "threads": true,
+            "cutoff": true,
             "config": {
                 "THREADS": "1"
-            }
-        },
-        {
-            "algName": "pMMCS-j2",
-            "containerName": "agdphd/pmmcs",
-            "config": {
-                "THREADS": "2"
-            }
-        },
-        {
-            "algName": "pMMCS-j4",
-            "containerName": "agdphd/pmmcs",
-            "config": {
-                "THREADS": "4"
-            }
-        },
-        {
-            "algName": "pMMCS-j8",
-            "containerName": "agdphd/pmmcs",
-            "config": {
-                "THREADS": "8"
-            }
-        },
-        {
-            "algName": "pMMCS-j16",
-            "containerName": "agdphd/pmmcs",
-            "config": {
-                "THREADS": "16"
             }
         }
     ]

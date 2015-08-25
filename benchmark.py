@@ -9,6 +9,7 @@ import json
 import pyalgorun
 import logging
 import time
+import copy
 
 # Set up argument processing
 parser = argparse.ArgumentParser(description="MHS algorithm benchmark runner")
@@ -21,7 +22,8 @@ parser.add_argument("algorithm_list_file", type=argparse.FileType('r'), help="JS
 parser.add_argument("input_data_file", type=argparse.FileType('r'), help="Input file to be passed to each algorithm")
 parser.add_argument("output_data_file", type=argparse.FileType('w'), help="Output file to write results")
 parser.add_argument("-n", dest="num_tests", type=int, default=1, help="Number of test iterations")
-parser.add_argument("-j", dest="num_threads", type=int, default=1, help="Number of concurrent tests to run")
+parser.add_argument("-j", dest="num_threads", type=int, nargs='*', help="Numbers of threads to use for supporting algorithms")
+parser.add_argument("-c", dest="cutoff_sizes", type=int, nargs='*', help="Cutoff sizes to use for supporting algorithms (if specified, full test is not run unless 0 is included)")
 parser.add_argument("-d", dest="docker_base_url", default=None, help="Base URL for Docker client")
 parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
 parser.add_argument('-s', '--slow', dest="slow", action="store_true", help="Include slow algorithms (be careful!)")
@@ -46,9 +48,35 @@ input_str = json.dumps(input_dict)
 if not args.slow:
     alg_list = filter(lambda alg: not alg.get("slow"), alg_list)
 
+# Split out threading cases if requested
+if args.num_threads is not None:
+    thread_algs = filter(lambda alg: alg.get("threads"), alg_list)
+    for alg in thread_algs:
+        alg_list.remove(alg)
+        for n in args.num_threads:
+            newalg = copy.deepcopy(alg)
+            newalg["algName"] = "{0}-t{1}".format(alg.get("algName"), n)
+            if newalg.get("config") is None:
+                newalg["config"] = {}
+                newalg["config"]["THREADS"] = n
+            alg_list.append(newalg)
+
+# Split out cutoff cases if requested
+if args.cutoff_sizes is not None:
+    cutoff_algs = filter(lambda alg: alg.get("cutoff"), alg_list)
+    alg_list = []
+    for alg in cutoff_algs:
+        for c in args.cutoff_sizes:
+            newalg = copy.deepcopy(alg)
+            newalg["algName"] = "{0}-c{1}".format(alg.get("algName"), c)
+            if newalg.get("config") is None:
+                newalg["config"] = {}
+                newalg["config"]["CUTOFF_SIZE"] = c
+            alg_list.append(newalg)
+
 # Launch containers
 logging.info("Launching containers")
-alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url, num_threads = args.num_threads)
+alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url)
 
 # Set up a dict to store the timing results
 runtimes = {alg.name(): [] for alg in alg_collection}
