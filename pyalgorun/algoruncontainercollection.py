@@ -8,7 +8,6 @@ from algoruncontainer import AlgorunContainer
 import json
 import jsonschema
 import requests
-import multiprocessing
 import docker
 
 # Helper function to build a single container
@@ -39,9 +38,8 @@ class AlgorunContainerCollection:
     Keyword arguments:
     alg_set -- Iterable of algorithms to run, each a dict with key "containerName" and "algName" and optionally "config"
     docker_base_url -- base URL for the Docker client (optional)
-    num_threads -- number of jobs to run in parallel (optional)
     """
-    def __init__(self, alg_set, docker_base_url = None, num_threads = 1):
+    def __init__(self, alg_set, docker_base_url = None):
         # Set up the containers
         # Note: Docker build doesn't parallelize well, so we do this serially
         containers = [build_container(alg.get("containerName"),
@@ -50,12 +48,8 @@ class AlgorunContainerCollection:
                                             docker_base_url)
                       for alg in alg_set]
 
-        # Set up the job pool
-        pool = multiprocessing.Pool(processes = num_threads)
-
         # Store the container collection in a member
         self._containers = containers
-        self._pool = pool
         self._docker_base_url = docker_base_url
 
     def __getitem__(self, alg_name):
@@ -90,7 +84,7 @@ class AlgorunContainerCollection:
         data -- a data object compatible with the underlying containers
         """
 
-        results = self._pool.map(result_pair, ((container, data) for container in self))
+        results = map(result_pair, ((container, data) for container in self))
         return dict(results)
 
     def stopall(self):
@@ -104,8 +98,6 @@ class AlgorunContainerCollection:
 
     def close(self):
         """
-        Terminate the pool and shut down the containers
+        Shut down the containers
         """
-        self._pool.close()
-        self._pool.join()
         self.stopall()
