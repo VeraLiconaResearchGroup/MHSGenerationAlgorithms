@@ -1,7 +1,7 @@
 {
     "containers": [
         {
-            "algName": "mhs2-c3",
+            "algName": "mhs2-j1-c3",
             "containerName": "agdphd/mhs2",
             "config": {
                 "THREADS": "1",
@@ -9,10 +9,74 @@
             }
         },
         {
-            "algName": "mhs2-c5",
+            "algName": "mhs2-j1-c5",
             "containerName": "agdphd/mhs2",
             "config": {
                 "THREADS": "1",
+                "CUTOFF_SIZE": "5"
+            }
+        },
+        {
+            "algName": "mhs2-j2-c3",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "2",
+                "CUTOFF_SIZE": "3"
+            }
+        },
+        {
+            "algName": "mhs2-j2-c5",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "2",
+                "CUTOFF_SIZE": "5"
+            }
+        },
+        {
+            "algName": "mhs2-j4-c3",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "4",
+                "CUTOFF_SIZE": "3"
+            }
+        },
+        {
+            "algName": "mhs2-j4-c5",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "4",
+                "CUTOFF_SIZE": "5"
+            }
+        },
+        {
+            "algName": "mhs2-j8-c3",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "8",
+                "CUTOFF_SIZE": "3"
+            }
+        },
+        {
+            "algName": "mhs2-j8-c5",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "8",
+                "CUTOFF_SIZE": "5"
+            }
+        },
+        {
+            "algName": "mhs2-j16-c3",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "16",
+                "CUTOFF_SIZE": "3"
+            }
+        },
+        {
+            "algName": "mhs2-j16-c5",
+            "containerName": "agdphd/mhs2",
+            "config": {
+                "THREADS": "16",
                 "CUTOFF_SIZE": "5"
             }
         },
