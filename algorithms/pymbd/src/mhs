@@ -62,7 +62,7 @@ description = Description(sets)
 
 # Run the chosen algorithm
 problem = Problem()
-MBDresult = problem.compute_with_description(description, alg, prune=True, max_time=None, max_card=cutoff_size)
+MBDresult = problem.compute_with_description(description, alg, prune=True, cache=True, max_time=None, max_card=cutoff_size)
 
 # Process the results
 hs = MBDresult.get_diagnoses()
