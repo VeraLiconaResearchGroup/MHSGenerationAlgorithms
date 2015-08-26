@@ -21,7 +21,7 @@ namespace agdmhs {
     class Hypergraph {
     public:
 
-        Hypergraph(size_t num_verts, size_t num_edges = 0);
+        Hypergraph(size_t num_verts = 0, size_t num_edges = 0);
         Hypergraph(const fs::path& input_file);
 
         size_t num_verts() const;

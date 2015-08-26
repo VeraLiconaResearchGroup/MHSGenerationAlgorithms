@@ -10,7 +10,6 @@
 #include "hypergraph.h"
 
 #include <omp.h>
-#include <stdexcept>
 
 #include <boost/dynamic_bitset.hpp>
 

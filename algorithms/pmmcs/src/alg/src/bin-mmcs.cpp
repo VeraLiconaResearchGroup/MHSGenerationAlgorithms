@@ -1,5 +1,5 @@
 /**
-   C++ implementation of the MMCS algorithm (binary)
+   C++ implementation of various MHS algorithms (binary)
    Copyright Vera-Licona Research Group (C) 2015
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 **/
@@ -8,6 +8,7 @@
 #include "mmcs.h"
 
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include <boost/program_options.hpp>
@@ -20,6 +21,7 @@ int main(int argc, char * argv[]) {
     desc.add_options()
         ("input", po::value<std::string>()->required(), "Input hypergraph file")
         ("output", po::value<std::string>()->default_value("out.dat"), "Output transversals file")
+        ("algorithm,a", po::value<std::string>()->default_value("mmcs"), "Algorithm to use")
         ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel")
         ("cutoff-size,c", po::value<int>()->default_value(0), "Maximum size set to return (0: no limit)");
 
@@ -43,8 +45,17 @@ int main(int argc, char * argv[]) {
     std::string input_file(vm["input"].as<std::string>());
     agdmhs::Hypergraph H (input_file);
 
-    // Run algorithm
-    agdmhs::Hypergraph Htrans = agdmhs::mmcs_transversal(H, num_threads, cutoff_size);
+    // Run chosen algorithm
+    agdmhs::Hypergraph Htrans;
+    std::string algname = vm["algorithm"].as<std::string>();
+
+    if (algname == "mmcs") {
+        Htrans = agdmhs::mmcs_transversal(H, num_threads, cutoff_size);
+    } else {
+        std::stringstream error_message;
+        error_message << "Did not recognize requested algorithm " << algname << ".";
+        throw po::invalid_option_value(error_message.str());
+    }
 
     // Print results
     std::cout << "Found " << Htrans.num_edges() << " hitting sets." << std::endl;
