@@ -8,6 +8,7 @@ import argparse
 import json
 import pyalgorun
 import logging
+import copy
 
 # Set up argument processing
 parser = argparse.ArgumentParser(description="MHS algorithm correctness tester")
@@ -18,7 +19,7 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 # Add arguments
 parser.add_argument("algorithm_list_file", type=argparse.FileType('r'), help="JSON file of algorithms to benchmark")
 parser.add_argument("test_data_file", type=argparse.FileType('r'), help="Test input file containing both sets and transversals")
-parser.add_argument("-j", dest="num_threads", type=int, default=1, help="Number of concurrent tests to run")
+parser.add_argument("-j", dest="num_threads", type=int, nargs='*', help="Number of threads to use for supporting algorithms")
 parser.add_argument("-d", dest="docker_base_url", default=None, help="Base URL for Docker client")
 parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
 parser.add_argument('-s', '--slow', dest="slow", action="store_true", help="Include slow algorithms (be careful!)")
@@ -46,9 +47,22 @@ correct_transversals = frozenset(frozenset(transversal) for transversal in test_
 if not args.slow:
     alg_list = filter(lambda alg: not alg.get("slow"), alg_list)
 
+# Split out threading cases if requested
+if args.num_threads is not None:
+    thread_algs = filter(lambda alg: alg.get("threads"), alg_list)
+    for alg in thread_algs:
+        alg_list.remove(alg)
+        for n in args.num_threads:
+            newalg = copy.deepcopy(alg)
+            newalg["algName"] = "{0}-t{1}".format(alg.get("algName"), n)
+            if newalg.get("config") is None:
+                newalg["config"] = {}
+                newalg["config"]["THREADS"] = n
+            alg_list.append(newalg)
+
 # Launch containers
 logging.info("Launching containers")
-alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url, num_threads = args.num_threads)
+alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url)
 
 # Run the tests and store the timing results
 tests_failed = []
