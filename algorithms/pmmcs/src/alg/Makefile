@@ -1,4 +1,4 @@
-SRC := $(wildcard *.cpp)
+SRC := $(wildcard src/*.cpp)
 OBJ := $(SRC:.cpp=.o)
 DEP := $(SRC:.cpp=.P)
 BIN = mmcs
@@ -9,11 +9,14 @@ CXXFLAGS += -fPIC
 CXXFLAGS += -fopenmp
 CXXFLAGS += -Wall
 CXXFLAGS += -g
-CXXFLAGS += -O3
+#CXXFLAGS += -O3
 
 # Libraries
 LIBS += -lboost_program_options
 LIBS += -lboost_system
+
+# Includes
+INCLUDES += -Iinclude
 
 # Commands
 all: $(OBJ) $(BIN)
@@ -23,10 +26,10 @@ all: $(OBJ) $(BIN)
 debug: CXXFLAGS += -O0
 debug: all
 
-mmcs: mmcs.o
+mmcs: $(OBJ)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) $^ -o $@ $(LIBS)
 
-%.o: %.cc
+%.o: %.cpp
 	$(CXX) -MD $(CXXFLAGS) $(INCLUDES) -o $@ -c $<
 	@cp $*.d $*.P; \
 	sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
