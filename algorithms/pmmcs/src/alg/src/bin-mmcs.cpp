@@ -4,8 +4,8 @@
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 **/
 
-#include "hypergraph.h"
-#include "mmcs.h"
+#include "hypergraph.hpp"
+#include "mmcs.hpp"
 
 #include <iostream>
 #include <sstream>

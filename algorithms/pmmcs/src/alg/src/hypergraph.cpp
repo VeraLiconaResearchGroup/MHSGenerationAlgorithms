@@ -4,7 +4,7 @@
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 **/
 
-#include "hypergraph.h"
+#include "hypergraph.hpp"
 
 #include <boost/dynamic_bitset.hpp>
 #include <boost/filesystem/fstream.hpp>

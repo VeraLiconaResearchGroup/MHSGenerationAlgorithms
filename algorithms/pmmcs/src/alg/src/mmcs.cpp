@@ -4,10 +4,10 @@
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 **/
 
-#include "mmcs.h"
+#include "mmcs.hpp"
 
 #include "concurrentqueue.h"
-#include "hypergraph.h"
+#include "hypergraph.hpp"
 
 #include <omp.h>
 
