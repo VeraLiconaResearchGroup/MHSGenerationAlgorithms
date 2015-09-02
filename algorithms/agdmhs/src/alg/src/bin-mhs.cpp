@@ -4,6 +4,7 @@
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 **/
 
+#include "fka.hpp"
 #include "hypergraph.hpp"
 #include "mmcs.hpp"
 
@@ -11,6 +12,10 @@
 #include <sstream>
 #include <string>
 
+#define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
 #include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
@@ -21,7 +26,8 @@ int main(int argc, char * argv[]) {
     desc.add_options()
         ("input", po::value<std::string>()->required(), "Input hypergraph file")
         ("output", po::value<std::string>()->default_value("out.dat"), "Output transversals file")
-        ("algorithm,a", po::value<std::string>()->default_value("mmcs"), "Algorithm to use")
+        ("verbosity,v", po::value<int>()->default_value(0)->implicit_value(1), "Write verbose debugging output (-v2 for trace output)")
+        ("algorithm,a", po::value<std::string>()->default_value("pmmcs"), "Algorithm to use (pmmcs, fka)")
         ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel")
         ("cutoff-size,c", po::value<int>()->default_value(0), "Maximum size set to return (0: no limit)");
 
@@ -45,12 +51,41 @@ int main(int argc, char * argv[]) {
     std::string input_file(vm["input"].as<std::string>());
     agdmhs::Hypergraph H (input_file);
 
+    // Process logging-related options
+    int verbosity = vm["verbosity"].as<int>();
+    switch (verbosity) {
+    case 1:
+        boost::log::core::get()->set_filter
+            (boost::log::trivial::severity >= boost::log::trivial::debug);
+        break;
+
+    case 2:
+        boost::log::core::get()->set_filter
+            (boost::log::trivial::severity >= boost::log::trivial::trace);
+        break;
+
+    default:
+        boost::log::core::get()->set_filter
+            (boost::log::trivial::severity >= boost::log::trivial::warning);
+        break;
+    }
+
     // Run chosen algorithm
     agdmhs::Hypergraph Htrans;
     std::string algname = vm["algorithm"].as<std::string>();
 
-    if (algname == "mmcs") {
+    if (algname == "pmmcs") {
         Htrans = agdmhs::mmcs_transversal(H, num_threads, cutoff_size);
+    } else if (algname == "fka") {
+        if (num_threads > 1) {
+            std::cout << "Notice: this algorithm does not support multithreading." << std::endl;
+        }
+
+        if (cutoff_size > 0) {
+            std::cout << "Notice: this algorithm does not support cutoff." << std::endl;
+        }
+
+        Htrans = agdmhs::fka_transversal(H);
     } else {
         std::stringstream error_message;
         error_message << "Did not recognize requested algorithm " << algname << ".";

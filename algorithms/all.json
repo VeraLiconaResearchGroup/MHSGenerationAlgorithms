@@ -94,11 +94,18 @@
         },
         {
             "algName": "pMMCS",
-            "containerName": "agdphd/pmmcs",
+            "containerName": "agdphd/agdmhs",
             "threads": true,
             "cutoff": true,
             "config": {
-                "THREADS": "1"
+                "ALGORITHM": "pmmcs"
+            }
+        },
+        {
+            "algName": "fka-agd",
+            "containerName": "agdphd/agdmhs",
+            "config": {
+                "ALGORITHM": "fka"
             }
         }
     ]

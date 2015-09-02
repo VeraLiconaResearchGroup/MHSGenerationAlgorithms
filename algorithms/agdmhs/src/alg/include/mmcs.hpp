@@ -4,8 +4,8 @@
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 **/
 
-#ifndef _MMCS_MAIN__H
-#define _MMCS_MAIN__H
+#ifndef _MMCS__H
+#define _MMCS__H
 
 #include <vector>
 

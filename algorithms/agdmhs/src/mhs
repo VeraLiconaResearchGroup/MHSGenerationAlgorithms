@@ -12,7 +12,7 @@ import sys
 import os
 
 # Set up argument processing
-parser = argparse.ArgumentParser(description='MHS runner: SHD')
+parser = argparse.ArgumentParser(description='MHS runner: AGDMHS')
 
 # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
 parser.add_argument("input_file", help="Input file to process")
@@ -33,6 +33,8 @@ try:
     cutoff_size = int(os.environ.get("CUTOFF_SIZE"))
 except (ValueError, TypeError): # Invalid or no value
     cutoff_size = 0
+
+algorithm = os.environ.get("ALGORITHM", "mmcs")
 
 # Configure path and validation
 script_dir = sys.path[0]
@@ -61,7 +63,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_parts = ['./alg/mmcs', temp_input_file.name, temp_output_file.name]
+        alg_call_parts = ['./alg/mhs', temp_input_file.name, temp_output_file.name, '-a', algorithm]
 
         if cutoff_size > 0:
             alg_call_parts += ['-c', cutoff_size]
