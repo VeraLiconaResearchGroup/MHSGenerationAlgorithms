@@ -1,18 +1,22 @@
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
 # Set up variables
 FROM algorun/algorun:15.04
 MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 # Add any algorithm dependencies here
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    libboost-program-options-dev \
-    python-jsonschema \
-    && rm -rf /var/lib/apt/lists/
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    default-jdk \
+    python-jsonschema && \
+    rm -rf /var/lib/apt/lists/
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
 WORKDIR /home/algorithm/src/alg
-RUN make
+RUN javac FK_B.java
+RUN jar cfe FK_B.jar FK_B FK_B.class
 WORKDIR /home/algorithm/src
 
 # Add the Algorun manifest and examples
