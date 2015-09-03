@@ -4,6 +4,7 @@
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 **/
 
+#include "berge.hpp"
 #include "fka.hpp"
 #include "hypergraph.hpp"
 #include "mmcs.hpp"
@@ -20,6 +21,18 @@
 
 namespace po = boost::program_options;
 
+void check_threads(int num_threads) {
+    if (num_threads > 1) {
+        std::cout << "Notice: this algorithm does not support multithreading." << std::endl;
+    }
+}
+
+void check_cutoff(int cutoff_size) {
+    if (cutoff_size > 0) {
+        std::cout << "Notice: this algorithm does not support cutoff." << std::endl;
+    }
+}
+
 int main(int argc, char * argv[]) {
     // SET UP ARGUMENTS
     po::options_description desc("Options");
@@ -27,7 +40,7 @@ int main(int argc, char * argv[]) {
         ("input", po::value<std::string>()->required(), "Input hypergraph file")
         ("output", po::value<std::string>()->default_value("out.dat"), "Output transversals file")
         ("verbosity,v", po::value<int>()->default_value(0)->implicit_value(1), "Write verbose debugging output (-v2 for trace output)")
-        ("algorithm,a", po::value<std::string>()->default_value("pmmcs"), "Algorithm to use (pmmcs, fka)")
+        ("algorithm,a", po::value<std::string>()->default_value("pmmcs"), "Algorithm to use (pmmcs, fka, berge)")
         ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel")
         ("cutoff-size,c", po::value<int>()->default_value(0), "Maximum size set to return (0: no limit)");
 
@@ -77,15 +90,15 @@ int main(int argc, char * argv[]) {
     if (algname == "pmmcs") {
         Htrans = agdmhs::mmcs_transversal(H, num_threads, cutoff_size);
     } else if (algname == "fka") {
-        if (num_threads > 1) {
-            std::cout << "Notice: this algorithm does not support multithreading." << std::endl;
-        }
-
-        if (cutoff_size > 0) {
-            std::cout << "Notice: this algorithm does not support cutoff." << std::endl;
-        }
+        check_threads(num_threads);
+        check_cutoff(cutoff_size);
 
         Htrans = agdmhs::fka_transversal(H);
+    } else if (algname == "berge") {
+        check_threads(num_threads);
+        check_cutoff(cutoff_size);
+
+        Htrans = agdmhs::berge_transversal(H);
     } else {
         std::stringstream error_message;
         error_message << "Did not recognize requested algorithm " << algname << ".";

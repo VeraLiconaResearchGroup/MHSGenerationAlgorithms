@@ -121,24 +121,66 @@ namespace agdmhs {
         _edges.reserve(n_edges);
     };
 
-    Hypergraph Hypergraph::edge_union(const Hypergraph& G) const {
+    Hypergraph Hypergraph::edge_vee(const Hypergraph& G, bool do_minimize) const {
         // Return new hypergraph with the edges of this and G
-        assert(_n_verts == G.num_verts());
+        // Note: we assume that this and G share the same vertex set
+        assert(num_verts() == G.num_verts());
 
+        // Container to store all the new edges
         bsvector newedges;
 
-        // A bit of vector magic to save some time
-        newedges.reserve(_edges.size() + G.num_edges());
+        // Fill newedges with the edges from this and G
+        // We use a bit of vector magic to save some time
+        newedges.reserve(num_edges() + G.num_edges());
         newedges.insert(newedges.end(), _edges.begin(), _edges.end());
         newedges.insert(newedges.end(), G._edges.begin(), G._edges.end());
 
+        // Build the result hypergraph with these edges
         Hypergraph result(newedges);
+
+        // Minimize if requested
+        if (do_minimize) {
+            result = result.minimization();
+        }
+
+        return result;
+    }
+
+    Hypergraph Hypergraph::edge_wedge(const Hypergraph& G, bool do_minimize) const {
+        // Return new hypergraph with edges all possible unions of
+        // edges from this and G
+        // Note: we assume that this and G share the same vertex set
+        assert(num_verts() == G.num_verts());
+
+        // Container to store all the new edges
+        bsvector newedges (num_edges() * G.num_edges(), bitset(_n_verts));
+
+        // For every pair of edges in this and G, add their union
+        for (auto& edge1: _edges) {
+            for (auto& edge2: G._edges) {
+                newedges.push_back(edge1 | edge2);
+            }
+        }
+
+        // Build the result hypergraph with these edges
+        Hypergraph result(newedges);
+
+        // Minimize if requested
+        // TODO: Can this be rolled into the union operation to save time?
+        if (do_minimize) {
+            result = result.minimization();
+        }
+
         return result;
     }
 
     bitset& Hypergraph::operator[] (const hindex edge) {
         return _edges.at(edge);
     };
+
+    const bitset& Hypergraph::operator[] (const hindex edge) const {
+        return _edges.at(edge);
+    }
 
     void Hypergraph::write_to_file(const fs::path& output_file) const {
         // Set up file writer

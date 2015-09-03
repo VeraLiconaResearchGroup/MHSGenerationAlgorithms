@@ -30,8 +30,10 @@ namespace agdmhs {
 
         void add_edge(const bitset& edge, bool test_simplicity = false);
         void reserve_edge_capacity(size_t n_edges);
-        Hypergraph edge_union(const Hypergraph& G) const;
+        Hypergraph edge_vee(const Hypergraph& G, bool do_minimize = true) const;
+        Hypergraph edge_wedge(const Hypergraph& G, bool do_minimize = true) const;
         bitset& operator[] (const hindex edge);
+        const bitset& operator[] (const hindex edge) const;
 
         void write_to_file(const fs::path& output_file) const;
         Hypergraph minimization() const;
