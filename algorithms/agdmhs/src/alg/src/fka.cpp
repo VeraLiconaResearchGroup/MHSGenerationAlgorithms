@@ -6,6 +6,7 @@
 
 #include "fka.hpp"
 
+#include "fk-base.hpp"
 #include "hypergraph.hpp"
 
 #define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
@@ -27,8 +28,6 @@ namespace agdmhs {
 
         bool still_searching_for_transversals = true;
         while (still_searching_for_transversals) {
-            BOOST_LOG_TRIVIAL(debug) << "Starting a run.";
-
             bitset omit_set = fka_find_omit_set(H, G);
 
             if (omit_set.none() and G.num_edges() > 0) {
@@ -36,10 +35,11 @@ namespace agdmhs {
                 still_searching_for_transversals = false;
             } else {
                 bitset new_mhs = fka_transform_omit_set_to_mhs(H, G, omit_set);
-                BOOST_LOG_TRIVIAL(debug) << "Received witness."
+                BOOST_LOG_TRIVIAL(trace) << "Received witness."
                                          << "\nomit_set:\t" << omit_set
                                          << "\nMHS:\t\t" << new_mhs;
                 G.add_edge(new_mhs, true);
+                BOOST_LOG_TRIVIAL(debug) << "New G size: " << G.num_edges();
             }
         }
 
@@ -61,249 +61,69 @@ namespace agdmhs {
         // Input specification
         assert(F.num_verts() == G.num_verts());
 
-        // FK step 0: minimize F and G
-        Hypergraph Fmin = F.minimization();
-        Hypergraph Gmin = G.minimization();
-
-        BOOST_LOG_TRIVIAL(trace) << "Minimized, so now "
-                                 << "|F| = " << Fmin.num_edges()
-                                 << " and |G| = " << Gmin.num_edges();
+        // Create an empty omit_set to use as temporary storage
+        bitset omit_set (F.num_verts());
 
         // FK step 1: initialize if G is empty
-        if (Gmin.num_edges() == 0) {
+        if (G.num_edges() == 0) {
             BOOST_LOG_TRIVIAL(trace) << "Returning empty omit_set since G is empty.";
-            bitset omit_set(Fmin.num_verts());
             return omit_set;
         }
 
         // FK step 2: consistency checks
         // Check 1.1: hitting condition
-        for (auto const& Fedge: Fmin) {
-            for (auto const& Gedge: Gmin) {
-                if (not Fedge.intersects(Gedge)) {
-                    bitset omit_set = Fmin.verts_covered() - Fedge;
-
-                    BOOST_LOG_TRIVIAL(trace) << "Hitting condition failed!\n"
-                                             << "F edge:\t" << Fedge << "\n"
-                                             << "G edge:\t" << Gedge;
-
-                    return omit_set;
-                }
-            }
+        omit_set = fk_hitting_condition_check(F, G);
+        if (omit_set.any()) {
+            return omit_set;
         }
 
         // Check 1.2: same vertices covered
-        bitset Fcovered = Fmin.verts_covered();
-        bitset Gcovered = Gmin.verts_covered();
-
-        bitset Fsurplus = Fcovered - Gcovered;
-        bitset Gsurplus = Gcovered - Fcovered;
-
-        if (Fsurplus.any()) {
-            hindex surplus_vertex = Fsurplus.find_first();
-            for (auto const& edge: Fmin) {
-                if (edge.test(surplus_vertex)) {
-                    BOOST_LOG_TRIVIAL(trace) << "Coverage condition 1 failed.\n"
-                                             << "F edge:\t\t" << edge;
-
-                    bitset omit_set = edge;
-                    omit_set.reset(surplus_vertex);
-                    return omit_set;
-                }
-            }
-            throw std::runtime_error("Invalid state in coverage condition 1.");
-        } else if (Gsurplus.any()) {
-            hindex surplus_vertex = Gsurplus.find_first();
-            for (auto const& edge: Gmin) {
-                if (edge.test(surplus_vertex)) {
-                    BOOST_LOG_TRIVIAL(trace) << "Coverage condition 2 failed.\n"
-                                             << "G edge:\t\t" << edge;
-
-                    bitset omit_set = (Fcovered | Gcovered)^ edge;
-                    omit_set.set(surplus_vertex);
-                    return omit_set;
-                }
-            }
-            throw std::runtime_error("Invalid state in coverage condition 2.");
+        omit_set = fk_coverage_condition_check(F, G);
+        if (omit_set.any()) {
+            return omit_set;
         }
 
         // Check 1.3: neither F nor G has edges too large
-        for (auto const& Fedge: Fmin) {
-            if (Fedge.count() > G.num_edges()) {
-                // Found a too-large F edge. Now to construct the omit_set…
-                BOOST_LOG_TRIVIAL(trace) << "Size condition 1 failed.\n"
-                                         << "F edge:\t\t" << Fedge;
-
-                hindex v_index = Fedge.find_first();
-                while (v_index < bitset::npos) {
-                    bitset omit_set = Fedge;
-                    omit_set.reset(v_index);
-
-                    bool omit_set_is_valid = true;
-
-                    for (auto const& Gedge: Gmin) {
-                        if (not omit_set.intersects(Gedge)) {
-                            omit_set_is_valid = false;
-                        }
-                    }
-
-                    if (omit_set_is_valid) {
-                        BOOST_LOG_TRIVIAL(trace) << "Omitted vertex " << v_index;
-                        return omit_set;
-                    }
-
-                    v_index = Fedge.find_next(v_index);
-                }
-                throw std::runtime_error("Invalid state in size condition 1.");
-            }
-        }
-
-        for (auto const& Gedge: Gmin) {
-            if (Gedge.count() > F.num_edges()) {
-                // Found a too-large G edge. Now to construct the omit_set…
-                // TODO: What is the omit_set?
-                BOOST_LOG_TRIVIAL(trace) << "Size condition 2 failed.\n"
-                                         << "G edge:\t" << Gedge;
-                hindex v_index = Gedge.find_first();
-                while (v_index < bitset::npos) {
-                    bitset omit_set = Gedge;
-                    omit_set.reset(v_index);
-
-                    for (auto const& Fedge: Fmin) {
-                        if (not omit_set.intersects(Fedge)) {
-                            // TODO: This omit_set calculation may be incorrect
-                            return omit_set;
-                        }
-                    }
-
-                    v_index = Gedge.find_next(v_index);
-                }
-                throw std::runtime_error("Invalid state in size condition 2.");
-            }
+        omit_set = fk_edge_size_check(F, G);
+        if (omit_set.any()) {
+            return omit_set;
         }
 
         // Check 2.1: satisfiability count condition
-        double checkvalue = 0;
-        for (auto const& Fedge: Fmin) {
-            checkvalue += pow(2, -Fedge.count());
-        }
-
-        for (auto const& Gedge: Gmin) {
-            checkvalue += pow(2, -Gedge.count());
-        }
-
-        if (checkvalue < 1) {
-            bitset omit_set (Fmin.num_verts());
-            for (hindex i = 0; i < Fmin.num_verts(); ++i) {
-                bitset extended_omit_set = omit_set;
-                extended_omit_set.set(i);
-
-                unsigned long oldcount = 0;
-                unsigned long newcount = 0;
-
-                for (auto const& Fedge: Fmin) {
-                    if (omit_set.is_subset_of(Fedge)) {
-                        ++oldcount;
-                    }
-
-                    if (extended_omit_set.is_subset_of(Fedge)) {
-                        ++newcount;
-                    }
-                }
-
-                for (auto const& Gedge: Gmin) {
-                    if (not Gedge.is_subset_of(omit_set)) {
-                        ++oldcount;
-                    }
-
-                    if (not Gedge.is_subset_of(extended_omit_set)) {
-                        ++newcount;
-                    }
-                }
-
-                if (newcount <= oldcount) {
-                    omit_set = extended_omit_set;
-                }
-            }
-
-            BOOST_LOG_TRIVIAL(trace) << "Count condition failed.";
-
+        omit_set = fk_satisfiability_count_check(F, G);
+        if (omit_set.any()) {
             return omit_set;
         }
 
         // FK step 3: Check whether F and G are small
         // If either hypergraph is empty, they cannot be dual
-        if (Fmin.num_edges() == 0 or Gmin.num_edges() == 0) {
-            BOOST_LOG_TRIVIAL(trace) << "Either F or G is null.";
-
-            // Any combination will do as a omit_set
-            bitset omit_set (Fmin.num_verts());
-            omit_set.set();
-            return omit_set;
-        }
-
-        // If both have one edge, previous checks guarantee that they are transverse
-        if (Fmin.num_edges() == 1 and Gmin.num_edges() == 1) {
-            BOOST_LOG_TRIVIAL(trace) << "Either F or G is unital.";
-
-            // Return the empty edge as a special signal
-            bitset omit_set (Fmin.num_edges());
+        omit_set = fk_small_hypergraphs_check(F, G);
+        if (omit_set.any()) {
             return omit_set;
         }
 
         // FK step 4: Recurse
 
         // Find the most frequently occurring vertex
-        // First, we record the frequencies of the vertices
-        std::vector<int> freqs(Fmin.num_verts());
-        for (hindex i = 0; i < Fmin.num_verts(); ++i) {
-            for (auto const& Fedge: Fmin) {
-                if (Fedge.test(i)) {
-                    ++freqs[i];
-                }
-            }
-
-            for (auto const& Gedge: Gmin) {
-                if (Gedge.test(i)) {
-                    ++freqs[i];
-                }
-            }
-        }
-
-        // Then we find the largest one
-        auto&& max_freq_vert_iterator = std::max_element(freqs.begin(), freqs.end());
-        hindex max_freq_vert = std::distance(freqs.begin(), max_freq_vert_iterator);
-
-        BOOST_LOG_TRIVIAL(trace) << "Most frequent vertex: " << max_freq_vert;
+        hindex max_freq_vert = fk_most_frequent_vertex(F, G);
 
         // Then we compute the split hypergraphs F0, F1, G0, and G1
+        std::pair<Hypergraph, Hypergraph> Fsplit, Gsplit;
+        Hypergraph F0, F1, G0, G1;
 
-        Hypergraph F0(Fmin.num_verts()), F1(Fmin.num_verts()), G0(Fmin.num_verts()), G1(Fmin.num_verts());
-        for (auto const& Fedge: Fmin) {
-            if (Fedge.test(max_freq_vert)) {
-                bitset newedge = Fedge;
-                newedge.reset(max_freq_vert);
-                F0.add_edge(newedge);
-            } else {
-                F1.add_edge(Fedge);
-            }
-        }
+        Fsplit = fk_split_hypergraph_over_vertex(F, max_freq_vert);
+        F0 = Fsplit.first;
+        F1 = Fsplit.second;
 
-        for (auto const& Gedge: Gmin) {
-            if (Gedge.test(max_freq_vert)) {
-                bitset newedge = Gedge;
-                newedge.reset(max_freq_vert);
-                G0.add_edge(newedge);
-            } else {
-                G1.add_edge(Gedge);
-            }
-        }
+        Gsplit = fk_split_hypergraph_over_vertex(G, max_freq_vert);
+        G0 = Gsplit.first;
+        G1 = Gsplit.second;
 
         // We will also need the unions F0∪F1 and G0∪G1
-        // These are not guaranteed minimal, so we minimize manually
-        Hypergraph Fnew = F0.edge_union(F1).minimization();
-        Hypergraph Gnew = G0.edge_union(G1).minimization();
+        Hypergraph Fnew = fk_minimized_union(F0, F1);
+        Hypergraph Gnew = fk_minimized_union(G0, G1);
 
+        // And, finally, fire up the two recursions
         if (F1.num_edges() > 0 and Gnew.num_edges() > 0) {
             BOOST_LOG_TRIVIAL(trace) << "Side 1 recursion.";
 
@@ -323,8 +143,8 @@ namespace agdmhs {
             }
         }
 
-        // If we make it this far, we did not find a omit_set, so the pair is dual
-        bitset omit_set (Fmin.num_verts());
+        // If we make it this far, we did not find a nonempty
+        // omit_set, so the pair is dual
         return omit_set;
     }
 
@@ -374,7 +194,7 @@ namespace agdmhs {
                                              << "\nmissed:\t" << edge;
 
                     is_hitting_set = false;
-                    //break;
+                    break;
                 }
             }
 
@@ -386,12 +206,12 @@ namespace agdmhs {
                                                  << "\nedge:\t" << edge;
 
                         has_no_known_subsets = false;
-                        //break;
+                        break;
                     }
                 }
             }
 
-            // If the resulting set is a hitting set and does not have any
+            // If the resulting set is a hitting set an9d does not have any
             // subsets already in G, it is a viable candidate.
             // Thus, we backtrack.
             if (is_hitting_set and has_no_known_subsets) {

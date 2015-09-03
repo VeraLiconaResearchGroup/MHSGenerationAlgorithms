@@ -117,6 +117,10 @@ namespace agdmhs {
         }
     };
 
+    void Hypergraph::reserve_edge_capacity(size_t n_edges) {
+        _edges.reserve(n_edges);
+    };
+
     Hypergraph Hypergraph::edge_union(const Hypergraph& G) const {
         // Return new hypergraph with the edges of this and G
         assert(_n_verts == G.num_verts());

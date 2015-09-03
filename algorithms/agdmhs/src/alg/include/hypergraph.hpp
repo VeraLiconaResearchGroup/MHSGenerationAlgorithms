@@ -29,6 +29,7 @@ namespace agdmhs {
         size_t num_edges() const;
 
         void add_edge(const bitset& edge, bool test_simplicity = false);
+        void reserve_edge_capacity(size_t n_edges);
         Hypergraph edge_union(const Hypergraph& G) const;
         bitset& operator[] (const hindex edge);
 
