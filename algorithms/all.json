@@ -107,6 +107,13 @@
             "config": {
                 "ALGORITHM": "fka"
             }
+        },
+        {
+            "algName": "berge",
+            "containerName": "agdphd/agdmhs",
+            "config": {
+                "ALGORITHM": "berge"
+            }
         }
     ]
 }
