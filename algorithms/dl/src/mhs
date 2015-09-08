@@ -46,8 +46,8 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         # Process the input file
         alg_call_string = "['./alg/DL', '{0}', '{1}']".format(temp_input_file.name, temp_output_file.name)
-        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, script_dir),
-                                   setup="import subprocess, os; devnull=open(os.devnull, 'w')",
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+                                   setup="import subprocess",
                                    number=1)
 
         # Process the results

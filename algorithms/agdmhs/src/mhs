@@ -34,7 +34,7 @@ try:
 except (ValueError, TypeError): # Invalid or no value
     cutoff_size = 0
 
-algorithm = os.environ.get("ALGORITHM", "mmcs")
+algorithm = os.environ.get("ALGORITHM", "pmmcs")
 
 # Configure path and validation
 script_dir = sys.path[0]
@@ -73,8 +73,8 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         alg_call_string = [str(arg) for arg in alg_call_parts]
 
-        time_taken = timeit.timeit(stmt="subprocess.call({0}, stdout=devnull, stderr=devnull, cwd='{1}')".format(alg_call_string, script_dir),
-                                   setup="import subprocess, os; devnull=open(os.devnull, 'w')",
+        time_taken = timeit.timeit(stmt="subprocess.call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+                                   setup="import subprocess",
                                    number=1)
 
         # Process the results
