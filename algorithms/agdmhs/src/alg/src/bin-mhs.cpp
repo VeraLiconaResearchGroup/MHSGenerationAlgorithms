@@ -83,6 +83,9 @@ int main(int argc, char * argv[]) {
         break;
     }
 
+    // Print input information
+    std::cout << "Input has " << H.num_verts() << " vertices and " << H.num_edges() << " edges." << std::endl;
+
     // Run chosen algorithm
     agdmhs::Hypergraph Htrans;
     std::string algname = vm["algorithm"].as<std::string>();
