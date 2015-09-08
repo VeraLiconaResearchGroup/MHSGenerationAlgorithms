@@ -19,6 +19,7 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 # Add arguments
 parser.add_argument("algorithm_list_file", type=argparse.FileType('r'), help="JSON file of algorithms to benchmark")
 parser.add_argument("test_data_file", type=argparse.FileType('r'), help="Test input file containing both sets and transversals")
+parser.add_argument("errors_file", type=argparse.FileType('w'), help="File to write errors in JSON format")
 parser.add_argument("-j", dest="num_threads", type=int, nargs='*', help="Number of threads to use for supporting algorithms")
 parser.add_argument("-d", dest="docker_base_url", default=None, help="Base URL for Docker client")
 parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
@@ -71,7 +72,12 @@ logging.info("Running algorithms")
 results = alg_collection.run_all_with_input(input_str)
 for algname, algresult in results.iteritems():
     # Run the algorithm
-    result = json.loads(algresult)
+    try:
+        result = json.loads(algresult)
+    except ValueError:
+        errormessage = "Algorithm {0} returned invalid JSON: {1}".format(algname, algresult)
+        raise RuntimeError(errormessage)
+
     logging.debug("Algorithm {0} finished.".format(algname))
 
     # Store the transversals as sets in a set for easy equality testing
@@ -79,21 +85,25 @@ for algname, algresult in results.iteritems():
 
     # Test the result for correctness and write diagnostics in case of failure
     if transversals != correct_transversals:
-        dumppath = "{0}.errors.json".format(algname)
         false_includes = list(list(transversal) for transversal in transversals.difference(correct_transversals))
         false_excludes = list(list(transversal) for transversal in correct_transversals.difference(transversals))
 
-        logging.error("Algorithm {0} failed! Dumping diagnostics to {1}.".format(algname, dumppath))
         errors = {
             "false_excludes": false_excludes,
             "false_includes": false_includes
         }
 
-        with open(dumppath, 'w') as dumpfile:
-            json.dump(errors, dumpfile, indent=4, separators=(',', ': '))
+        result = {"algName": algname, "errors": errors}
+
+        tests_failed.append(result)
 
 if len(tests_failed) == 0:
     logging.warning("All tests succeded.")
+else:
+    result = {"correctTransversals": test_data_dict["transversals"], "algErrors": tests_failed}
+    logging.warning("{0} tests failed. Dumping results to {1}.".format(len(tests_failed), args.errors_file.name))
+    json.dump(result, args.errors_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+
 
 # Close up shop
 alg_collection.close()

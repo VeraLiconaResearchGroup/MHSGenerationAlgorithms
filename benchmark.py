@@ -88,7 +88,12 @@ for i in range(args.num_tests):
 
     results = alg_collection.run_all_with_input(input_str)
     for algname, algresult in results.iteritems():
-        result = json.loads(algresult)
+        try:
+            result = json.loads(algresult)
+        except ValueError:
+            errormessage = "Algorithm {0} returned invalid JSON: {1}".format(algname, algresult)
+            raise RuntimeError(errormessage)
+
         time_taken = float(result["timeTaken"])
         runtimes[algname].append(time_taken)
         logging.debug("Algorithm {0} finished run {1}/{2} in {3} sec.".format(algname, i+1, args.num_tests, time_taken))
