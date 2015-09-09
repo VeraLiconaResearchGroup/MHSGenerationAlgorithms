@@ -102,6 +102,15 @@
             }
         },
         {
+            "algName": "pRS",
+            "containerName": "agdphd/agdmhs",
+            "threads": true,
+            "cutoff": true,
+            "config": {
+                "ALGORITHM": "prs"
+            }
+        },
+        {
             "algName": "fka-agd",
             "containerName": "agdphd/agdmhs",
             "config": {

@@ -9,6 +9,7 @@
 #include "hypergraph.hpp"
 #include "shd-base.hpp"
 
+#include <cassert>
 #include <omp.h>
 
 #include <boost/dynamic_bitset.hpp>
@@ -52,6 +53,8 @@ namespace agdmhs {
         Hypergraph Htrans(H.num_verts());
         bitset result;
         while (HittingSets.try_dequeue(result)) {
+            // TODO: Remove for speed
+            assert(H.is_transversed_by(result));
             Htrans.add_edge(result);
         }
 
@@ -65,16 +68,10 @@ namespace agdmhs {
                                     const Hypergraph crit,
                                     const bitset uncov,
                                     const size_t cutoff_size){
-        // if uncov is empty, S is a hitting set
-        if (uncov.none()) {
-            HittingSets.enqueue(S);
-            return;
-        }
-
-        // If CAND is empty or S is too big, S cannot be extended, so we're done
-        if (CAND.none() or (cutoff_size > 0 and S.count() >= cutoff_size)) {
-            return;
-        }
+        // Input specification
+        assert(uncov.any()); // uncov cannot be empty
+        assert(CAND.any()); // CAND cannot be empty
+        assert(S.count() < cutoff_size); // If we're using a cutoff, S must not be too large
 
         // Otherwise, get an uncovered edge and remove its elements from CAND
         // TODO: Implement the optimization of Murakami and Uno

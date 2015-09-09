@@ -8,6 +8,7 @@
 #include "fka.hpp"
 #include "hypergraph.hpp"
 #include "mmcs.hpp"
+#include "rs.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -40,7 +41,7 @@ int main(int argc, char * argv[]) {
         ("input", po::value<std::string>()->required(), "Input hypergraph file")
         ("output", po::value<std::string>()->default_value("out.dat"), "Output transversals file")
         ("verbosity,v", po::value<int>()->default_value(0)->implicit_value(1), "Write verbose debugging output (-v2 for trace output)")
-        ("algorithm,a", po::value<std::string>()->default_value("pmmcs"), "Algorithm to use (pmmcs, fka, berge)")
+        ("algorithm,a", po::value<std::string>()->default_value("pmmcs"), "Algorithm to use (pmmcs, prs, fka, berge)")
         ("num-threads,t", po::value<int>()->default_value(1), "Number of threads to run in parallel")
         ("cutoff-size,c", po::value<int>()->default_value(0), "Maximum size set to return (0: no limit)");
 
@@ -92,6 +93,8 @@ int main(int argc, char * argv[]) {
 
     if (algname == "pmmcs") {
         Htrans = agdmhs::mmcs_transversal(H, num_threads, cutoff_size);
+    } else if (algname == "prs") {
+        Htrans = agdmhs::rs_transversal(H, num_threads, cutoff_size);
     } else if (algname == "fka") {
         check_threads(num_threads);
         check_cutoff(cutoff_size);
