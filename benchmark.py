@@ -102,4 +102,4 @@ for i in range(args.num_tests):
 alg_collection.close()
 
 # Print the results
-json.dump(runtimes, args.output_data_file)
+json.dump(runtimes, args.output_data_file, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
