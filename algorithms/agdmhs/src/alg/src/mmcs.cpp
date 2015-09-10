@@ -70,7 +70,7 @@ namespace agdmhs {
         // Input specification
         assert(uncov.any()); // uncov cannot be empty
         assert(CAND.any()); // CAND cannot be empty
-        assert(S.count() < cutoff_size); // If we're using a cutoff, S must not be too large
+        assert(cutoff_size == 0 or S.count() < cutoff_size); // If we're using a cutoff, S must not be too large
 
         // Otherwise, get an uncovered edge and remove its elements from CAND
         // TODO: Implement the optimization of Murakami and Uno
