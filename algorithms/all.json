@@ -24,7 +24,8 @@
             "algName": "mhs2",
             "containerName": "agdphd/mhs2",
             "threads": true,
-            "cutoff": true
+            "cutoff": true,
+            "slow": true
         },
         {
             "algName": "partran",
