@@ -17,50 +17,7 @@
 
 // TODO: Input specifications with <cassert>
 namespace agdmhs {
-    Hypergraph mmcs_transversal(const Hypergraph& H,
-                                const size_t num_threads,
-                                const size_t cutoff_size) {
-        // SET UP INTERNAL VARIABLES
-        // Number of threads for parallelization
-        omp_set_num_threads(num_threads);
-
-        // Results queue
-        bsqueue HittingSets;
-
-        // Candidate hitting set
-        bitset S (H.num_verts());
-        S.reset(); // Initially empty
-
-        // Eligible vertices
-        bitset CAND (H.num_verts());
-        CAND.set(); // Initially full
-
-        // Which edges each vertex is critical for
-        Hypergraph crit (H.num_edges(), H.num_verts());
-
-        // Which edges are uncovered
-        bitset uncov (H.num_edges());
-        uncov.set(); // Initially full
-
-        // RUN ALGORITHM
-        {
-#pragma omp parallel shared(H, HittingSets)
-#pragma omp single
-            mmcs_extend_or_confirm_set(HittingSets, H, S, CAND, crit, uncov, cutoff_size);
-#pragma omp taskwait
-        }
-
-        // Gather results
-        Hypergraph Htrans(H.num_verts());
-        bitset result;
-        while (HittingSets.try_dequeue(result)) {
-            Htrans.add_edge(result);
-        }
-
-        return Htrans;
-    }
-
-    void mmcs_extend_or_confirm_set(bsqueue& HittingSets,
+    static void mmcs_extend_or_confirm_set(bsqueue& HittingSets,
                                     const Hypergraph& H,
                                     const bitset S,
                                     const bitset CAND,
@@ -114,5 +71,48 @@ namespace agdmhs {
             newCAND[v] = true;
             v = C.find_next(v);
         }
+    }
+
+    Hypergraph mmcs_transversal(const Hypergraph& H,
+                                const size_t num_threads,
+                                const size_t cutoff_size) {
+        // SET UP INTERNAL VARIABLES
+        // Number of threads for parallelization
+        omp_set_num_threads(num_threads);
+
+        // Results queue
+        bsqueue HittingSets;
+
+        // Candidate hitting set
+        bitset S (H.num_verts());
+        S.reset(); // Initially empty
+
+        // Eligible vertices
+        bitset CAND (H.num_verts());
+        CAND.set(); // Initially full
+
+        // Which edges each vertex is critical for
+        Hypergraph crit (H.num_edges(), H.num_verts());
+
+        // Which edges are uncovered
+        bitset uncov (H.num_edges());
+        uncov.set(); // Initially full
+
+        // RUN ALGORITHM
+        {
+#pragma omp parallel shared(H, HittingSets)
+#pragma omp single
+            mmcs_extend_or_confirm_set(HittingSets, H, S, CAND, crit, uncov, cutoff_size);
+#pragma omp taskwait
+        }
+
+        // Gather results
+        Hypergraph Htrans(H.num_verts());
+        bitset result;
+        while (HittingSets.try_dequeue(result)) {
+            Htrans.add_edge(result);
+        }
+
+        return Htrans;
     }
 }
