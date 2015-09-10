@@ -17,13 +17,13 @@
 
 // TODO: Input specifications with <cassert>
 namespace agdmhs {
-    static void mmcs_extend_or_confirm_set(bsqueue& HittingSets,
-                                    const Hypergraph& H,
-                                    const bitset S,
-                                    const bitset CAND,
-                                    const Hypergraph crit,
-                                    const bitset uncov,
-                                    const size_t cutoff_size){
+    static bsqueue HittingSets;
+    static void mmcs_extend_or_confirm_set(const Hypergraph& H,
+                                           const bitset S,
+                                           const bitset CAND,
+                                           const Hypergraph crit,
+                                           const bitset uncov,
+                                           const size_t cutoff_size){
         // Input specification
         assert(uncov.any()); // uncov cannot be empty
         assert(CAND.any()); // CAND cannot be empty
@@ -63,8 +63,8 @@ namespace agdmhs {
                 HittingSets.enqueue(newS);
             } else if (is_minimal and newCAND.count() > 0 and (cutoff_size == 0 or newS.count() < cutoff_size)) {
                 // In this case, newS is not yet a hitting set but is not too large either
-#pragma omp task untied shared(H, HittingSets)
-                mmcs_extend_or_confirm_set(HittingSets, H, newS, newCAND, new_crit, new_uncov, cutoff_size);
+#pragma omp task untied shared(H)
+                mmcs_extend_or_confirm_set(H, newS, newCAND, new_crit, new_uncov, cutoff_size);
             }
 
             // Update newCAND and proceed to new vertex
@@ -79,9 +79,6 @@ namespace agdmhs {
         // SET UP INTERNAL VARIABLES
         // Number of threads for parallelization
         omp_set_num_threads(num_threads);
-
-        // Results queue
-        bsqueue HittingSets;
 
         // Candidate hitting set
         bitset S (H.num_verts());
@@ -100,9 +97,9 @@ namespace agdmhs {
 
         // RUN ALGORITHM
         {
-#pragma omp parallel shared(H, HittingSets)
+#pragma omp parallel shared(H)
 #pragma omp single
-            mmcs_extend_or_confirm_set(HittingSets, H, S, CAND, crit, uncov, cutoff_size);
+            mmcs_extend_or_confirm_set(H, S, CAND, crit, uncov, cutoff_size);
 #pragma omp taskwait
         }
 

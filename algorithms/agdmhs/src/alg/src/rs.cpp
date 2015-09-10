@@ -16,6 +16,8 @@
 
 // TODO: Input specifications with <cassert>
 namespace agdmhs {
+    static bsqueue HittingSets;
+
     static bool rs_vertex_is_violating(const hindex& v,
                              const Hypergraph& H,
                              const bitset& S,
@@ -57,12 +59,11 @@ namespace agdmhs {
         return bad_edge_found;
     };
 
-    static void rs_extend_or_confirm_set(bsqueue& HittingSets,
-                                  const Hypergraph& H,
-                                  const bitset S,
-                                  const Hypergraph crit,
-                                  const bitset uncov,
-                                  const size_t cutoff_size) {
+    static void rs_extend_or_confirm_set(const Hypergraph& H,
+                                         const bitset S,
+                                         const Hypergraph crit,
+                                         const bitset uncov,
+                                         const size_t cutoff_size) {
         // Input specification
         assert(uncov.any()); // uncov cannot be empty
         assert(cutoff_size == 0 or S.count() < cutoff_size); // If we're using a cutoff, S must not be too large
@@ -101,8 +102,8 @@ namespace agdmhs {
             // After this point, we'll be considering extending newS even more.
             // If we're using a cutoff, this requires more room.
             if (cutoff_size == 0 or newS.count() < cutoff_size) {
-#pragma omp task untied shared(H, HittingSets)
-                rs_extend_or_confirm_set(HittingSets, H, newS, new_crit, new_uncov, cutoff_size);
+#pragma omp task untied shared(H)
+                rs_extend_or_confirm_set(H, newS, new_crit, new_uncov, cutoff_size);
             }
 
             v = H[i].find_next(v);
@@ -115,9 +116,6 @@ namespace agdmhs {
         // SET UP INTERNAL VARIABLES
         // Number of threads for parallelization
         omp_set_num_threads(num_threads);
-
-        // Results queue
-        bsqueue HittingSets;
 
         // Candidate hitting set
         bitset S (H.num_verts());
@@ -132,9 +130,9 @@ namespace agdmhs {
 
         // RUN ALGORITHM
         {
-#pragma omp parallel shared(H, HittingSets)
+#pragma omp parallel shared(H)
 #pragma omp single
-            rs_extend_or_confirm_set(HittingSets, H, S, crit, uncov, cutoff_size);
+            rs_extend_or_confirm_set(H, S, crit, uncov, cutoff_size);
 #pragma omp taskwait
         }
 
