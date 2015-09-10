@@ -50,8 +50,6 @@ namespace agdmhs {
         Hypergraph Htrans(H.num_verts());
         bitset result;
         while (HittingSets.try_dequeue(result)) {
-            // TODO: remove for speed
-            assert(H.is_transversed_by(result));
             Htrans.add_edge(result);
         }
 

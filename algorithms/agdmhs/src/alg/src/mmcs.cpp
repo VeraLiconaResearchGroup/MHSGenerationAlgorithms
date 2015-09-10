@@ -9,6 +9,7 @@
 #include "hypergraph.hpp"
 #include "shd-base.hpp"
 
+#include <atomic>
 #include <cassert>
 #include <omp.h>
 
@@ -53,8 +54,6 @@ namespace agdmhs {
         Hypergraph Htrans(H.num_verts());
         bitset result;
         while (HittingSets.try_dequeue(result)) {
-            // TODO: Remove for speed
-            assert(H.is_transversed_by(result));
             Htrans.add_edge(result);
         }
 
