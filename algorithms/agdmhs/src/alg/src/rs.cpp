@@ -54,7 +54,48 @@ namespace agdmhs {
         }
 
         return Htrans;
-    }
+    };
+
+    bool vertex_is_violating(const hindex& v,
+                             const Hypergraph& H,
+                             const bitset& S,
+                             const Hypergraph& crit) {
+        // Test whether v is violating: specifically, whether there is any
+        // vertex in S which would lose all its critical edges to v
+        bitset v_edges (H.num_edges());
+        for (hindex edge_index = 0; edge_index < H.num_edges(); ++edge_index) {
+            if (H[edge_index].test(v)) {
+                v_edges.set(edge_index);
+            }
+        }
+
+        bool minimality_check_failed = false;
+        hindex other_vertex = S.find_first();
+        while (other_vertex != bitset::npos and not minimality_check_failed) {
+            if (crit[other_vertex].is_subset_of(v_edges)) {
+                minimality_check_failed = true;
+            }
+            other_vertex = S.find_next(other_vertex);
+        }
+
+        return minimality_check_failed;
+    };
+
+    bool any_edge_critical_after_i(const hindex& i,
+                                   const bitset& S,
+                                   const Hypergraph& crit) {
+        bool bad_edge_found = false;
+        hindex w = S.find_first();
+        while (w != bitset::npos and not bad_edge_found) {
+            hindex first_crit_edge = crit[w].find_first();
+            if (first_crit_edge >= i) {
+                bad_edge_found = true;
+            }
+            w = S.find_next(w);
+        }
+
+        return bad_edge_found;
+    };
 
     void rs_extend_or_confirm_set(bsqueue& HittingSets,
                                   const Hypergraph& H,
@@ -73,46 +114,17 @@ namespace agdmhs {
         // Loop over vertices in that edge
         hindex v = H[i].find_first();
         while (v != bitset::npos) {
-            // Test whether v is violating: specifically, whether there is any
-            // vertex in S which would lose all its critical edges to v
-            bitset v_edges (H.num_edges());
-            for (hindex edge_index = 0; edge_index < H.num_edges(); ++edge_index) {
-                if (H[edge_index].test(v)) {
-                    v_edges.set(edge_index);
-                }
-            }
-
-            bool minimality_check_failed = false;
-            hindex other_vertex = S.find_first();
-            while (other_vertex != bitset::npos and not minimality_check_failed) {
-                if (crit[other_vertex].is_subset_of(v_edges)) {
-                    minimality_check_failed = true;
-                }
-                other_vertex = S.find_next(other_vertex);
-            }
-
-            if (minimality_check_failed) {
+            // Check preconditions
+            if (vertex_is_violating(v, H, S, crit)) {
                 v = H[i].find_next(v);
                 continue;
             }
 
-            // Otherwise, update uncov and crit
             Hypergraph new_crit = crit;
             bitset new_uncov = uncov;
             update_crit_and_uncov(new_crit, new_uncov, H, v);
 
-            // Test the criticality condition
-            bool all_edges_crit_before_i = true;
-            hindex w = S.find_first();
-            while (w != bitset::npos and all_edges_crit_before_i) {
-                hindex first_crit_edge = new_crit[w].find_first();
-                if (first_crit_edge >= i) {
-                    all_edges_crit_before_i = false;
-                }
-                w = S.find_next(w);
-            }
-
-            if (not all_edges_crit_before_i) {
+            if (any_edge_critical_after_i(i, S, new_crit)) {
                 v = H[i].find_next(v);
                 continue;
             }
@@ -136,6 +148,5 @@ namespace agdmhs {
 
             v = H[i].find_next(v);
         }
-
-    }
+    };
 }
