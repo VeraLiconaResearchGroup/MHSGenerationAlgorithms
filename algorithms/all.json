@@ -62,6 +62,7 @@
             "algName": "bool-recursive",
             "containerName": "agdphd/pymbd",
             "cutoff": true,
+            "slow": true,
             "config": {
                 "ALGORITHM_NAME": "bool-recursive"
             }
