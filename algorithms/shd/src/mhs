@@ -59,12 +59,15 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         # Process the input file
         alg_call_parts = ['./alg/shd']
 
-        if mode == "rs":
-            alg_call_parts.append('D')
-        else:
-            alg_call_parts.append('0')
+        options_string = ""
 
-        alg_call_parts.append('q')
+        if mode == "rs":
+            options_string += 'D'
+        else:
+            options_string += '0'
+
+        options_string += 'q'
+        alg_call_parts.append(options_string)
 
         if cutoff_size > 0:
             alg_call_parts += ['-u', cutoff_size]
