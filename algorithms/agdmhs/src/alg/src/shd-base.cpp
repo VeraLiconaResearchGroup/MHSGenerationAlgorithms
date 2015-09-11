@@ -14,21 +14,50 @@ namespace agdmhs {
     void update_crit_and_uncov(Hypergraph& crit,
                                bitset& uncov,
                                const Hypergraph& H,
+                               const bitset& S,
                                const hindex v) {
-        for (hindex edge_index = 0; edge_index < H.num_edges(); ++edge_index) {
-            // If the vertex is in this edge, proceed
-            if (H[edge_index].test(v)) {
+        bitset edges = H.edges_containing_vertex(v);
+        hindex e = edges.find_first();
+        while (e != bitset::npos) {
+            // If this edge was uncovered, it is no longer, but v is now critical for it
+            if (uncov.test(e)) {
+                uncov.reset(e);
+                crit[v].set(e);
+            } else {
                 // Remove e from all crit[w]'s
-                for (hindex w = 0; w < H.num_verts(); ++w) {
-                    crit[w].reset(edge_index);
-                }
-
-                // If this edge was uncovered, it is no longer, but v is now critical for it
-                if (uncov.test(edge_index)) {
-                    uncov.reset(edge_index);
-                    crit[v].set(edge_index);
+                hindex w = S.find_first();
+                while (w != bitset::npos) {
+                    crit[w].reset(e);
+                    w = S.find_next(w);
                 }
             }
+
+            e = edges.find_next(e);
+        }
+    }
+
+    void restore_crit_and_uncov(Hypergraph& crit,
+                                bitset& uncov,
+                                const Hypergraph& H,
+                                const bitset& S,
+                                const hindex v) {
+        crit[v].reset();
+
+        bitset edges = H.edges_containing_vertex(v);
+        hindex e = edges.find_first();
+        while (e != bitset::npos) {
+            // If the vertex is in this edge, proceed
+            bitset hitting_vertices = H[e] & S;
+            hindex first_hit_vertex = hitting_vertices.find_first();
+            if (first_hit_vertex == bitset::npos) {
+                // No other vertex in S hits this edge
+                uncov.set(e);
+            } else if (hitting_vertices.find_next(first_hit_vertex) == bitset::npos) {
+                // Exactly one other vertex in S hits this edge
+                crit[first_hit_vertex].set(e);
+            } // Otherwise, no change required
+
+            e = edges.find_next(e);
         }
     }
 }

@@ -255,6 +255,16 @@ namespace agdmhs {
         return result;
     };
 
+    bitset Hypergraph::edges_containing_vertex(const hindex& vertex) const {
+        bitset result (num_edges());
+        for (hindex edge_index = 0; edge_index < num_edges(); ++edge_index) {
+            if (_edges[edge_index].test(vertex)) {
+                result.set(edge_index);
+            }
+        }
+        return result;
+    };
+
     bool Hypergraph::is_transversed_by(const bitset& S) const {
         // Return true if S is a hitting set for this hypergraph
         // NOTE: equivalent to evaluating as a CNF with S as an assignment

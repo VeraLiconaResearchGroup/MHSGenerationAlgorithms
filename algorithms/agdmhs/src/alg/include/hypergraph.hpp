@@ -38,6 +38,7 @@ namespace agdmhs {
         void write_to_file(const fs::path& output_file) const;
         Hypergraph minimization() const;
         bitset verts_covered() const;
+        bitset edges_containing_vertex(const hindex& vertex) const;
         bool is_transversed_by(const bitset& S) const;
         bool has_edge_covered_by(const bitset& S) const;
 

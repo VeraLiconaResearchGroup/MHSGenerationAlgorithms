@@ -18,7 +18,14 @@ namespace agdmhs {
     void update_crit_and_uncov(Hypergraph& crit,
                                bitset& uncov,
                                const Hypergraph& H,
+                               const bitset& S,
                                const hindex v);
+
+    void restore_crit_and_uncov(Hypergraph& crit,
+                                bitset& uncov,
+                                const Hypergraph& H,
+                                const bitset& S,
+                                const hindex v);
 }
 
 #endif

@@ -82,7 +82,7 @@ namespace agdmhs {
 
             Hypergraph new_crit = crit;
             bitset new_uncov = uncov;
-            update_crit_and_uncov(new_crit, new_uncov, H, v);
+            update_crit_and_uncov(new_crit, new_uncov, H, S, v);
 
             if (rs_any_edge_critical_after_i(i, S, new_crit)) {
                 v = H[i].find_next(v);

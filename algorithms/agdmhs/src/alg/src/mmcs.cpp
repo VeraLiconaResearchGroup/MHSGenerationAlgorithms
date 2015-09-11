@@ -41,7 +41,7 @@ namespace agdmhs {
             // Update uncov and crit by iterating over edges containing the vertex
             Hypergraph new_crit = crit;
             bitset new_uncov = uncov;
-            update_crit_and_uncov(new_crit, new_uncov, H, v);
+            update_crit_and_uncov(new_crit, new_uncov, H, S, v);
 
             // Construct the new candidate hitting set
             bitset newS = S;
