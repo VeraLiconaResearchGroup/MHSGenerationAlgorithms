@@ -102,9 +102,8 @@ int main(int argc, char * argv[]) {
         Htrans = agdmhs::fka_transversal(H);
     } else if (algname == "berge") {
         check_threads(num_threads);
-        check_cutoff(cutoff_size);
 
-        Htrans = agdmhs::berge_transversal(H);
+        Htrans = agdmhs::berge_transversal(H, cutoff_size);
     } else {
         std::stringstream error_message;
         error_message << "Did not recognize requested algorithm " << algname << ".";

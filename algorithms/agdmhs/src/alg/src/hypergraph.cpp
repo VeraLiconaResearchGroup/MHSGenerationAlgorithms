@@ -117,11 +117,11 @@ namespace agdmhs {
         }
     };
 
-    void Hypergraph::reserve_edge_capacity(size_t n_edges) {
+    void Hypergraph::reserve_edge_capacity(const size_t n_edges) {
         _edges.reserve(n_edges);
     };
 
-    Hypergraph Hypergraph::edge_vee(const Hypergraph& G, bool do_minimize) const {
+    Hypergraph Hypergraph::edge_vee(const Hypergraph& G, const bool do_minimize) const {
         // Return new hypergraph with the edges of this and G
         // Note: we assume that this and G share the same vertex set
         assert(num_verts() == G.num_verts());
@@ -146,7 +146,7 @@ namespace agdmhs {
         return result;
     }
 
-    Hypergraph Hypergraph::edge_wedge(const Hypergraph& G, bool do_minimize) const {
+    Hypergraph Hypergraph::edge_wedge(const Hypergraph& G, const bool do_minimize) const {
         // Return new hypergraph with edges all possible unions of
         // edges from this and G
         // Note: we assume that this and G share the same vertex set
@@ -159,6 +159,37 @@ namespace agdmhs {
         for (auto& edge1: _edges) {
             for (auto& edge2: G._edges) {
                 newedges.push_back(edge1 | edge2);
+            }
+        }
+
+        // Build the result hypergraph with these edges
+        Hypergraph result(newedges);
+
+        // Minimize if requested
+        // TODO: Can this be rolled into the union operation to save time?
+        if (do_minimize) {
+            result = result.minimization();
+        }
+
+        return result;
+    }
+
+    Hypergraph Hypergraph::edge_wedge_cutoff(const Hypergraph& G, const size_t cutoff_size, const bool do_minimize) {
+        // Return new hypergraph with edges all possible unions of edges from
+        // this and G whose size is no greater than cutoff_size
+        // Note: we assume that this and G share the same vertex set
+        assert(num_verts() == G.num_verts());
+
+        // Container to store all the new edges
+        bsvector newedges;
+
+        // For every pair of edges in this and G, add their union
+        for (auto& edge1: _edges) {
+            for (auto& edge2: G._edges) {
+                bitset newedge = edge1 | edge2;
+                if (newedge.count() <= cutoff_size) {
+                    newedges.push_back(newedge);
+                }
             }
         }
 

@@ -29,9 +29,10 @@ namespace agdmhs {
         size_t num_edges() const;
 
         void add_edge(const bitset& edge, bool test_simplicity = false);
-        void reserve_edge_capacity(size_t n_edges);
-        Hypergraph edge_vee(const Hypergraph& G, bool do_minimize = true) const;
-        Hypergraph edge_wedge(const Hypergraph& G, bool do_minimize = true) const;
+        void reserve_edge_capacity(const size_t n_edges);
+        Hypergraph edge_vee(const Hypergraph& G, const bool do_minimize = true) const;
+        Hypergraph edge_wedge(const Hypergraph& G, const bool do_minimize = true) const;
+        Hypergraph edge_wedge_cutoff(const Hypergraph& G, const size_t cutoff_size, const bool do_minimize = true);
         bitset& operator[] (const hindex edge);
         const bitset& operator[] (const hindex edge) const;
 

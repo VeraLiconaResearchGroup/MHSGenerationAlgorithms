@@ -12,8 +12,8 @@
 #include <boost/dynamic_bitset.hpp>
 
 namespace agdmhs {
-    Hypergraph berge_transversal(const Hypergraph& H);
-    void berge_update_transversals_with_edge(Hypergraph& G, const bitset& edge);
+    Hypergraph berge_transversal(const Hypergraph& H,
+                                 const size_t cutoff_size = 0);
 }
 
 #endif

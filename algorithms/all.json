@@ -122,6 +122,7 @@
         {
             "algName": "berge",
             "containerName": "agdphd/agdmhs",
+            "cutoff": true,
             "config": {
                 "ALGORITHM": "berge"
             }
