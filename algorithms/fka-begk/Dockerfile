@@ -13,6 +13,9 @@ RUN dpkg --add-architecture i386 && \
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
+WORKDIR /home/algorithm/src/alg
+RUN make
+WORKDIR /home/algorithm/src
 
 # Add the Algorun manifest and examples
 COPY ./algorun_info /home/algorithm/web/algorun_info/
