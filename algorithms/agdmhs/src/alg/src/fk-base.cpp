@@ -55,7 +55,7 @@ namespace agdmhs {
             hindex surplus_vertex = Fsurplus.find_first();
             for (auto const& edge: F) {
                 if (edge.test(surplus_vertex)) {
-                    BOOST_LOG_TRIVIAL(trace) << "Coverage condition 1 failed."
+                    BOOST_LOG_TRIVIAL(trace) << "Coverage condition 1 failed: G missing vertex " << surplus_vertex << "."
                                              << "\nF edge:\t\t" << edge;
 
                     bitset omit_set = edge;
@@ -68,7 +68,7 @@ namespace agdmhs {
             hindex surplus_vertex = Gsurplus.find_first();
             for (auto const& edge: G) {
                 if (edge.test(surplus_vertex)) {
-                    BOOST_LOG_TRIVIAL(trace) << "Coverage condition 2 failed."
+                    BOOST_LOG_TRIVIAL(trace) << "Coverage condition 2 failed: F missing vertex " << surplus_vertex << "."
                                              << "\nG edge:\t\t" << edge;
 
                     bitset omit_set = (Fcovered | Gcovered)^ edge;

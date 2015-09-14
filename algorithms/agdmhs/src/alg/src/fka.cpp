@@ -26,9 +26,11 @@ namespace agdmhs {
                                  << H.num_edges() << " edges.";
         Hypergraph G (H.num_verts());
 
+        Hypergraph Hmin = H.minimization();
+
         bool still_searching_for_transversals = true;
         while (still_searching_for_transversals) {
-            bitset omit_set = fka_find_omit_set(H, G);
+            bitset omit_set = fka_find_omit_set(Hmin, G);
 
             if (omit_set.none() and G.num_edges() > 0) {
                 BOOST_LOG_TRIVIAL(debug) << "Received empty omit_set, so we're done.";
@@ -56,7 +58,7 @@ namespace agdmhs {
 
         BOOST_LOG_TRIVIAL(trace) << "Beginning run with "
                                  << "|F| = " << F.num_edges()
-                                 << "and |G| = " << G.num_edges();
+                                 << " and |G| = " << G.num_edges();
 
         // Input specification
         assert(F.num_verts() == G.num_verts());
