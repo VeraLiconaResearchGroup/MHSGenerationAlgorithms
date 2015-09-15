@@ -40,7 +40,7 @@ algarg = os.environ.get("ALGORITHM_NAME")
 try:
     alg = algname_map[algarg]
 except KeyError: # Invalid option
-    raise ValueError("Invalid argument name {0} from environment variable ALGORITHM_NAME".format(algarg))
+    raise ValueError("Invalid argument name {0} from environment variable ALGORITHM_NAME. Must use one of: {1}.".format(algarg, algname_map.keys()))
 
 # Configure path and validation
 script_dir = sys.path[0]
