@@ -45,7 +45,9 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_string = "['./alg/mtminer-wrap.sh', '{0}', '{1}']".format(temp_input_file.name, temp_output_file.name)
+        alg_call_parts = ['./alg/mtminer-wrap.sh', temp_input_file.name, temp_output_file.name]
+        alg_call_string = [str(arg) for arg in alg_call_parts]
+
         time_taken = timeit.timeit(stmt="subprocess.call({0}, cwd='{1}')".format(alg_call_string, script_dir),
                                    setup="import subprocess;",
                                    number=1)
