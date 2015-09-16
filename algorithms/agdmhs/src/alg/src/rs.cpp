@@ -14,34 +14,15 @@
 
 #include <boost/dynamic_bitset.hpp>
 
+#define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/dynamic_bitset.hpp>
+
 // TODO: Input specifications with <cassert>
 namespace agdmhs {
     static bsqueue HittingSets;
-
-    static bool rs_vertex_is_violating(const hindex& v,
-                             const Hypergraph& H,
-                             const bitset& S,
-                             const Hypergraph& crit) {
-        // Test whether v is violating: specifically, whether there is any
-        // vertex in S which would lose all its critical edges to v
-        bitset v_edges (H.num_edges());
-        for (hindex edge_index = 0; edge_index < H.num_edges(); ++edge_index) {
-            if (H[edge_index].test(v)) {
-                v_edges.set(edge_index);
-            }
-        }
-
-        bool minimality_check_failed = false;
-        hindex other_vertex = S.find_first();
-        while (other_vertex != bitset::npos and not minimality_check_failed) {
-            if (crit[other_vertex].is_subset_of(v_edges)) {
-                minimality_check_failed = true;
-            }
-            other_vertex = S.find_next(other_vertex);
-        }
-
-        return minimality_check_failed;
-    };
 
     static bool rs_any_edge_critical_after_i(const hindex& i,
                                    const bitset& S,
@@ -75,14 +56,15 @@ namespace agdmhs {
         hindex v = H[i].find_first();
         while (v != bitset::npos) {
             // Check preconditions
-            if (rs_vertex_is_violating(v, H, S, crit)) {
+            Hypergraph new_crit = crit;
+            bitset new_uncov = uncov;
+            try {
+                update_crit_and_uncov(new_crit, new_uncov, H, S, v);
+            }
+            catch (vertex_violating_exception& e) {
                 v = H[i].find_next(v);
                 continue;
             }
-
-            Hypergraph new_crit = crit;
-            bitset new_uncov = uncov;
-            update_crit_and_uncov(new_crit, new_uncov, H, S, v);
 
             if (rs_any_edge_critical_after_i(i, S, new_crit)) {
                 v = H[i].find_next(v);

@@ -10,29 +10,42 @@
 
 #include <boost/dynamic_bitset.hpp>
 
+#define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/dynamic_bitset.hpp>
+
+#include <ctime>
+
 namespace agdmhs {
     void update_crit_and_uncov(Hypergraph& crit,
                                bitset& uncov,
                                const Hypergraph& H,
                                const bitset& S,
                                const hindex v) {
-        bitset edges = H.edges_containing_vertex(v);
-        hindex e = edges.find_first();
-        while (e != bitset::npos) {
-            // If this edge was uncovered, it is no longer, but v is now critical for it
-            if (uncov.test(e)) {
-                uncov.reset(e);
-                crit[v].set(e);
-            } else {
-                // Remove e from all crit[w]'s
-                hindex w = S.find_first();
-                while (w != bitset::npos) {
-                    crit[w].reset(e);
-                    w = S.find_next(w);
-                }
-            }
+        /*
+          Update crit[] and uncov to reflect S+v.
+          (Assumes crit[] and uncov were correct for S.)
+          NOTE: Raises a vertex_violating_exception if any w in S is not
+          critical in S+v.
+         */
+        bitset v_edges = H.edges_containing_vertex(v);
 
-            e = edges.find_next(e);
+        // v is critical for edges it hits which were previously uncovered
+        crit[v] = v_edges & uncov;
+
+        // Remove anything v hits from uncov
+        uncov -= v_edges;
+
+        // Remove anything v hits from the other crit[w]s
+        hindex w = S.find_first();
+        while (w != bitset::npos) {
+            crit[w] -= v_edges;
+            if (crit[w].none()) {
+                throw vertex_violating_exception();
+            }
+            w = S.find_next(w);
         }
     }
 

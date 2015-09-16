@@ -15,6 +15,12 @@
 
 #include <boost/dynamic_bitset.hpp>
 
+#define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/dynamic_bitset.hpp>
+
 // TODO: Input specifications with <cassert>
 namespace agdmhs {
     static bsqueue HittingSets;
@@ -29,6 +35,7 @@ namespace agdmhs {
         assert(CAND.any()); // CAND cannot be empty
         assert(cutoff_size == 0 or S.count() < cutoff_size); // If we're using a cutoff, S must not be too large
 
+
         // Otherwise, get an uncovered edge and remove its elements from CAND
         // TODO: Implement the optimization of Murakami and Uno
         bitset e = H[uncov.find_first()]; // Just use the first set in uncov
@@ -41,34 +48,32 @@ namespace agdmhs {
             // Update uncov and crit by iterating over edges containing the vertex
             Hypergraph new_crit = crit;
             bitset new_uncov = uncov;
-            update_crit_and_uncov(new_crit, new_uncov, H, S, v);
+            try {
+                update_crit_and_uncov(new_crit, new_uncov, H, S, v);
+            }
+            catch (vertex_violating_exception& e) {
+                // Update newCAND and proceed to new vertex
+                newCAND.set(v);
+                v = C.find_next(v);
+                continue;
+            }
 
             // Construct the new candidate hitting set
             bitset newS = S;
-            newS[v] = true;
+            newS.set(v);
 
-            // Test the minimality condition on newS
-            bool is_minimal = true;
-            hindex w = newS.find_first();
-            while (w != bitset::npos and is_minimal) {
-                if (new_crit[w].none()) {
-                    is_minimal = false;
-                }
-                w = newS.find_next(w);
-            }
-
-            // If we made it this far, minimality holds, so we process newS
-            if (is_minimal and new_uncov.none() and (cutoff_size == 0 or newS.count() <= cutoff_size)) {
+            // If we made it this far, newS is a new candidate, which we process
+            if (new_uncov.none() and (cutoff_size == 0 or newS.count() <= cutoff_size)) {
                 // In this case, newS is a valid hitting set, so we store it
                 HittingSets.enqueue(newS);
-            } else if (is_minimal and newCAND.count() > 0 and (cutoff_size == 0 or newS.count() < cutoff_size)) {
+            } else if (newCAND.count() > 0 and (cutoff_size == 0 or newS.count() < cutoff_size)) {
                 // In this case, newS is not yet a hitting set but is not too large either
 #pragma omp task untied shared(H)
                 mmcs_extend_or_confirm_set(H, newS, newCAND, new_crit, new_uncov, cutoff_size);
             }
 
             // Update newCAND and proceed to new vertex
-            newCAND[v] = true;
+            newCAND.set(v);
             v = C.find_next(v);
         }
     }
