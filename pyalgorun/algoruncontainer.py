@@ -47,10 +47,13 @@ class AlgorunContainer:
         # Start the container
         docker_client.start(docker_container)
 
-        # Get the local port for accessing the API.
+        # Get the port and address for accessing the API.
         # For some reason, .port() returns a list of dicts, so we have to
         # play some games with indices.
         local_port = docker_client.port(docker_container, ALGORUN_PORT)[0]["HostPort"]
+        container_network_address = docker_client.port(docker_container, ALGORUN_PORT)[0]["HostIp"]
+        if container_network_address == '0.0.0.0':
+            container_network_address = 'localhost'
 
         # Store the container and port as attributes
         self._name = alg_name
@@ -58,7 +61,8 @@ class AlgorunContainer:
         self._docker_container = docker_container
         self._docker_base_url = docker_base_url
         self._local_port = local_port
-        self._api_url_base = "http://localhost:" + local_port #TODO: Support remote clients
+        self._container_network_address = container_network_address
+        self._api_url_base = "http://" + container_network_address + ":" + local_port
 
         # Wait for the server to spin up to avoid other problems
         while True:
