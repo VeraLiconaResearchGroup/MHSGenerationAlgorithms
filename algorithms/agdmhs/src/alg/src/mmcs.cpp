@@ -35,10 +35,18 @@ namespace agdmhs {
         assert(CAND.any()); // CAND cannot be empty
         assert(cutoff_size == 0 or S.count() < cutoff_size); // If we're using a cutoff, S must not be too large
 
+        // Otherwise, we prune the vertices to search
+        // Per M+U, we find the edge e with smallest intersection with CAND
+        hindex search_edge = uncov.find_first();
+        bitset e = H[search_edge];
+        while (search_edge != bitset::npos) {
+            if ((H[search_edge] & CAND).count() < (e & CAND).count()) {
+                e = H[search_edge];
+            }
+            search_edge = uncov.find_next(search_edge);
+        }
 
-        // Otherwise, get an uncovered edge and remove its elements from CAND
-        // TODO: Implement the optimization of Murakami and Uno
-        bitset e = H[uncov.find_first()]; // Just use the first set in uncov
+        // Then consider vertices lying in the intersection of e with CAND
         bitset C = CAND & e; // intersection
         bitset newCAND = CAND & (~e); // difference
 
