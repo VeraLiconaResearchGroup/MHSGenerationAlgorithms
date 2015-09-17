@@ -1,7 +1,7 @@
 SRC := $(wildcard src/*.cpp)
 OBJ := $(SRC:.cpp=.o)
 DEP := $(SRC:.cpp=.P)
-BIN = mhs
+BIN = agdmhs
 
 # C++ compiler flags
 CXXFLAGS += --std=c++11
@@ -27,7 +27,7 @@ all: $(OBJ) $(BIN)
 debug: CXXFLAGS += -O0
 debug: all
 
-mhs: $(OBJ)
+agdmhs: $(OBJ)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) $^ -o $@ $(LIBS)
 
 %.o: %.cpp

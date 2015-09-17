@@ -63,7 +63,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_input_file.flush()
 
         # Process the input file
-        alg_call_parts = ['./alg/mhs', temp_input_file.name, temp_output_file.name, '-a', algorithm]
+        alg_call_parts = ['./alg/agdmhs', temp_input_file.name, temp_output_file.name, '-a', algorithm]
 
         if cutoff_size > 0:
             alg_call_parts += ['-c', cutoff_size]
