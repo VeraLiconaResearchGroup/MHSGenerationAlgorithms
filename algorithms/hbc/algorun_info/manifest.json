@@ -4,7 +4,12 @@
     "algo_description": "Introduced in <a href=\"//www.infona.pl/resource/bwmeta1.element.baztech-article-BUS5-0014-0020\">A data mining formalization to improve hypergraph minimal transversal computation</a> (<a href=\"//cremilleux.users.greyc.fr/papers/FundInfoFinal07.pdf\">PDF</a>) by Hébert, Bretto, and Crémilleux.",
     "algo_website": "//forge.greyc.fr/projects/kdariane/wiki/Mtminer",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
-    "authors": [
+    "algo_authors": [
+        {
+            "name": "Céline Hébert",
+            "email": "celine.hebert@info.unicaen.fr",
+            "organization": "Université de Caen",
+        },
         {
             "name": "François Rioult",
             "email": "francois.rioult@unicaen.fr",
