@@ -4,7 +4,7 @@
     "algo_description": "Introduced in <a href=\"//doi.org/10.1007/s10115-004-0178-1\">Mining border descriptions of emerging patterns from dataset pairs</a> by Dong and Li.",
     "algo_website": "http://research.nii.ac.jp/~uno/code/shd.html",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
-    "authors": [
+    "algo_authors": [
         {
             "name": "Keisuke Murakami",
             "email": "murakami@nii.ac.jp",

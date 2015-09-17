@@ -4,4 +4,4 @@ For details of the algorithm, see [_Mining border descriptions of emerging patte
 
 ## Implementation
 The implementation provided in [src/alg](src/alg) is C code written by Keisuke Murakami and distributed at the [Hypergraph Dualization Repository](//research.nii.ac.jp/~uno/dualization.html).
-It is redistributed here by permission from the authors; see [src/alg/COPYRIGHT.md](src/alg/COPYRIGHT.md) for details.
+It is redistributed here by permission from the authors; see [src/alg/LICENSE.md](src/alg/LICENSE.md) for details.
