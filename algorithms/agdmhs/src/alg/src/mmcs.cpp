@@ -11,6 +11,7 @@
 
 #include <atomic>
 #include <cassert>
+#include <deque>
 #include <omp.h>
 
 #include <boost/dynamic_bitset.hpp>
@@ -50,9 +51,16 @@ namespace agdmhs {
         bitset C = CAND & e; // intersection
         bitset newCAND = CAND & (~e); // difference
 
-        // Test all the vertices in C
+        // Store the indices in C in descending order for iteration
+        std::deque<hindex> Cindices;
         hindex v = C.find_first();
         while (v != bitset::npos) {
+            Cindices.push_front(v);
+            v = C.find_next(v);
+        }
+
+        // Test all the vertices in C (in descending order)
+        for (auto& v: Cindices) {
             // Update uncov and crit by iterating over edges containing the vertex
             Hypergraph new_crit = crit;
             bitset new_uncov = uncov;
@@ -62,7 +70,6 @@ namespace agdmhs {
             catch (vertex_violating_exception& e) {
                 // Update newCAND and proceed to new vertex
                 newCAND.set(v);
-                v = C.find_next(v);
                 continue;
             }
 
@@ -82,7 +89,6 @@ namespace agdmhs {
 
             // Update newCAND and proceed to new vertex
             newCAND.set(v);
-            v = C.find_next(v);
         }
     }
 
