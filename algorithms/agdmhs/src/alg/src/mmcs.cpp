@@ -26,10 +26,10 @@
 namespace agdmhs {
     static bsqueue HittingSets;
     static void mmcs_extend_or_confirm_set(const Hypergraph& H,
-                                           const bitset S,
-                                           const bitset CAND,
-                                           const Hypergraph crit,
-                                           const bitset uncov,
+                                           const bitset& S,
+                                           const bitset& CAND,
+                                           const Hypergraph& crit,
+                                           const bitset& uncov,
                                            const size_t cutoff_size){
         // Input specification
         assert(uncov.any()); // uncov cannot be empty
