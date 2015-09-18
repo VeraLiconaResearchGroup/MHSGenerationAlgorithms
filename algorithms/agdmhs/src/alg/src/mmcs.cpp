@@ -9,7 +9,6 @@
 #include "hypergraph.hpp"
 #include "shd-base.hpp"
 
-#include <atomic>
 #include <cassert>
 #include <deque>
 #include <omp.h>
