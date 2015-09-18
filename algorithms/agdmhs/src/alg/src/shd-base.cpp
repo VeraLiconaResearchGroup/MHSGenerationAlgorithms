@@ -16,7 +16,7 @@
 #include <boost/log/expressions.hpp>
 #include <boost/dynamic_bitset.hpp>
 
-#include <ctime>
+#include <cassert>
 
 namespace agdmhs {
     void update_crit_and_uncov(Hypergraph& crit,
@@ -27,12 +27,16 @@ namespace agdmhs {
         /*
           Update crit[] and uncov to reflect S+v.
           (Assumes crit[] and uncov were correct for S.)
+
           NOTE: Raises a vertex_violating_exception if any w in S is not
-          critical in S+v.
+          critical in S+v. In this case, the state of crit[] and uncov
+          is undefined!
          */
-        bitset v_edges = H.edges_containing_vertex(v);
+        // Input specification
+        assert(not S.test(v));
 
         // v is critical for edges it hits which were previously uncovered
+        bitset v_edges = H.edges_containing_vertex(v);
         crit[v] = v_edges & uncov;
 
         // Remove anything v hits from uncov
