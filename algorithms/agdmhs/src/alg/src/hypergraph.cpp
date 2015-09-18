@@ -146,6 +146,18 @@ namespace agdmhs {
         return result;
     }
 
+    Hypergraph Hypergraph::transpose() const {
+        // Return new hypergraph T such that T[i][j] = this[j][i]
+        Hypergraph T (num_edges());
+        T.reserve_edge_capacity(_n_verts);
+
+        for (hindex v = 0; v < _n_verts; ++v) {
+            T.add_edge(edges_containing_vertex(v));
+        }
+
+        return T;
+    }
+
     Hypergraph Hypergraph::edge_wedge(const Hypergraph& G, const bool do_minimize) const {
         // Return new hypergraph with edges all possible unions of
         // edges from this and G

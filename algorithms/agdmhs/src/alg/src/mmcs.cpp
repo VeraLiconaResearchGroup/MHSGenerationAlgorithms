@@ -26,6 +26,7 @@
 namespace agdmhs {
     static bsqueue HittingSets;
     static void mmcs_extend_or_confirm_set(const Hypergraph& H,
+                                           const Hypergraph& T,
                                            const bitset& S,
                                            const bitset& CAND,
                                            const Hypergraph& crit,
@@ -65,7 +66,7 @@ namespace agdmhs {
             Hypergraph new_crit = crit;
             bitset new_uncov = uncov;
             try {
-                update_crit_and_uncov(new_crit, new_uncov, H, S, v);
+                update_crit_and_uncov(new_crit, new_uncov, H, T, S, v);
             }
             catch (vertex_violating_exception& e) {
                 // Update newCAND and proceed to new vertex
@@ -83,8 +84,8 @@ namespace agdmhs {
                 HittingSets.enqueue(newS);
             } else if (newCAND.count() > 0 and (cutoff_size == 0 or newS.count() < cutoff_size)) {
                 // In this case, newS is not yet a hitting set but is not too large either
-#pragma omp task untied shared(H)
-                mmcs_extend_or_confirm_set(H, newS, newCAND, new_crit, new_uncov, cutoff_size);
+#pragma omp task untied shared(H, T)
+                mmcs_extend_or_confirm_set(H, T, newS, newCAND, new_crit, new_uncov, cutoff_size);
             }
 
             // Update newCAND and proceed to new vertex
@@ -114,11 +115,14 @@ namespace agdmhs {
         bitset uncov (H.num_edges());
         uncov.set(); // Initially full
 
+        // Tranpose of H
+        Hypergraph T = H.transpose();
+
         // RUN ALGORITHM
         {
-#pragma omp parallel shared(H)
+#pragma omp parallel shared(H, T)
 #pragma omp single
-            mmcs_extend_or_confirm_set(H, S, CAND, crit, uncov, cutoff_size);
+            mmcs_extend_or_confirm_set(H, T, S, CAND, crit, uncov, cutoff_size);
 #pragma omp taskwait
         }
 

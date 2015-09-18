@@ -22,6 +22,7 @@ namespace agdmhs {
     void update_crit_and_uncov(Hypergraph& crit,
                                bitset& uncov,
                                const Hypergraph& H,
+                               const Hypergraph& T,
                                const bitset& S,
                                const hindex v) {
         /*
@@ -36,7 +37,7 @@ namespace agdmhs {
         assert(not S.test(v));
 
         // v is critical for edges it hits which were previously uncovered
-        bitset v_edges = H.edges_containing_vertex(v);
+        bitset v_edges = T[v];
         crit[v] = v_edges & uncov;
 
         // Remove anything v hits from uncov
