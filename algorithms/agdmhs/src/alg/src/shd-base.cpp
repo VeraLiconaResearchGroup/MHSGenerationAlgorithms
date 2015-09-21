@@ -53,29 +53,4 @@ namespace agdmhs {
             w = S.find_next(w);
         }
     }
-
-    void restore_crit_and_uncov(Hypergraph& crit,
-                                bitset& uncov,
-                                const Hypergraph& H,
-                                const bitset& S,
-                                const hindex v) {
-        crit[v].reset();
-
-        bitset edges = H.edges_containing_vertex(v);
-        hindex e = edges.find_first();
-        while (e != bitset::npos) {
-            // If the vertex is in this edge, proceed
-            bitset hitting_vertices = H[e] & S;
-            hindex first_hit_vertex = hitting_vertices.find_first();
-            if (first_hit_vertex == bitset::npos) {
-                // No other vertex in S hits this edge
-                uncov.set(e);
-            } else if (hitting_vertices.find_next(first_hit_vertex) == bitset::npos) {
-                // Exactly one other vertex in S hits this edge
-                crit[first_hit_vertex].set(e);
-            } // Otherwise, no change required
-
-            e = edges.find_next(e);
-        }
-    }
 }
