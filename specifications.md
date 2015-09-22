@@ -17,6 +17,7 @@ An input file represents a collection of sets whose minimal hitting sets are to 
   Each of these arrays represents a set to be hit or an edge of the hypergraph.
   Each integer in a set is an *index*.
   The indices MAY appear in any order within a set, and the sets MAY appear in any order.
+  The hypergraph SHOULD be simple, which is to say that no edge should be a subset of any other edge.
 
 The input file MUST NOT contain pairs with the keys `guaranteedComplete`, `guaranteedMinimal`, or `transversals`.
 `mhs` SHOULD assume that the vertex set is 1, 2, …, n where n is the largest index appearing in the file.
@@ -32,12 +33,12 @@ The following input file represents this hypergraph in the specified format:
     {
         "someKey": "ignored value",
         "sets": [
-                [1, 2, 4],
-                [3, 2, 5],
-                [2, 4]
+                [1, 2, 5],
+                [3, 2, 4],
+                [1, 3]
                 ]
     }
-                
+
 
 ## Output file
 An output file represents a collection of hitting sets of the input collection.
@@ -66,15 +67,15 @@ The following output file represents this incomplete set of minimal hitting sets
     {
         "someKey": "ignored value",
         "sets": [
-                [1, 2, 4],
-                [3, 2, 5],
+                [1, 2, 5],
+                [3, 2, 4],
                 [2, 4]
                 ],
         "guaranteedMinimal": true,
         "guaranteedComplete": false,
         "transversals": [
-                        [2],
-                        [3, 4]
+                        [1, 3],
+                        [3, 5]
                         ]
     }
 

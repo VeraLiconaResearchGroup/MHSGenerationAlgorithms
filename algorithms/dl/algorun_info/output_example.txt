@@ -1,1 +1,1 @@
-{"guaranteedComplete": true, "transversals": [[2], [3, 4], [4, 5]], "guaranteedMinimal": true, "sets": [[1, 2, 4], [3, 2, 5], [2, 4]]}
+{"guaranteedComplete": true, "transversals": [[2], [3, 4], [4, 5]], "timeTaken": 0.002045721, "guaranteedMinimal": true, "sets": [[1, 2, 5], [3, 2, 4], [1, 3]]}
