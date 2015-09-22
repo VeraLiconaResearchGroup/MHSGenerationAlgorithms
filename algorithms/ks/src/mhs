@@ -11,73 +11,86 @@ import timeit
 import sys
 import os
 
-# Set up argument processing
-parser = argparse.ArgumentParser(description='MHS runner: KS')
+def input_file_lines(edges):
+    num_verts = max(vert for edge in edges for vert in edge)
 
-# Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
-parser.add_argument("input_file", help="Input file to process")
-parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
+    for edge in edges:
+        # thg represents each set as a row vector where '0' means an element
+        # is included and any other character (such as '*') means it is not
+        edge_as_charlist = ['*'] * num_verts
+        for vert in edge:
+            edge_as_charlist[vert-1] = '0'
+        yield "".join(edge_as_charlist)
 
-args = parser.parse_args()
+def transversals_from_output_file(output_file):
+    output_file.seek(0)
+    # Only use lines that don't start with '#'
+    lines = (line for line in output_file if not line.startswith('#'))
 
-# Configure path and validation
-script_dir = sys.path[0]
-input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
-output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+    # The vertices included in each edge are marked with the character '0'
+    for line in lines:
+        yield [i for (i, c) in enumerate(line, start=1) if c == '0']
 
-# Read the input file
-with open(args.input_file) as input_file:
-    input_json = json.load(input_file)
+def main():
+    # Set up argument processing
+    parser = argparse.ArgumentParser(description='MHS runner: KS')
 
-# Validate the input
-with open(input_schema_path) as input_schema_file:
-    input_schema = json.load(input_schema_file)
-    jsonschema.validate(input_json, input_schema)
+    # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+    parser.add_argument("input_file", help="Input file to process")
+    parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
 
-# Set up temporary files for input and output
-with tempfile.NamedTemporaryFile() as temp_input_file:
-    with tempfile.NamedTemporaryFile() as temp_output_file:
-        # Generate the input file
-        num_verts = max(vert for edge in input_json["sets"] for vert in edge)
+    args = parser.parse_args()
 
-        for edge in input_json["sets"]:
-            # thg represents each set as a row vector where '0' means an element
-            # is included and any other character (such as '*') means it is not
-            edge_as_charlist = ['*'] * num_verts
-            for vert in edge:
-                edge_as_charlist[vert-1] = '0'
-            edge_as_string = "".join(edge_as_charlist)
-            temp_input_file.write(edge_as_string + "\n")
+    # Configure path and validation
+    script_dir = sys.path[0]
+    input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+    output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
 
-        temp_input_file.flush()
+    # Read the input file
+    with open(args.input_file) as input_file:
+        input_json = json.load(input_file)
 
-        # Process the input file
-        alg_call_string = "['./alg/thg', '-i', '{0}', '-o', '{1}']".format(temp_input_file.name, temp_output_file.name)
-        time_taken = timeit.timeit(stmt="subprocess.call({0}, cwd='{1}')".format(alg_call_string, script_dir),
-                                   setup="import subprocess",
-                                   number=1)
+    # Validate the input
+    with open(input_schema_path) as input_schema_file:
+        input_schema = json.load(input_schema_file)
+        jsonschema.validate(input_json, input_schema)
 
-        # Process the results
-        temp_output_file.seek(0)
-        # Only use lines that don't start with '#'
-        transversal_lines = filter(lambda line: not line.startswith('#'), temp_output_file.readlines())
-        # Extract the indices of the '0' characters in the line
-        lineprocessor = lambda line: [i for (i, c) in enumerate(line, start=1) if c=='0']
-        transversals = map(lineprocessor, transversal_lines)
-        results = input_json
-        results["guaranteedMinimal"] = True
-        results["guaranteedComplete"] = True
-        results["transversals"] = transversals
-        results["timeTaken"] = time_taken
+    # Set up temporary files for input and output
+    with tempfile.NamedTemporaryFile() as temp_input_file:
+        with tempfile.NamedTemporaryFile() as temp_output_file:
+            # Generate the input file
+            for line in input_file_lines(input_json["sets"]):
+                temp_input_file.write(line + "\n")
+            temp_input_file.flush()
 
-# Validate the output
-with open(output_schema_path) as output_schema_file:
-    output_schema = json.load(output_schema_file)
-    jsonschema.validate(results, output_schema)
+            # Set up the algorithm call
+            alg_call_string = "['./alg/thg', '-i', '{0}', '-o', '{1}']".format(temp_input_file.name, temp_output_file.name)
 
-# Write the results to the output file
-with open(args.output_file, 'w') as output_file:
-    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+            # Call the algorithm
+            time_taken = timeit.timeit(stmt="subprocess.call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+                                       setup="import subprocess",
+                                       number=1)
+
+            # Process the results
+            transversals = list(transversals_from_output_file(temp_output_file))
+
+    results = input_json
+    results["guaranteedMinimal"] = True
+    results["guaranteedComplete"] = True
+    results["transversals"] = transversals
+    results["timeTaken"] = time_taken
+
+    # Validate the output
+    with open(output_schema_path) as output_schema_file:
+        output_schema = json.load(output_schema_file)
+        jsonschema.validate(results, output_schema)
+
+    # Write the results to the output file
+    with open(args.output_file, 'w') as output_file:
+        json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+
+if __name__ == "__main__":
+    main()
 
 ### Emacs configuration
 # Local Variables:
