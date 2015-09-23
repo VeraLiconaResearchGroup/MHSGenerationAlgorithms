@@ -38,7 +38,7 @@ if args.verbose == 0:
 elif args.verbose == 1:
     logging.basicConfig(level=logging.INFO)
 else:
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
 # Read and process files
 alg_list = json.load(args.algorithm_list_file)["containers"]
@@ -75,10 +75,15 @@ runtimes = defaultdict(list)
 # Run the tests and store the timing results
 logging.info("Running algorithms.")
 for alg in alg_collection:
-    for t in num_threads:
-        for c in cutoff_sizes:
+    # Only iterate over cases supported by the algorithm
+    alg_entry = next(entry for entry in alg_list if entry["algName"] == alg._name)
+    alg_thread_list = num_threads if alg_entry.get("threads") else [1]
+    alg_cutoff_list = cutoff_sizes if alg_entry.get("cutoff") else [0]
+
+    for t in alg_thread_list:
+        for c in alg_cutoff_list:
             for i in range(args.num_tests):
-                logging.debug("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
+                logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
                 config = {"THREADS": t, "CUTOFF_SIZE": c}
                 alg.change_config(config)
                 newname = "{0}-t{1}-c{2}".format(alg._name, t, c)
