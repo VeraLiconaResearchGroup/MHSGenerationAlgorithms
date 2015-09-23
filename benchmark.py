@@ -10,6 +10,7 @@ import pyalgorun
 import logging
 import time
 import copy
+from collections import defaultdict
 
 # Set up argument processing
 parser = argparse.ArgumentParser(description="MHS algorithm benchmark runner")
@@ -48,58 +49,53 @@ input_str = json.dumps(input_dict)
 if not args.slow:
     alg_list = filter(lambda alg: not alg.get("slow"), alg_list)
 
-# Split out threading cases if requested
-if args.num_threads is not None:
-    thread_algs = filter(lambda alg: alg.get("threads"), alg_list)
-    for alg in thread_algs:
-        alg_list.remove(alg)
-        for n in args.num_threads:
-            newalg = copy.deepcopy(alg)
-            newalg["algName"] = "{0}-t{1}".format(alg.get("algName"), n)
-            if newalg.get("config") is None:
-                newalg["config"] = {}
-                newalg["config"]["THREADS"] = n
-            alg_list.append(newalg)
+# Filter out non-threading algorithms if appropriate
+num_threads = args.num_threads
+if num_threads is None:
+    num_threads = [1]
 
-# Split out cutoff cases if requested
-if args.cutoff_sizes is not None:
-    cutoff_algs = filter(lambda alg: alg.get("cutoff"), alg_list)
-    alg_list = []
-    for alg in cutoff_algs:
-        for c in args.cutoff_sizes:
-            newalg = copy.deepcopy(alg)
-            newalg["algName"] = "{0}-c{1}".format(alg.get("algName"), c)
-            if newalg.get("config") is None:
-                newalg["config"] = {}
-                newalg["config"]["CUTOFF_SIZE"] = c
-            alg_list.append(newalg)
+if 1 not in num_threads:
+    alg_list = filter(lambda alg: alg.get("threads"), alg_list)
+
+# Filter out non-cutoff algorithms if appropriate
+cutoff_sizes = args.cutoff_sizes
+if cutoff_sizes is None:
+    cutoff_sizes = [0]
+
+if 0 not in cutoff_sizes:
+    alg_list = filter(lambda alg: alg.get("cutoff"), alg_list)
 
 # Launch containers
 logging.info("Launching containers")
 alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url)
 
 # Set up a dict to store the timing results
-runtimes = {alg.name(): [] for alg in alg_collection}
+runtimes = defaultdict(list)
 
 # Run the tests and store the timing results
-logging.info("Running algorithms")
-for i in range(args.num_tests):
-    logging.info("Running panel {0}/{1}".format(i+1, args.num_tests))
+logging.info("Running algorithms.")
+for alg in alg_collection:
+    for t in num_threads:
+        for c in cutoff_sizes:
+            for i in range(args.num_tests):
+                logging.debug("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
+                config = {"THREADS": t, "CUTOFF_SIZE": c}
+                alg.change_config(config)
+                newname = "{0}-t{1}-c{2}".format(alg._name, t, c)
 
-    results = alg_collection.run_all_with_input(input_str)
-    for algname, algresult in results.iteritems():
-        try:
-            result = json.loads(algresult)
-        except ValueError:
-            errormessage = "Algorithm {0} returned invalid JSON: {1}".format(algname, algresult)
-            raise RuntimeError(errormessage)
+                result = json.loads(alg.run_alg(input_str))
+                time_taken = float(result["timeTaken"])
+                runtimes[newname].append(time_taken)
+                logging.info("Finished {0} run in {1} sec.".format(newname, time_taken))
 
-        time_taken = float(result["timeTaken"])
-        runtimes[algname].append(time_taken)
-        logging.debug("Algorithm {0} finished run {1}/{2} in {3} sec.".format(algname, i+1, args.num_tests, time_taken))
-
-# Close up shop
+# All done! Time to close up shop.
 alg_collection.close()
 
+# Build output dict
+output = {
+    "runtimes": runtimes,
+    "algs": alg_list,
+}
+
 # Print the results
-json.dump(runtimes, args.output_data_file, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
+json.dump(output, args.output_data_file, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
