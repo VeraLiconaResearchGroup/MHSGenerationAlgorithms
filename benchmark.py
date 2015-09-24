@@ -33,12 +33,16 @@ parser.add_argument('-s', '--slow', dest="slow", action="store_true", help="Incl
 args = parser.parse_args()
 
 # Set up logging
+log_format = '%(levelname)s [%(asctime)s] %(message)s'
+
 if args.verbose == 0:
-    logging.basicConfig(level=logging.WARNING)
+    log_level = logging.WARNING
 elif args.verbose == 1:
-    logging.basicConfig(level=logging.INFO)
+    log_level = logging.INFO
 else:
-    logging.basicConfig(level=logging.INFO)
+    log_level = logging.DEBUG
+
+logging.basicConfig(format = log_format, level = log_level)
 
 # Read and process files
 alg_list = json.load(args.algorithm_list_file)["containers"]
@@ -86,7 +90,12 @@ for alg in alg_collection:
                 logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
                 config = {"THREADS": t, "CUTOFF_SIZE": c}
                 alg.change_config(config)
-                newname = "{0}-t{1}-c{2}".format(alg._name, t, c)
+                newname = alg._name
+                if t > 1:
+                    newname += "-t{0}".format(t)
+                if c > 0:
+                    newname += "-c{0}".format(c)
+
 
                 result = json.loads(alg.run_alg(input_str))
                 time_taken = float(result["timeTaken"])
