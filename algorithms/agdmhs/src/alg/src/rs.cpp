@@ -11,6 +11,7 @@
 
 #include <atomic>
 #include <cassert>
+#include <deque>
 #include <omp.h>
 
 #include <boost/dynamic_bitset.hpp>
@@ -52,7 +53,6 @@ namespace agdmhs {
     static void rs_extend_or_confirm_set(const Hypergraph& H,
                                          const Hypergraph& T,
                                          const bitset& S,
-                                         const bitset& CAND,
                                          const Hypergraph& crit,
                                          const bitset& uncov,
                                          const size_t cutoff_size) {
@@ -60,33 +60,22 @@ namespace agdmhs {
 
         // Input specification
         assert(uncov.any()); // uncov cannot be empty
-        assert(CAND.any()); // CAND cannot be empty
         assert(cutoff_size == 0 or S.count() < cutoff_size); // If we're using a cutoff, S must not be too large
 
         // Otherwise, get an uncovered edge
-        hindex search_edge = uncov.find_first(); // Per M+U, we use the first edge (to ensure proper search order)
+        hindex search_edge = uncov.find_first(); // Just use the first set in uncov
         bitset e = H[search_edge];
-        while (search_edge != bitset::npos) {
-            if ((H[search_edge] & CAND).count() < (e & CAND).count()) {
-                e = H[search_edge];
-            }
-            search_edge = uncov.find_next(search_edge);
-        }
 
-        // Then consider vertices lying in the intersection of e with CAND
-        bitset C = CAND & e; // intersection
-        bitset newCAND = CAND & (~e); // difference
-
-        // Store the indices in C in descending order for iteration
-        std::deque<hindex> Cindices;
-        hindex v = C.find_first();
+        // Store the indices in the edge for iteration
+        std::deque<hindex> search_indices;
+        hindex v = e.find_first();
         while (v != bitset::npos) {
-            Cindices.push_front(v);
-            v = C.find_next(v);
+            search_indices.push_front(v);
+            v = e.find_next(v);
         }
 
-        // Test all the vertices in C (in descending order)
-        for (auto& v: Cindices) {
+        // Loop over vertices in that edge
+        for (auto& v: search_indices) {
             // Check preconditions
             Hypergraph new_crit = crit;
             bitset new_uncov = uncov;
@@ -95,13 +84,11 @@ namespace agdmhs {
             }
             catch (vertex_violating_exception& e) {
                 ++rs_violators;
-                newCAND.set(v);
                 continue;
             }
 
             if (rs_any_edge_critical_after_i(search_edge, S, new_crit)) {
                 ++rs_critical_fails;
-                newCAND.set(v);
                 continue;
             }
 
@@ -111,15 +98,15 @@ namespace agdmhs {
 
             if (new_uncov.none()) {
                 HittingSets.enqueue(newS);
-            } else if (cutoff_size == 0 or newS.count() < cutoff_size) {
-            // After this point, we'll be considering extending newS even more.
-            // If we're using a cutoff, this requires more room.
-#pragma omp task untied shared(H, T)
-                rs_extend_or_confirm_set(H, T, newS, newCAND, new_crit, new_uncov, cutoff_size);
+                continue;
             }
 
-            // Update newCAND and proceed to new vertex
-            newCAND.set(v);
+            // After this point, we'll be considering extending newS even more.
+            // If we're using a cutoff, this requires more room.
+            if (cutoff_size == 0 or newS.count() < cutoff_size) {
+#pragma omp task untied shared(H, T)
+                rs_extend_or_confirm_set(H, T, newS, new_crit, new_uncov, cutoff_size);
+            }
         }
     };
 
@@ -139,10 +126,6 @@ namespace agdmhs {
         bitset S (H.num_verts());
         S.reset(); // Initially empty
 
-        // Eligible vertices
-        bitset CAND (H.num_verts());
-        CAND.set(); // Initially full
-
         // Which edges each vertex is critical for
         Hypergraph crit (H.num_edges(), H.num_verts());
 
@@ -157,7 +140,7 @@ namespace agdmhs {
         {
 #pragma omp parallel shared(H, T)
 #pragma omp single
-            rs_extend_or_confirm_set(H, T, S, CAND, crit, uncov, cutoff_size);
+            rs_extend_or_confirm_set(H, T, S, crit, uncov, cutoff_size);
 #pragma omp taskwait
         }
 
