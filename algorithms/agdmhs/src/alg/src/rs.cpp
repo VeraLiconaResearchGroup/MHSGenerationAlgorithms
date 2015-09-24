@@ -9,6 +9,7 @@
 #include "hypergraph.hpp"
 #include "shd-base.hpp"
 
+#include <atomic>
 #include <cassert>
 #include <omp.h>
 
@@ -23,6 +24,10 @@
 // TODO: Input specifications with <cassert>
 namespace agdmhs {
     static bsqueue HittingSets;
+
+    std::atomic<unsigned> rs_iterations;
+    std::atomic<unsigned> rs_violators;
+    std::atomic<unsigned> rs_critical_fails;
 
     static bool rs_any_edge_critical_after_i(const hindex& i,
                                    const bitset& S,
@@ -51,6 +56,8 @@ namespace agdmhs {
                                          const Hypergraph& crit,
                                          const bitset& uncov,
                                          const size_t cutoff_size) {
+        ++rs_iterations;
+
         // Input specification
         assert(uncov.any()); // uncov cannot be empty
         assert(CAND.any()); // CAND cannot be empty
@@ -87,11 +94,13 @@ namespace agdmhs {
                 update_crit_and_uncov(new_crit, new_uncov, H, T, S, v);
             }
             catch (vertex_violating_exception& e) {
+                ++rs_violators;
                 newCAND.set(v);
                 continue;
             }
 
             if (rs_any_edge_critical_after_i(search_edge, S, new_crit)) {
+                ++rs_critical_fails;
                 newCAND.set(v);
                 continue;
             }
@@ -118,6 +127,11 @@ namespace agdmhs {
                               const size_t num_threads,
                               const size_t cutoff_size) {
         // SET UP INTERNAL VARIABLES
+        // Debugging counters
+        rs_iterations = 0;
+        rs_violators = 0;
+        rs_critical_fails = 0;
+
         // Number of threads for parallelization
         omp_set_num_threads(num_threads);
 
@@ -153,6 +167,8 @@ namespace agdmhs {
         while (HittingSets.try_dequeue(result)) {
             Htrans.add_edge(result);
         }
+
+        BOOST_LOG_TRIVIAL(info) << "pRS complete: " << rs_iterations << " iterations, " << rs_violators << " violating verts, " << rs_critical_fails << " critical check failures.";
 
         return Htrans;
     };

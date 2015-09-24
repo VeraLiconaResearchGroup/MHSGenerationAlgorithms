@@ -9,6 +9,7 @@
 #include "hypergraph.hpp"
 #include "shd-base.hpp"
 
+#include <atomic>
 #include <cassert>
 #include <deque>
 #include <omp.h>
@@ -24,6 +25,9 @@
 // TODO: Input specifications with <cassert>
 namespace agdmhs {
     static bsqueue HittingSets;
+    std::atomic<unsigned> mmcs_iterations;
+    std::atomic<unsigned> mmcs_violators;
+
     static void mmcs_extend_or_confirm_set(const Hypergraph& H,
                                            const Hypergraph& T,
                                            const bitset& S,
@@ -31,6 +35,8 @@ namespace agdmhs {
                                            const Hypergraph& crit,
                                            const bitset& uncov,
                                            const size_t cutoff_size){
+        ++mmcs_iterations;
+
         // Input specification
         assert(uncov.any()); // uncov cannot be empty
         assert(CAND.any()); // CAND cannot be empty
@@ -69,6 +75,7 @@ namespace agdmhs {
             }
             catch (vertex_violating_exception& e) {
                 // Update newCAND and proceed to new vertex
+                ++mmcs_violators;
                 newCAND.set(v);
                 continue;
             }
@@ -96,6 +103,10 @@ namespace agdmhs {
                                 const size_t num_threads,
                                 const size_t cutoff_size) {
         // SET UP INTERNAL VARIABLES
+        // Debugging counters
+        mmcs_iterations = 0;
+        mmcs_violators = 0;
+
         // Number of threads for parallelization
         omp_set_num_threads(num_threads);
 
@@ -131,6 +142,8 @@ namespace agdmhs {
         while (HittingSets.try_dequeue(result)) {
             Htrans.add_edge(result);
         }
+
+        BOOST_LOG_TRIVIAL(info) << "pMMCS complete: " << mmcs_iterations << " iterations, " << mmcs_violators << " violating vertices.";
 
         return Htrans;
     }
