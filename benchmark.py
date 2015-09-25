@@ -128,11 +128,16 @@ for alg in alg_collection:
                 runtimes[newname].append(time_taken)
                 logging.info("Finished {0} run in {1} sec.".format(newname, time_taken))
 
+    # Kill the algorithm once we're done computing with it,
+    # regardless of the outcome
+    alg.stop()
+
 # All done! Time to close up shop.
 alg_collection.close()
 
 # Build output dict
 output = {
+    "timeout_secs": timeout,
     "runtimes": runtimes,
     "algs": alg_list,
 }
