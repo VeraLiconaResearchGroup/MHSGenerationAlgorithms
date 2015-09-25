@@ -88,8 +88,6 @@ class AlgorunContainer:
         """
         Stop the underlying Docker container
         """
-        # Note: spinning up a Docker client is expensive, so this
-        # should not be used in a loop on many containers.
         docker_client = docker.Client(base_url = self._docker_base_url)
         logging.debug("Stopping container {0}".format(self.name()))
         docker_client.stop(self._docker_container)
