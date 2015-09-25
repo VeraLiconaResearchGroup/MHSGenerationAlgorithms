@@ -14,6 +14,13 @@ ALGORUN_PORT = 8765
 RUN_URL_SUFFIX = "/v1/run"
 CONF_URL_SUFFIX = "/v1/config"
 
+class AlgorunTimeout(Exception):
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
+
 class AlgorunContainer:
     """
     Container wrapping and implementing an algorithm
@@ -87,7 +94,7 @@ class AlgorunContainer:
         logging.debug("Stopping container {0}".format(self.name()))
         docker_client.stop(self._docker_container)
 
-    def run_alg(self, data):
+    def run_alg(self, data, timeout = None):
         """
         Run the algorithm on some data
 
@@ -105,7 +112,9 @@ class AlgorunContainer:
 
         # Submit the request
         try:
-            r = requests.post(run_url, data = payload, headers = headers)
+            r = requests.post(run_url, data = payload, headers = headers, timeout = timeout)
+        except requests.exceptions.Timeout:
+            raise AlgorunTimeout(timeout)
         except:
             logging.critical("Container {0} threw an exception on analysis POST!".format({self._name}))
             raise

@@ -25,6 +25,7 @@ parser.add_argument("output_data_file", type=argparse.FileType('w'), help="Outpu
 parser.add_argument("-n", dest="num_tests", type=int, default=1, help="Number of test iterations")
 parser.add_argument("-j", dest="num_threads", type=int, nargs='*', help="Numbers of threads to use for supporting algorithms")
 parser.add_argument("-c", dest="cutoff_sizes", type=int, nargs='*', help="Cutoff sizes to use for supporting algorithms (if specified, full test is not run unless 0 is included)")
+parser.add_argument("-t", dest="timeout", type=int, default=0, help="Kill algorithms after this many seconds (0 to run forever)")
 parser.add_argument("-d", dest="docker_base_url", default=None, help="Base URL for Docker client")
 parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
 parser.add_argument('-s', '--slow', dest="slow", action="store_true", help="Include slow algorithms (be careful!)")
@@ -61,13 +62,27 @@ if num_threads is None:
 if 1 not in num_threads:
     alg_list = filter(lambda alg: alg.get("threads"), alg_list)
 
+num_threads.sort(reverse=True)
+
 # Filter out non-cutoff algorithms if appropriate
 cutoff_sizes = args.cutoff_sizes
 if cutoff_sizes is None:
     cutoff_sizes = [0]
 
-if 0 not in cutoff_sizes:
+cutoff_sizes.sort()
+
+if 0 in cutoff_sizes:
+    # Put 0 at the end of the list so the timeout filtering logic works
+    cutoff_sizes.remove(0)
+    cutoff_sizes.append(0)
+else:
+    # Remove algorithms that don't support cutoff
     alg_list = filter(lambda alg: alg.get("cutoff"), alg_list)
+
+# Process timeout
+timeout = args.timeout
+if timeout == 0:
+    timeout = None
 
 # Launch containers
 logging.info("Launching containers")
@@ -85,6 +100,8 @@ for alg in alg_collection:
     alg_cutoff_list = cutoff_sizes if alg_entry.get("cutoff") else [0]
 
     for t in alg_thread_list:
+        alg_has_timed_out = False
+
         for c in alg_cutoff_list:
             for i in range(args.num_tests):
                 logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
@@ -96,9 +113,18 @@ for alg in alg_collection:
                 if c > 0:
                     newname += "-c{0}".format(c)
 
+                if not alg_has_timed_out:
+                    try:
+                        result_str = alg.run_alg(input_str, timeout)
+                        result = json.loads(result_str)
+                        time_taken = float(result["timeTaken"])
+                    except pyalgorun.AlgorunTimeout:
+                        logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
+                        alg_has_timed_out = True
+                        time_taken = -1
+                else:
+                    time_taken = -1
 
-                result = json.loads(alg.run_alg(input_str))
-                time_taken = float(result["timeTaken"])
                 runtimes[newname].append(time_taken)
                 logging.info("Finished {0} run in {1} sec.".format(newname, time_taken))
 
