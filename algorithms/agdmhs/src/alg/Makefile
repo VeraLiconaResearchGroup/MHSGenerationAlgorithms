@@ -15,7 +15,6 @@ CXXFLAGS += -O3
 LIBS += -lboost_program_options
 LIBS += -lboost_system
 LIBS += -lboost_log
-#LIBS += -ltcmalloc
 
 # Includes
 INCLUDES += -Iinclude
