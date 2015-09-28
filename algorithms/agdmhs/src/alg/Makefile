@@ -8,13 +8,14 @@ CXXFLAGS += --std=c++11
 CXXFLAGS += -fPIC
 CXXFLAGS += -fopenmp
 CXXFLAGS += -Wall
-CXXFLAGS += -g
+CXXFLAGS += -g3 -pg
 CXXFLAGS += -O3
 
 # Libraries
 LIBS += -lboost_program_options
 LIBS += -lboost_system
 LIBS += -lboost_log
+#LIBS += -ltcmalloc
 
 # Includes
 INCLUDES += -Iinclude
