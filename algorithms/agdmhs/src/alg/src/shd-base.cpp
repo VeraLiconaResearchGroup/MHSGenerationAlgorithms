@@ -30,8 +30,7 @@ namespace agdmhs {
           (Assumes crit[] and uncov were correct for S.)
 
           NOTE: Raises a vertex_violating_exception if any w in S is not
-          critical in S+v. In this case, the state of crit[] and uncov
-          is undefined!
+          critical in S+v. In this case, crit[] and uncov are restored.
          */
         // Input specification
         assert(not S.test(v));
@@ -45,18 +44,14 @@ namespace agdmhs {
         uncov -= v_edges;
 
         // Remove anything v hits from the other crit[w]s
-        bool found_violating_vertex = false;
         hindex w = S.find_first();
         while (w != bitset::npos) {
             crit[w] -= v_edges;
             if (crit[w].none()) {
-                found_violating_vertex = true;
+                restore_crit_and_uncov(crit, uncov, H, T, S, v);
+                throw vertex_violating_exception();
             }
             w = S.find_next(w);
-        }
-
-        if (found_violating_vertex) {
-            throw vertex_violating_exception();
         }
     }
 

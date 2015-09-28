@@ -43,6 +43,7 @@ namespace agdmhs {
             hindex first_crit_edge = crit[w].find_first();
             if (first_crit_edge >= i) {
                 bad_edge_found = true;
+                break;
             }
             w = S.find_next(w);
         }
@@ -82,7 +83,6 @@ namespace agdmhs {
             }
             catch (vertex_violating_exception& e) {
                 ++rs_violators;
-                restore_crit_and_uncov(crit, uncov, H, T, S, v);
                 continue;
             }
 

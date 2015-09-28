@@ -74,7 +74,6 @@ namespace agdmhs {
             catch (vertex_violating_exception& e) {
                 // Update CAND and proceed to new vertex
                 ++mmcs_violators;
-                restore_crit_and_uncov(crit, uncov, H, T, S, v);
                 CAND.set(v);
                 continue;
             }
