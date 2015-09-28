@@ -56,6 +56,7 @@ namespace agdmhs {
                                          bitset& S,
                                          Hypergraph& crit,
                                          bitset& uncov,
+                                         const bitset& violating_vertices,
                                          const size_t cutoff_size) {
         ++rs_iterations;
 
@@ -68,10 +69,20 @@ namespace agdmhs {
         bitset e = H[search_edge];
 
         // Store the indices in the edge for iteration
+        bitset new_violating_vertices (H.num_verts());
         std::deque<hindex> search_indices;
         hindex v = e.find_first();
         while (v != bitset::npos) {
-            search_indices.push_front(v);
+            // If v is already known violating, we skip it entirely
+            bool known_violating = violating_vertices.test(v);
+            if (not known_violating and vertex_would_violate(crit, uncov, H, T, S, v)) {
+                // Otherwise, if it would violate, we mark it
+                new_violating_vertices.set(v);
+                ++rs_violators;
+            } else if (not known_violating) {
+                // And if not, we will consider it in the loop
+                search_indices.push_front(v);
+            }
             v = e.find_next(v);
         }
 
@@ -79,13 +90,9 @@ namespace agdmhs {
         for (auto& v: search_indices) {
             // Check preconditions
             Hypergraph critmark;
-            try {
-                critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
-            }
-            catch (vertex_violating_exception& e) {
-                ++rs_violators;
-                continue;
-            }
+            // This call can throw, but if it does it represents a logic error,
+            // so we don't catch it here
+            critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
 
             if (rs_any_edge_critical_after_i(search_edge, S, crit)) {
                 ++rs_critical_fails;
@@ -102,7 +109,7 @@ namespace agdmhs {
             } else if (cutoff_size == 0 or S.count() < cutoff_size) {
                 // In this case, S is not yet a hitting set but is not too large either
 //#pragma omp task untied shared(H, T)
-                rs_extend_or_confirm_set(H, T, S, crit, uncov, cutoff_size);
+                rs_extend_or_confirm_set(H, T, S, crit, uncov, violating_vertices | new_violating_vertices, cutoff_size);
             }
 
             // Update crit, uncov, and S, then proceed to the next vertex
@@ -130,6 +137,9 @@ namespace agdmhs {
         // Which edges each vertex is critical for
         Hypergraph crit (H.num_edges(), H.num_verts());
 
+        // Which edges are known to be violating
+        bitset violating_vertices (H.num_verts());
+
         // Which edges are uncovered
         bitset uncov (H.num_edges());
         uncov.set(); // Initially full
@@ -141,7 +151,7 @@ namespace agdmhs {
         {
 #pragma omp parallel shared(H, T)
 #pragma omp single
-            rs_extend_or_confirm_set(H, T, S, crit, uncov, cutoff_size);
+            rs_extend_or_confirm_set(H, T, S, crit, uncov, violating_vertices, cutoff_size);
 #pragma omp taskwait
         }
 

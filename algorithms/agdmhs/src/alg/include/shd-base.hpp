@@ -23,6 +23,13 @@ namespace agdmhs {
         }
     };
 
+    bool vertex_would_violate(const Hypergraph& crit,
+                              const bitset& uncov,
+                              const Hypergraph& H,
+                              const Hypergraph& T,
+                              const bitset& S,
+                              const hindex v);
+
     Hypergraph update_crit_and_uncov(Hypergraph& crit,
                                bitset& uncov,
                                const Hypergraph& H,

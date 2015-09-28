@@ -19,6 +19,37 @@
 #include <cassert>
 
 namespace agdmhs {
+    bool vertex_would_violate(const Hypergraph& crit,
+                              const bitset& uncov,
+                              const Hypergraph& H,
+                              const Hypergraph& T,
+                              const bitset& S,
+                              const hindex v) {
+        /*
+          Determine whether addition of v to S would violate any vertices.
+          (That is, whether any vertex in S would be redundant in S+v.)
+         */
+
+        // Input specification
+        assert(not S.test(v));
+        assert(crit[v].none());
+
+        // We only consider edges which are hit by v and are not in uncov
+        bitset test_edges = T[v] - uncov;
+
+        // Check whether any w in S would lose all its critical edges
+        hindex w = S.find_first();
+        while (w != bitset::npos) {
+            if ((crit[w] - test_edges).none()) {
+                return true;
+            }
+            w = S.find_next(w);
+        }
+
+        // If we make it this far, no vertex was violated
+        return false;
+    }
+
     Hypergraph update_crit_and_uncov(Hypergraph& crit,
                                bitset& uncov,
                                const Hypergraph& H,
