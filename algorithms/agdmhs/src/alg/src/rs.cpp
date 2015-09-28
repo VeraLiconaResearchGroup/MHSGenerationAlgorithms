@@ -52,9 +52,9 @@ namespace agdmhs {
 
     static void rs_extend_or_confirm_set(const Hypergraph& H,
                                          const Hypergraph& T,
-                                         const bitset& S,
-                                         const Hypergraph& crit,
-                                         const bitset& uncov,
+                                         bitset& S,
+                                         Hypergraph& crit,
+                                         bitset& uncov,
                                          const size_t cutoff_size) {
         ++rs_iterations;
 
@@ -77,36 +77,36 @@ namespace agdmhs {
         // Loop over vertices in that edge
         for (auto& v: search_indices) {
             // Check preconditions
-            Hypergraph new_crit = crit;
-            bitset new_uncov = uncov;
             try {
-                update_crit_and_uncov(new_crit, new_uncov, H, T, S, v);
+                update_crit_and_uncov(crit, uncov, H, T, S, v);
             }
             catch (vertex_violating_exception& e) {
                 ++rs_violators;
+                restore_crit_and_uncov(crit, uncov, H, T, S, v);
                 continue;
             }
 
-            if (rs_any_edge_critical_after_i(search_edge, S, new_crit)) {
+            if (rs_any_edge_critical_after_i(search_edge, S, crit)) {
                 ++rs_critical_fails;
+                restore_crit_and_uncov(crit, uncov, H, T, S, v);
                 continue;
             }
 
             // if new_uncov is empty, adding v to S makes a hitting set
-            bitset newS = S;
-            newS.set(v);
+            S.set(v);
 
-            if (new_uncov.none()) {
-                HittingSets.enqueue(newS);
-                continue;
+            if (uncov.none()) {
+                // In this case, S is a valid hitting set, so we store it
+                HittingSets.enqueue(S);
+            } else if (cutoff_size == 0 or S.count() < cutoff_size) {
+                // In this case, S is not yet a hitting set but is not too large either
+//#pragma omp task untied shared(H, T)
+                rs_extend_or_confirm_set(H, T, S, crit, uncov, cutoff_size);
             }
 
-            // After this point, we'll be considering extending newS even more.
-            // If we're using a cutoff, this requires more room.
-            if (cutoff_size == 0 or newS.count() < cutoff_size) {
-#pragma omp task untied shared(H, T)
-                rs_extend_or_confirm_set(H, T, newS, new_crit, new_uncov, cutoff_size);
-            }
+            // Update crit, uncov, and S, then proceed to the next vertex
+            S.reset(v);
+            restore_crit_and_uncov(crit, uncov, H, T, S, v);
         }
     };
 

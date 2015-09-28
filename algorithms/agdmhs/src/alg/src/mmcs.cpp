@@ -30,10 +30,10 @@ namespace agdmhs {
 
     static void mmcs_extend_or_confirm_set(const Hypergraph& H,
                                            const Hypergraph& T,
-                                           const bitset& S,
-                                           const bitset& CAND,
-                                           const Hypergraph& crit,
-                                           const bitset& uncov,
+                                           bitset& S,
+                                           bitset& CAND,
+                                           Hypergraph& crit,
+                                           bitset& uncov,
                                            const size_t cutoff_size){
         ++mmcs_iterations;
 
@@ -55,7 +55,7 @@ namespace agdmhs {
 
         // Then consider vertices lying in the intersection of e with CAND
         bitset C = CAND & e; // intersection
-        bitset newCAND = CAND & (~e); // difference
+        CAND -= e; // difference
 
         // Store the indices in C in descending order for iteration
         std::deque<hindex> Cindices;
@@ -68,34 +68,34 @@ namespace agdmhs {
         // Test all the vertices in C (in descending order)
         for (auto& v: Cindices) {
             // Update uncov and crit by iterating over edges containing the vertex
-            Hypergraph new_crit = crit;
-            bitset new_uncov = uncov;
             try {
-                update_crit_and_uncov(new_crit, new_uncov, H, T, S, v);
+                update_crit_and_uncov(crit, uncov, H, T, S, v);
             }
             catch (vertex_violating_exception& e) {
-                // Update newCAND and proceed to new vertex
+                // Update CAND and proceed to new vertex
                 ++mmcs_violators;
-                newCAND.set(v);
+                restore_crit_and_uncov(crit, uncov, H, T, S, v);
+                CAND.set(v);
                 continue;
             }
 
             // Construct the new candidate hitting set
-            bitset newS = S;
-            newS.set(v);
+            S.set(v);
 
-            // If we made it this far, newS is a new candidate, which we process
-            if (new_uncov.none() and (cutoff_size == 0 or newS.count() <= cutoff_size)) {
-                // In this case, newS is a valid hitting set, so we store it
-                HittingSets.enqueue(newS);
-            } else if (newCAND.count() > 0 and (cutoff_size == 0 or newS.count() < cutoff_size)) {
-                // In this case, newS is not yet a hitting set but is not too large either
-#pragma omp task untied shared(H, T)
-                mmcs_extend_or_confirm_set(H, T, newS, newCAND, new_crit, new_uncov, cutoff_size);
+            // If we made it this far, S is a new candidate, which we process
+            if (uncov.none() and (cutoff_size == 0 or S.count() <= cutoff_size)) {
+                // In this case, S is a valid hitting set, so we store it
+                HittingSets.enqueue(S);
+            } else if (CAND.count() > 0 and (cutoff_size == 0 or S.count() < cutoff_size)) {
+                // In this case, S is not yet a hitting set but is not too large either
+//#pragma omp task untied shared(H, T)
+                mmcs_extend_or_confirm_set(H, T, S, CAND, crit, uncov, cutoff_size);
             }
 
-            // Update newCAND and proceed to new vertex
-            newCAND.set(v);
+            // Update CAND, crit, uncov, and S, then proceed to new vertex
+            CAND.set(v);
+            S.reset(v);
+            restore_crit_and_uncov(crit, uncov, H, T, S, v);
         }
     }
 
@@ -130,10 +130,10 @@ namespace agdmhs {
 
         // RUN ALGORITHM
         {
-#pragma omp parallel shared(H, T)
-#pragma omp single
+//#pragma omp parallel shared(H, T)
+//#pragma omp single
             mmcs_extend_or_confirm_set(H, T, S, CAND, crit, uncov, cutoff_size);
-#pragma omp taskwait
+//#pragma omp taskwait
         }
 
         // Gather results
