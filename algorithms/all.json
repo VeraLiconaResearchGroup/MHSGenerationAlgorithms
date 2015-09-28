@@ -115,6 +115,7 @@
         {
             "algName": "fka-agd",
             "containerName": "agdphd/agdmhs",
+            "slow": "true",
             "config": {
                 "ALGORITHM": "fka"
             }
@@ -123,6 +124,7 @@
             "algName": "berge",
             "containerName": "agdphd/agdmhs",
             "cutoff": true,
+            "slow": "true",
             "config": {
                 "ALGORITHM": "berge"
             }
