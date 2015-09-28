@@ -68,8 +68,9 @@ namespace agdmhs {
         // Test all the vertices in C (in descending order)
         for (auto& v: Cindices) {
             // Update uncov and crit by iterating over edges containing the vertex
+            Hypergraph critmark;
             try {
-                update_crit_and_uncov(crit, uncov, H, T, S, v);
+                critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
             }
             catch (vertex_violating_exception& e) {
                 // Update CAND and proceed to new vertex
@@ -94,7 +95,7 @@ namespace agdmhs {
             // Update CAND, crit, uncov, and S, then proceed to new vertex
             CAND.set(v);
             S.reset(v);
-            restore_crit_and_uncov(crit, uncov, H, T, S, v);
+            restore_crit_and_uncov(crit, uncov, S, critmark, v);
         }
     }
 

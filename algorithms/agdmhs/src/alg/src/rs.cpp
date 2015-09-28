@@ -78,8 +78,9 @@ namespace agdmhs {
         // Loop over vertices in that edge
         for (auto& v: search_indices) {
             // Check preconditions
+            Hypergraph critmark;
             try {
-                update_crit_and_uncov(crit, uncov, H, T, S, v);
+                critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
             }
             catch (vertex_violating_exception& e) {
                 ++rs_violators;
@@ -88,7 +89,7 @@ namespace agdmhs {
 
             if (rs_any_edge_critical_after_i(search_edge, S, crit)) {
                 ++rs_critical_fails;
-                restore_crit_and_uncov(crit, uncov, H, T, S, v);
+                restore_crit_and_uncov(crit, uncov, S, critmark, v);
                 continue;
             }
 
@@ -106,7 +107,7 @@ namespace agdmhs {
 
             // Update crit, uncov, and S, then proceed to the next vertex
             S.reset(v);
-            restore_crit_and_uncov(crit, uncov, H, T, S, v);
+            restore_crit_and_uncov(crit, uncov, S, critmark, v);
         }
     };
 

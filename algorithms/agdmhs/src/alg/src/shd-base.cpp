@@ -19,7 +19,7 @@
 #include <cassert>
 
 namespace agdmhs {
-    void update_crit_and_uncov(Hypergraph& crit,
+    Hypergraph update_crit_and_uncov(Hypergraph& crit,
                                bitset& uncov,
                                const Hypergraph& H,
                                const Hypergraph& T,
@@ -28,6 +28,7 @@ namespace agdmhs {
         /*
           Update crit[] and uncov to reflect S+v.
           (Assumes crit[] and uncov were correct for S.)
+          Returns overlay with edges removed from crit.
 
           NOTE: Raises a vertex_violating_exception if any w in S is not
           critical in S+v. In this case, crit[] and uncov are restored.
@@ -43,23 +44,29 @@ namespace agdmhs {
         // Remove anything v hits from uncov
         uncov -= v_edges;
 
-        // Remove anything v hits from the other crit[w]s
+        // Remove anything v hits from the other crit[w]s and record it
+        // in critmark[w]s
+        Hypergraph critmark(H.num_edges(), H.num_verts());
+
         hindex w = S.find_first();
         while (w != bitset::npos) {
+            critmark[w] = crit[w] & v_edges;
             crit[w] -= v_edges;
+
             if (crit[w].none()) {
-                restore_crit_and_uncov(crit, uncov, H, T, S, v);
+                restore_crit_and_uncov(crit, uncov, S, critmark, v);
                 throw vertex_violating_exception();
             }
             w = S.find_next(w);
         }
+
+        return critmark;
     }
 
     void restore_crit_and_uncov(Hypergraph& crit,
                                 bitset& uncov,
-                                const Hypergraph& H,
-                                const Hypergraph& T,
                                 const bitset& S,
+                                const Hypergraph& critmark,
                                 const hindex v) {
         /*
           Update crit[] and uncov to reflect S no longer containing v.
@@ -68,26 +75,16 @@ namespace agdmhs {
         // Input specification
         assert(not S.test(v));
         assert(not uncov.intersects(crit[v]));
-        assert(crit[v].is_subset_of(T[v]));
 
         // If v was critical for an edge, it is now uncovered
         uncov |= crit[v];
         crit[v].reset();
 
-        // If v was in an edge but was not critical, some other vertex
-        // may now be.
-        bitset check_edges = T[v] - crit[v];
-
-        hindex e = check_edges.find_first();
-        while (e != bitset::npos) {
-            // Find vertices in S which are also in the edge
-            bitset S_verts_in_e = H[e] & S;
-            if (S_verts_in_e.count() == 1) {
-                hindex crit_vert = S_verts_in_e.find_first();
-                crit[crit_vert].set(e);
-            }
-
-            e = check_edges.find_next(e);
+        // Restore all other crit vertices using critmark
+        hindex w = S.find_first();
+        while (w != bitset::npos) {
+            crit[w] |= critmark[w];
+            w = S.find_next(w);
         }
     }
 }
