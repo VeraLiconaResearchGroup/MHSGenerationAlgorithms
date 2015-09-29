@@ -16,6 +16,11 @@
 #include <sstream>
 #include <vector>
 
+#define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
+
 namespace agdmhs {
     Hypergraph::Hypergraph (size_t num_verts, size_t num_edges):
         _n_verts(num_verts)
@@ -235,12 +240,7 @@ namespace agdmhs {
         }
 
         for (auto const& edge: _edges) {
-            hindex i = edge.find_first();
-            while (i != bitset::npos) {
-                output_filestream << i << " ";
-                i = edge.find_next(i);
-            }
-            output_filestream << std::endl;
+            output_filestream << edge << "\n";
         }
     };
 
