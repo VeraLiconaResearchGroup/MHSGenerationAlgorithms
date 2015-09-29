@@ -40,7 +40,7 @@ namespace agdmhs {
         // Check whether any w in S would lose all its critical edges
         hindex w = S.find_first();
         while (w != bitset::npos) {
-            if ((crit[w] - test_edges).none()) {
+            if (crit[w].is_subset_of(test_edges)) {
                 return true;
             }
             w = S.find_next(w);
@@ -69,7 +69,7 @@ namespace agdmhs {
         assert(crit[v].none());
 
         // v is critical for edges it hits which were previously uncovered
-        bitset v_edges = T[v];
+        const bitset& v_edges = T[v];
         crit[v] = v_edges & uncov;
 
         // Remove anything v hits from uncov
@@ -81,10 +81,11 @@ namespace agdmhs {
 
         hindex w = S.find_first();
         while (w != bitset::npos) {
-            critmark[w] = crit[w] & v_edges;
-            crit[w] -= v_edges;
+            bitset& critw = crit[w];
+            critmark[w] = critw & v_edges;
+            critw -= v_edges;
 
-            if (crit[w].none()) {
+            if (critw.none()) {
                 restore_crit_and_uncov(crit, uncov, S, critmark, v);
                 throw vertex_violating_exception();
             }
