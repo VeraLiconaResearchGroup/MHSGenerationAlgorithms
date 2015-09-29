@@ -13,9 +13,15 @@
 #include <boost/dynamic_bitset.hpp>
 
 #include <exception>
+#include <map>
+#include <utility>
 
 namespace agdmhs {
     typedef moodycamel::ConcurrentQueue<bitset> bsqueue;
+
+    // Types to record mappings of indices to bitsets
+    // For example, each element of crit[] is a bitset
+    typedef std::map<hindex, bitset> hsetmap;
 
     class vertex_violating_exception: public std::exception {
         virtual const char* what() const throw() {
@@ -30,17 +36,17 @@ namespace agdmhs {
                               const bitset& S,
                               const hindex v);
 
-    Hypergraph update_crit_and_uncov(Hypergraph& crit,
-                               bitset& uncov,
-                               const Hypergraph& H,
-                               const Hypergraph& T,
-                               const bitset& S,
-                               const hindex v);
+    hsetmap update_crit_and_uncov(Hypergraph& crit,
+                                  bitset& uncov,
+                                  const Hypergraph& H,
+                                  const Hypergraph& T,
+                                  const bitset& S,
+                                  const hindex v);
 
     void restore_crit_and_uncov(Hypergraph& crit,
                                 bitset& uncov,
                                 const bitset& S,
-                                const Hypergraph& critmark,
+                                const hsetmap& critmark,
                                 const hindex v);
 }
 

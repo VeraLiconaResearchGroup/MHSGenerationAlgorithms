@@ -30,6 +30,8 @@ namespace agdmhs {
     std::atomic<unsigned> rs_violators;
     std::atomic<unsigned> rs_critical_fails;
 
+    std::atomic<unsigned> rs_tasks_waiting;
+
     static bool rs_any_edge_critical_after_i(const hindex& i,
                                    const bitset& S,
                                    const Hypergraph& crit) {
@@ -89,7 +91,7 @@ namespace agdmhs {
         // Loop over vertices in that edge
         for (auto& v: search_indices) {
             // Check preconditions
-            Hypergraph critmark;
+            hsetmap critmark;
             // This call can throw, but if it does it represents a logic error,
             // so we don't catch it here
             critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
@@ -108,8 +110,23 @@ namespace agdmhs {
                 HittingSets.enqueue(S);
             } else if (cutoff_size == 0 or S.count() < cutoff_size) {
                 // In this case, S is not yet a hitting set but is not too large either
-//#pragma omp task untied shared(H, T)
-                rs_extend_or_confirm_set(H, T, S, crit, uncov, violating_vertices | new_violating_vertices, cutoff_size);
+                if (rs_tasks_waiting < 4 and uncov.size() > 2) {
+                    // Spawn a new task if the queue is getting low, but
+                    // don't waste time with small jobs.
+                    // Each one gets its own copy of S, CAND, crit, and uncov
+                    ++rs_tasks_waiting;
+                    bitset new_S = S;
+                    Hypergraph new_crit = crit;
+                    bitset new_uncov = uncov;
+                    bitset new_viol = violating_vertices | new_violating_vertices;
+#pragma omp task shared(H, T) // Start a new task
+                    {
+                    --rs_tasks_waiting;
+                    rs_extend_or_confirm_set(H, T, new_S, new_crit, new_uncov, new_viol, cutoff_size);
+                    }
+                } else {
+                    rs_extend_or_confirm_set(H, T, S, crit, uncov, violating_vertices | new_violating_vertices, cutoff_size);
+                }
             }
 
             // Update crit, uncov, and S, then proceed to the next vertex
@@ -126,9 +143,6 @@ namespace agdmhs {
         rs_iterations = 0;
         rs_violators = 0;
         rs_critical_fails = 0;
-
-        // Number of threads for parallelization
-        omp_set_num_threads(num_threads);
 
         // Candidate hitting set
         bitset S (H.num_verts());
@@ -149,10 +163,10 @@ namespace agdmhs {
 
         // RUN ALGORITHM
         {
-#pragma omp parallel shared(H, T)
-#pragma omp single
+#pragma omp parallel shared(H, T) num_threads(num_threads) // Don't create thread-local copies of H and T
+#pragma omp master // Only spawn the computation once
             rs_extend_or_confirm_set(H, T, S, crit, uncov, violating_vertices, cutoff_size);
-#pragma omp taskwait
+#pragma omp taskwait // Don't proceed until all the tasks are complete
         }
 
         // Gather results

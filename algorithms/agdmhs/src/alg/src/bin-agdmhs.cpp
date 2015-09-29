@@ -62,8 +62,10 @@ int main(int argc, char * argv[]) {
     po::notify(vm);
 
     // Process input file
+    BOOST_LOG_TRIVIAL(debug) << "Loading hypergraph from file.";
     std::string input_file(vm["input"].as<std::string>());
     agdmhs::Hypergraph H (input_file);
+    BOOST_LOG_TRIVIAL(debug) << "Loading complete.";
 
     // Process logging-related options
     int verbosity = vm["verbosity"].as<int>();
@@ -91,6 +93,8 @@ int main(int argc, char * argv[]) {
     agdmhs::Hypergraph Htrans;
     std::string algname = vm["algorithm"].as<std::string>();
 
+    BOOST_LOG_TRIVIAL(debug) << "Running algorithm.";
+
     if (algname == "pmmcs") {
         Htrans = agdmhs::mmcs_transversal(H, num_threads, cutoff_size);
     } else if (algname == "prs") {
@@ -109,11 +113,14 @@ int main(int argc, char * argv[]) {
         error_message << "Did not recognize requested algorithm " << algname << ".";
         throw po::invalid_option_value(error_message.str());
     }
+    std::cout << "Found " << Htrans.num_edges() << " hitting sets." << std::endl;
+    BOOST_LOG_TRIVIAL(debug) << "Algorithm complete.";
 
     // Print results
-    std::cout << "Found " << Htrans.num_edges() << " hitting sets." << std::endl;
+    BOOST_LOG_TRIVIAL(debug) << "Writing result file.";
     std::string output_file(vm["output"].as<std::string>());
     Htrans.write_to_file(output_file);
+    BOOST_LOG_TRIVIAL(debug) << "Writing complete.";
 
     return 0;
 }

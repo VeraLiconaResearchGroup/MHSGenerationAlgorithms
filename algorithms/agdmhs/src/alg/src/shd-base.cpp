@@ -50,12 +50,12 @@ namespace agdmhs {
         return false;
     }
 
-    Hypergraph update_crit_and_uncov(Hypergraph& crit,
-                               bitset& uncov,
-                               const Hypergraph& H,
-                               const Hypergraph& T,
-                               const bitset& S,
-                               const hindex v) {
+    hsetmap update_crit_and_uncov(Hypergraph& crit,
+                                  bitset& uncov,
+                                  const Hypergraph& H,
+                                  const Hypergraph& T,
+                                  const bitset& S,
+                                  const hindex v) {
         /*
           Update crit[] and uncov to reflect S+v.
           (Assumes crit[] and uncov were correct for S.)
@@ -77,7 +77,7 @@ namespace agdmhs {
 
         // Remove anything v hits from the other crit[w]s and record it
         // in critmark[w]s
-        Hypergraph critmark(H.num_edges(), H.num_verts());
+        hsetmap critmark;
 
         hindex w = S.find_first();
         while (w != bitset::npos) {
@@ -97,12 +97,13 @@ namespace agdmhs {
     void restore_crit_and_uncov(Hypergraph& crit,
                                 bitset& uncov,
                                 const bitset& S,
-                                const Hypergraph& critmark,
+                                const hsetmap& critmark,
                                 const hindex v) {
         /*
           Update crit[] and uncov to reflect S no longer containing v.
           (Assumes crit[] and uncov were correct for S with v included.)
         */
+
         // Input specification
         assert(not S.test(v));
         assert(not uncov.intersects(crit[v]));
@@ -114,7 +115,14 @@ namespace agdmhs {
         // Restore all other crit vertices using critmark
         hindex w = S.find_first();
         while (w != bitset::npos) {
-            crit[w] |= critmark[w];
+            try {
+                crit[w] |= critmark.at(w);
+            }
+            catch (std::out_of_range& e) {
+                // This may occur if a vertex_violating_exception was thrown.
+                // It's not an error, so we just catch the exception and
+                // do nothing.
+            }
             w = S.find_next(w);
         }
     }

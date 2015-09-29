@@ -28,13 +28,15 @@ namespace agdmhs {
     std::atomic<unsigned> mmcs_iterations;
     std::atomic<unsigned> mmcs_violators;
 
+    std::atomic<unsigned> mmcs_tasks_waiting;
+
     static void mmcs_extend_or_confirm_set(const Hypergraph& H,
                                            const Hypergraph& T,
                                            bitset& S,
                                            bitset& CAND,
                                            Hypergraph& crit,
                                            bitset& uncov,
-                                           const size_t cutoff_size){
+                                           const size_t cutoff_size) {
         ++mmcs_iterations;
 
         // Input specification
@@ -68,7 +70,7 @@ namespace agdmhs {
         // Test all the vertices in C (in descending order)
         for (auto& v: Cindices) {
             // Update uncov and crit by iterating over edges containing the vertex
-            Hypergraph critmark;
+            hsetmap critmark;
             try {
                 critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
             }
@@ -88,8 +90,24 @@ namespace agdmhs {
                 HittingSets.enqueue(S);
             } else if (CAND.count() > 0 and (cutoff_size == 0 or S.count() < cutoff_size)) {
                 // In this case, S is not yet a hitting set but is not too large either
-//#pragma omp task untied shared(H, T)
-                mmcs_extend_or_confirm_set(H, T, S, CAND, crit, uncov, cutoff_size);
+                if (mmcs_tasks_waiting < 4 and uncov.size() > 2) {
+                    // Spawn a new task if the queue is getting low, but
+                    // don't waste time with small jobs.
+                    // Each one gets its own copy of S, CAND, crit, and uncov
+                    ++mmcs_tasks_waiting;
+                    bitset new_S = S;
+                    bitset new_CAND = CAND;
+                    Hypergraph new_crit = crit;
+                    bitset new_uncov = uncov;
+#pragma omp task shared(H, T) // Start a new task
+                    {
+                    --mmcs_tasks_waiting;
+                    mmcs_extend_or_confirm_set(H, T, new_S, new_CAND, new_crit, new_uncov, cutoff_size);
+                    }
+                } else {
+                    // Stay in this thread otherwise
+                    mmcs_extend_or_confirm_set(H, T, S, CAND, crit, uncov, cutoff_size);
+                }
             }
 
             // Update CAND, crit, uncov, and S, then proceed to new vertex
@@ -106,9 +124,6 @@ namespace agdmhs {
         // Debugging counters
         mmcs_iterations = 0;
         mmcs_violators = 0;
-
-        // Number of threads for parallelization
-        omp_set_num_threads(num_threads);
 
         // Candidate hitting set
         bitset S (H.num_verts());
@@ -130,10 +145,10 @@ namespace agdmhs {
 
         // RUN ALGORITHM
         {
-//#pragma omp parallel shared(H, T)
-//#pragma omp single
+#pragma omp parallel shared(H, T) num_threads(num_threads) // Don't create thread-local copies of H and T
+#pragma omp master // Only spawn the computation once
             mmcs_extend_or_confirm_set(H, T, S, CAND, crit, uncov, cutoff_size);
-//#pragma omp taskwait
+#pragma omp taskwait // Don't proceed until all the tasks are complete
         }
 
         // Gather results
