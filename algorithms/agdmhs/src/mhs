@@ -101,6 +101,8 @@ def main():
         output_schema = json.load(output_schema_file)
         jsonschema.validate(results, output_schema)
 
+    print "Finished run in " + str(time_taken) + " s."
+
     # Write the results to the output file
     with open(args.output_file, 'w') as output_file:
         json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the outputa
