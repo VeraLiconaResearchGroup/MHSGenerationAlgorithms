@@ -27,6 +27,7 @@ namespace agdmhs {
     static bsqueue HittingSets;
     std::atomic<unsigned> mmcs_iterations;
     std::atomic<unsigned> mmcs_violators;
+    std::atomic<unsigned> mmcs_update_loops;
 
     std::atomic<unsigned> mmcs_tasks_waiting;
 
@@ -67,19 +68,21 @@ namespace agdmhs {
             v = C.find_next(v);
         }
 
+        // Record vertices of C which were violating for S
+        bitset violators (H.num_verts());
+
         // Test all the vertices in C (in descending order)
         for (auto& v: Cindices) {
+            ++mmcs_update_loops;
             // Update uncov and crit by iterating over edges containing the vertex
-            hsetmap critmark;
-            try {
-                critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
-            }
-            catch (vertex_violating_exception& e) {
+            if (vertex_would_violate(crit, uncov, H, T, S, v)) {
                 // Update CAND and proceed to new vertex
                 ++mmcs_violators;
-                CAND.set(v);
+                violators.set(v);
                 continue;
             }
+
+            hsetmap critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
 
             // Construct the new candidate hitting set
             S.set(v);
@@ -115,6 +118,9 @@ namespace agdmhs {
             S.reset(v);
             restore_crit_and_uncov(crit, uncov, S, critmark, v);
         }
+
+        // Return the violators to CAND before any other run uses it
+        CAND |= violators;
     }
 
     Hypergraph mmcs_transversal(const Hypergraph& H,
@@ -158,7 +164,7 @@ namespace agdmhs {
             Htrans.add_edge(result);
         }
 
-        BOOST_LOG_TRIVIAL(info) << "pMMCS complete: " << mmcs_iterations << " iterations, " << mmcs_violators << " violating vertices.";
+        BOOST_LOG_TRIVIAL(info) << "pMMCS complete: " << mmcs_iterations << " iterations, " << mmcs_violators << " violating vertices, " << mmcs_update_loops << " update loops.";
 
         return Htrans;
     }

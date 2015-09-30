@@ -29,6 +29,7 @@ namespace agdmhs {
     std::atomic<unsigned> rs_iterations;
     std::atomic<unsigned> rs_violators;
     std::atomic<unsigned> rs_critical_fails;
+    std::atomic<unsigned> rs_update_loops;
 
     std::atomic<unsigned> rs_tasks_waiting;
 
@@ -90,11 +91,8 @@ namespace agdmhs {
 
         // Loop over vertices in that edge
         for (auto& v: search_indices) {
-            // Check preconditions
-            hsetmap critmark;
-            // This call can throw, but if it does it represents a logic error,
-            // so we don't catch it here
-            critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
+            ++rs_update_loops;
+            hsetmap critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
 
             if (rs_any_edge_critical_after_i(search_edge, S, crit)) {
                 ++rs_critical_fails;
@@ -176,7 +174,7 @@ namespace agdmhs {
             Htrans.add_edge(result);
         }
 
-        BOOST_LOG_TRIVIAL(info) << "pRS complete: " << rs_iterations << " iterations, " << rs_violators << " violating verts, " << rs_critical_fails << " critical check failures.";
+        BOOST_LOG_TRIVIAL(info) << "pRS complete: " << rs_iterations << " iterations, " << rs_violators << " violating verts, " << rs_critical_fails << " critical check failures, " << rs_update_loops << " update loops.";
 
         return Htrans;
     };

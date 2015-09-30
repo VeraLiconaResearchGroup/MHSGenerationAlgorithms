@@ -60,9 +60,6 @@ namespace agdmhs {
           Update crit[] and uncov to reflect S+v.
           (Assumes crit[] and uncov were correct for S.)
           Returns overlay with edges removed from crit.
-
-          NOTE: Raises a vertex_violating_exception if any w in S is not
-          critical in S+v. In this case, crit[] and uncov are restored.
          */
         // Input specification
         assert(not S.test(v));
@@ -70,7 +67,8 @@ namespace agdmhs {
 
         // v is critical for edges it hits which were previously uncovered
         const bitset& v_edges = T[v];
-        crit[v] = v_edges & uncov;
+        crit[v] = v_edges;
+        crit[v] &= uncov;
 
         // Remove anything v hits from uncov
         uncov -= v_edges;
@@ -78,17 +76,12 @@ namespace agdmhs {
         // Remove anything v hits from the other crit[w]s and record it
         // in critmark[w]s
         hsetmap critmark;
-
         hindex w = S.find_first();
         while (w != bitset::npos) {
-            bitset& critw = crit[w];
-            critmark[w] = critw & v_edges;
-            critw -= v_edges;
+            critmark[w] = crit[w];
+            critmark[w] &= v_edges;
+            crit[w] -= v_edges;
 
-            if (critw.none()) {
-                restore_crit_and_uncov(crit, uncov, S, critmark, v);
-                throw vertex_violating_exception();
-            }
             w = S.find_next(w);
         }
 
