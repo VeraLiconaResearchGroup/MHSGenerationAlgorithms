@@ -22,7 +22,7 @@ def input_file_lines(edges):
 def transversals_from_output_file(output_file):
     output_file.seek(0)
     for line in output_file:
-        yield [i for i, b in enumerate(line, start=1) if b == '1']
+        yield map(int, line.split())
 
 def main():
     # Set up argument processing

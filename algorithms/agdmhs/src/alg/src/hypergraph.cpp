@@ -240,7 +240,12 @@ namespace agdmhs {
         }
 
         for (auto const& edge: _edges) {
-            output_filestream << edge << "\n";
+            hindex v = edge.find_first();
+            while (v != bitset::npos) {
+                output_filestream << v << ' ';
+                v = edge.find_next(v);
+            }
+            output_filestream << "\n";
         }
     };
 
