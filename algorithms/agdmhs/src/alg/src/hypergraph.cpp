@@ -11,7 +11,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 #include <stdexcept>
 #include <sstream>
 #include <vector>
@@ -102,12 +101,12 @@ namespace agdmhs {
         if (test_simplicity) {
             for (auto const& existing_edge: _edges) {
                 if (existing_edge.is_subset_of(edge)) {
-                    std::cout << "existing:\t" << existing_edge << "\n⊂ added:\t" << edge << std::endl;
+                    BOOST_LOG_TRIVIAL(error) << "existing:\t" << existing_edge << "\n⊂ added:\t" << edge;
                     throw std::runtime_error("Invalid edge addition.");
                 }
 
                 if (edge.is_subset_of(existing_edge)) {
-                    std::cout << "added:\t\t" << edge << "\n⊂ existing:\t" << existing_edge << std::endl;
+                    BOOST_LOG_TRIVIAL(error)  << "added:\t\t" << edge << "\n⊂ existing:\t" << existing_edge;
                     throw std::runtime_error("Invalid edge addition.");
                 }
             }

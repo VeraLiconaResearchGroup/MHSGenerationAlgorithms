@@ -9,15 +9,15 @@
 #include "fk-base.hpp"
 #include "hypergraph.hpp"
 
+#include <cassert>
+#include <vector>
+
+#include <boost/dynamic_bitset.hpp>
+
 #define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
-#include <boost/dynamic_bitset.hpp>
-
-#include <cassert>
-#include <iostream>
-#include <vector>
 
 namespace agdmhs {
     Hypergraph fka_transversal(const Hypergraph& H) {

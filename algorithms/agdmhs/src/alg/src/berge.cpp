@@ -8,13 +8,12 @@
 
 #include "hypergraph.hpp"
 
+#include <boost/dynamic_bitset.hpp>
+
 #define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
 #include <boost/log/core.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
-#include <boost/dynamic_bitset.hpp>
-
-#include <iostream>
 
 namespace agdmhs {
     void berge_update_transversals_with_edge(Hypergraph& G,
