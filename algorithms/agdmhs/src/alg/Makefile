@@ -8,7 +8,6 @@ CXXFLAGS += --std=c++11
 CXXFLAGS += -fPIC
 CXXFLAGS += -fopenmp
 CXXFLAGS += -Wall
-CXXFLAGS += -g3 -pg
 CXXFLAGS += -O3
 
 # Libraries
@@ -24,7 +23,10 @@ all: $(OBJ) $(BIN)
 
 -include $(DEP)
 
-debug: CXXFLAGS += -O0
+profile: CXXFLAGS += -g3 -pg
+profile: all
+
+debug: CXXFLAGS += -O0 -g3
 debug: all
 
 agdmhs: $(OBJ)
