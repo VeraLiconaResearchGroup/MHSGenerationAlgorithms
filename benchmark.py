@@ -118,7 +118,7 @@ for alg in alg_collection:
                         result_str = alg.run_alg(input_str, timeout)
                         result = json.loads(result_str)
                         time_taken = float(result["timeTaken"])
-                    except pyalgorun.AlgorunTimeout:
+                    except (pyalgorun.AlgorunTimeout, ValueError):
                         logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
                         alg_has_timed_out = True
                         time_taken = -1
