@@ -111,11 +111,11 @@ def main():
             original_algs = original_output["algs"]
             original_timeout = original_output["timeout_secs"]
         except IOError:
-            sys.stderr.write("Requested file " + args.output_data_file + " did not exist, so we could not append. Continuing.")
+            sys.stderr.write("Requested file " + args.output_data_file + " did not exist, so we could not append. Continuing.\n")
             pass
         except (ValueError, KeyError):
-            sys.stderr.write("Requested file " + args.output_data_file + " did not contain valid results JSON.")
-            sys.stderr.write("Aborting so we don't destroy data.")
+            sys.stderr.write("Requested file " + args.output_data_file + " did not contain valid results JSON.\n")
+            sys.stderr.write("Aborting so we don't destroy data.\n")
             sys.exit(1)
 
         if original_timeout != timeout:
