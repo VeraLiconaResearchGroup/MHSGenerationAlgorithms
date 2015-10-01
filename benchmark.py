@@ -151,9 +151,9 @@ def main():
                         except (pyalgorun.AlgorunTimeout, ValueError):
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
                             alg_has_timed_out = True
-                            time_taken = -1
+                            time_taken = float('inf')
                     else:
-                        time_taken = -1
+                        time_taken = float('inf')
 
                     runtimes[newname].append(time_taken)
                     logging.info("Finished {0} run in {1} sec.".format(newname, time_taken))
