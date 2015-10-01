@@ -9,7 +9,7 @@
             "containerName": "agdphd/dl"
         },
         {
-            "algName": "fka-begk",
+            "algName": "fka_begk",
             "containerName": "agdphd/fka-begk"
         },
         {
@@ -51,7 +51,7 @@
             }
         },
         {
-            "algName": "bool-iterative",
+            "algName": "bool_iterative",
             "containerName": "agdphd/pymbd",
             "cutoff": true,
             "config": {
@@ -59,7 +59,7 @@
             }
         },
         {
-            "algName": "bool-recursive",
+            "algName": "bool_recursive",
             "containerName": "agdphd/pymbd",
             "cutoff": true,
             "slow": true,
@@ -113,7 +113,7 @@
             }
         },
         {
-            "algName": "fka-agd",
+            "algName": "fka_agd",
             "containerName": "agdphd/agdmhs",
             "slow": "true",
             "config": {
