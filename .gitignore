@@ -1,3 +1,4 @@
 *.pyc
 *.P
 *.o
+results/*.json
