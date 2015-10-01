@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding: utf-8
 
 # MHS algorithm benchmark runner
 # Copyright Vera-Licona Research Group (C) 2015
@@ -9,7 +10,7 @@ import json
 import pyalgorun
 import logging
 import time
-import copy
+import sys
 from collections import defaultdict
 
 def main():
@@ -20,16 +21,17 @@ def main():
     logging.getLogger("requests").setLevel(logging.WARNING)
 
     # Add arguments
-    parser.add_argument("algorithm_list_file", type=argparse.FileType('r'), help="JSON file of algorithms to benchmark")
-    parser.add_argument("input_data_file", type=argparse.FileType('r'), help="Input file to be passed to each algorithm")
-    parser.add_argument("output_data_file", type=argparse.FileType('w'), help="Output file to write results")
-    parser.add_argument("-n", dest="num_tests", type=int, default=1, help="Number of test iterations")
-    parser.add_argument("-j", dest="num_threads", type=int, nargs='*', help="Numbers of threads to use for supporting algorithms")
-    parser.add_argument("-c", dest="cutoff_sizes", type=int, nargs='*', help="Cutoff sizes to use for supporting algorithms (if specified, full test is not run unless 0 is included)")
-    parser.add_argument("-t", dest="timeout", type=int, default=0, help="Kill algorithms after this many seconds (0 to run forever)")
-    parser.add_argument("-d", dest="docker_base_url", default=None, help="Base URL for Docker client")
+    parser.add_argument("algorithm_list_file", help="JSON file of algorithms to benchmark")
+    parser.add_argument("input_data_file", help="Input file to be passed to each algorithm")
+    parser.add_argument("output_data_file", help="Output file to write results")
+    parser.add_argument("-n", "--num_tests", type=int, default=1, help="Number of test iterations")
+    parser.add_argument("-j", "--num_threads", type=int, nargs='*', help="Numbers of threads to use for supporting algorithms")
+    parser.add_argument("-c", "--cutoff_sizes", type=int, nargs='*', help="Cutoff sizes to use for supporting algorithms (if specified, full test is not run unless 0 is included)")
+    parser.add_argument("-t", "--timeout", type=int, default=0, help="Kill algorithms after this many seconds (0 to run forever)")
+    parser.add_argument("-d", "--docker_base_url", default=None, help="Base URL for Docker client")
     parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
-    parser.add_argument('-s', '--slow', dest="slow", action="store_true", help="Include slow algorithms (be careful!)")
+    parser.add_argument('-s', '--slow', action="store_true", help="Include slow algorithms (be careful!)")
+    parser.add_argument('-a', '--append', action="store_true", help="Append results to existing file, replacing repeated algorithms (otherwise, overwrite!)")
 
     # Process the arguments
     args = parser.parse_args()
@@ -47,8 +49,12 @@ def main():
     logging.basicConfig(format = log_format, level = log_level)
 
     # Read and process files
-    alg_list = json.load(args.algorithm_list_file)["containers"]
-    input_dict = json.load(args.input_data_file)
+    with open(args.algorithm_list_file) as algorithm_list_file:
+        alg_list = json.load(algorithm_list_file)["containers"]
+
+    with open(args.input_data_file) as input_data_file:
+        input_dict = json.load(input_data_file)
+
     input_str = json.dumps(input_dict)
 
     # Filter out slow algorithms if requested
@@ -91,6 +97,29 @@ def main():
 
     # Set up a dict to store the timing results
     runtimes = defaultdict(list)
+
+    # Load the previous results if requested
+    original_runtimes = []
+    original_algs = []
+    original_timeout = timeout
+
+    if args.append:
+        try:
+            with open(args.output_data_file) as output_data_file:
+                original_output = json.load(output_data_file)
+            original_runtimes = original_output["runtimes"]
+            original_algs = original_output["algs"]
+            original_timeout = original_output["timeout_secs"]
+        except IOError:
+            sys.stderr.write("Requested file " + args.output_data_file + " did not exist, so we could not append. Continuing.")
+            pass
+        except (ValueError, KeyError):
+            sys.stderr.write("Requested file " + args.output_data_file + " did not contain valid results JSON.")
+            sys.stderr.write("Aborting so we don't destroy data.")
+            sys.exit(1)
+
+        if original_timeout != timeout:
+            raise ValueError("Given timeout " + timeout + " ≠ original timeout " + original_timeout + ". Cannot consistently update data.")
 
     # Run the tests and store the timing results
     logging.info("Running algorithms.")
@@ -136,6 +165,20 @@ def main():
     # All done! Time to close up shop.
     alg_collection.close()
 
+    # Combine old data with new
+    # First, combine algorithm lists, giving preference to new ones
+    for alg in alg_list:
+        for orig_alg in original_algs:
+            if orig_alg["algName"] == alg["algName"]:
+                original_algs.remove(orig_alg)
+
+    alg_list += original_algs
+
+    # Then combine runtime lists, giving preference to new ones
+    for orig_alg in original_runtimes:
+        if orig_alg not in runtimes:
+            runtimes[orig_alg] = original_runtimes[orig_alg]
+
     # Build output dict
     output = {
         "timeout_secs": timeout,
@@ -144,7 +187,8 @@ def main():
     }
 
     # Print the results
-    json.dump(output, args.output_data_file, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
+    with open(args.output_data_file, 'w') as output_data_file:
+        json.dump(output, output_data_file, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
 
 if __name__ == "__main__":
     main()
@@ -153,4 +197,3 @@ if __name__ == "__main__":
 # Local Variables:
 # mode: python
 # End
-:
