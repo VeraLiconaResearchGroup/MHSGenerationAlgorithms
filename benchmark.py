@@ -148,8 +148,9 @@ def main():
                             result_str = alg.run_alg(input_str, timeout)
                             result = json.loads(result_str)
                             time_taken = float(result["timeTaken"])
-                        except (pyalgorun.AlgorunTimeout, ValueError):
+                        except (pyalgorun.AlgorunTimeout, ValueError) as e:
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
+                            logging.info("Error message: {0}".format(e))
                             alg_has_timed_out = True
                             time_taken = float('inf')
                     else:
