@@ -72,7 +72,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         alg_call_string = [str(arg) for arg in alg_call_parts]
 
-        time_taken = timeit.timeit(stmt="subprocess.call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+        time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_string, script_dir),
                                    setup="import subprocess",
                                    number=1)
 

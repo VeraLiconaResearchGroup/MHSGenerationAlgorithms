@@ -67,7 +67,7 @@ def main():
             alg_call_string = "['./alg/thg', '-i', '{0}', '-o', '{1}']".format(temp_input_file.name, temp_output_file.name)
 
             # Call the algorithm
-            time_taken = timeit.timeit(stmt="subprocess.call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+            time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_string, script_dir),
                                        setup="import subprocess",
                                        number=1)
 
