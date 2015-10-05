@@ -2,7 +2,7 @@
 # Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 # Set up variables
-FROM algorun/algorun:15.04
+FROM algorun/algorun:latest
 MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 # Add the Algorun manifest and examples
