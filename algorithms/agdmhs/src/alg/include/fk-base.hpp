@@ -26,5 +26,6 @@ namespace agdmhs {
     Hypergraph fk_minimized_union(const Hypergraph& F, const Hypergraph& G);
 
     std::pair<Hypergraph, Hypergraph> fk_split_hypergraph_over_vertex(const Hypergraph& H, const hindex& v);
+    bitset fk_minimize_new_hs(const Hypergraph& F, const Hypergraph& G, bitset S);
 }
 #endif

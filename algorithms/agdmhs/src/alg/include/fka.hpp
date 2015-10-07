@@ -16,7 +16,6 @@
 namespace agdmhs {
     Hypergraph fka_transversal(const Hypergraph& H);
     bitset fka_find_omit_set(const Hypergraph& F, const Hypergraph& G);
-    bitset fka_transform_omit_set_to_mhs(const Hypergraph& F, const Hypergraph& G, const bitset& O);
 }
 
 #endif
