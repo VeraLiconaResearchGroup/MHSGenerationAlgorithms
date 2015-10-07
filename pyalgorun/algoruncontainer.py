@@ -84,6 +84,12 @@ class AlgorunContainer:
                 time.sleep(1)
                 continue
 
+    def __del__(self):
+        try:
+            self.stop()
+        except docker.errors.NotFound:
+            pass
+
     def stop(self):
         """
         Stop the underlying Docker container

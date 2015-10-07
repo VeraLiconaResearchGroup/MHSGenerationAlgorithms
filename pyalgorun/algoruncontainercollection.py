@@ -43,9 +43,9 @@ class AlgorunContainerCollection:
         # Set up the containers
         # Note: Docker build doesn't parallelize well, so we do this serially
         containers = [build_container(alg.get("containerName"),
-                                            alg.get("algName"),
-                                            alg.get("config"),
-                                            docker_base_url)
+                                      alg.get("algName"),
+                                      alg.get("config"),
+                                      docker_base_url)
                       for alg in alg_set]
 
         # Store the container collection in a member
@@ -94,7 +94,11 @@ class AlgorunContainerCollection:
         # We centralize the Docker client to save time
         docker_client = docker.Client(base_url = self._docker_base_url)
         for container in self._containers:
-            docker_client.stop(container._docker_container)
+            try:
+                docker_client.stop(container._docker_container)
+            except docker.errors.NotFound:
+                # Sometimes containers die, but we should still clean everything up
+                pass
 
     def close(self):
         """
