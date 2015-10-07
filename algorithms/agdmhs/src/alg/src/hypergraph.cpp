@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <sstream>
 #include <vector>
@@ -190,7 +191,7 @@ namespace agdmhs {
         return result;
     }
 
-    Hypergraph Hypergraph::edge_wedge_cutoff(const Hypergraph& G, const size_t cutoff_size, const bool do_minimize) {
+    Hypergraph Hypergraph::edge_wedge_cutoff(const Hypergraph& G, const size_t cutoff_size, const bool do_minimize) const {
         // Return new hypergraph with edges all possible unions of edges from
         // this and G whose size is no greater than cutoff_size
         // Note: we assume that this and G share the same vertex set
@@ -216,6 +217,44 @@ namespace agdmhs {
         // TODO: Can this be rolled into the union operation to save time?
         if (do_minimize) {
             result = result.minimization();
+        }
+
+        return result;
+    }
+
+    Hypergraph Hypergraph::contraction(const bitset& S,
+                                       const bool do_minimize) const {
+        /**
+           Return the contraction of H onto S.
+           This is the hypergraph whose edges are e∩S.
+           This is not automatically minimal, but optionally we can minimize
+           the result before returning it.
+         **/
+        Hypergraph result (num_verts());
+        for (auto& edge: _edges) {
+            bitset new_edge = edge & S;
+            result.add_edge(new_edge);
+        }
+
+        if (do_minimize) {
+            result = result.minimization();
+        }
+
+        return result;
+    }
+
+    Hypergraph Hypergraph::restriction(const bitset& S) const {
+        /**
+           Return the restriction of H to S.
+           This is the hypergraph whose edges are the edges e of H which are
+           subsets of H.
+           If H is minimal, so is its restriction.
+         **/
+        Hypergraph result (num_verts());
+        for (auto& edge: _edges) {
+            if (edge.is_subset_of(S)) {
+                result.add_edge(edge);
+            }
         }
 
         return result;
@@ -302,6 +341,43 @@ namespace agdmhs {
         return result;
     };
 
+    std::vector<hindex> Hypergraph::vertex_degrees() const {
+        std::vector<hindex> result (num_verts());
+        for (auto& edge: _edges) {
+            // TODO: If this is a bottleneck, we could speed things
+            // up by working on blocks instead of individual values
+            for (hindex i = 0; i < edge.size(); ++i) {
+                result[i] += edge[i];
+            }
+        }
+
+        return result;
+    }
+
+    bitset Hypergraph::vertices_with_degree_above_threshold(const float degree_threshold) const {
+        /**
+           Return the set of vertices whose degree is greater than
+           degree_threshold*|H|.
+        **/
+        assert(0 <= degree_threshold);
+        assert(degree_threshold <= 1);
+        auto&& degrees = vertex_degrees();
+
+        hindex n = num_verts();
+        hindex m = num_edges();
+        hindex count_threshold = floor(m * degree_threshold);
+
+        bitset result (n);
+
+        for (hindex i = 0; i < n; ++i) {
+            if (degrees[i] > count_threshold) {
+                result.set(i);
+            }
+        }
+
+        return result;
+    }
+
     bitset Hypergraph::edges_containing_vertex(const hindex& vertex) const {
         hindex n = num_edges();
         bitset result (n);
@@ -339,5 +415,15 @@ namespace agdmhs {
         }
 
         return false;
+    }
+
+    std::ostream& operator<<(std::ostream& os, const Hypergraph& H) {
+        os << "Hypergraph with " << H.num_verts() << " vertices and "
+           << H.num_edges() << " edges: \n";
+        for (auto& e: H) {
+            os << e << "\n";
+        }
+
+        return os;
     }
 }
