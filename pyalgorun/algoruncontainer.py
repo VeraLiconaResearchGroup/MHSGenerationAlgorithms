@@ -87,6 +87,7 @@ class AlgorunContainer:
     def __del__(self):
         try:
             self.stop()
+            self.remove()
         except docker.errors.NotFound:
             pass
 
@@ -97,6 +98,14 @@ class AlgorunContainer:
         docker_client = docker.Client(base_url = self._docker_base_url)
         logging.debug("Stopping container {0}".format(self.name()))
         docker_client.stop(self._docker_container)
+
+    def remove(self):
+        """
+        Remove the underlying data store of this container
+        """
+        docker_client = docker.Client(base_url = self._docker_base_url)
+        logging.debug("Removing container {0}".format(self.name()))
+        docker_client.remove_container(self._docker_container)
 
     def run_alg(self, data, timeout = None):
         """
