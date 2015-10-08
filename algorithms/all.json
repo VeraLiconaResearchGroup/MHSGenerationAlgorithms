@@ -37,7 +37,6 @@
         {
             "algName": "mmcs",
             "containerName": "agdphd/shd",
-            "cutoff": true,
             "config": {
                 "MODE": "mmcs"
             }
@@ -45,7 +44,6 @@
         {
             "algName": "rs",
             "containerName": "agdphd/shd",
-            "cutoff": true,
             "config": {
                 "MODE": "rs"
             }
