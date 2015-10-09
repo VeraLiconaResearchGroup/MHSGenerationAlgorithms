@@ -10,6 +10,7 @@ import json
 import pandas
 import numpy
 import os
+from matplotlib import pyplot as plt
 from collections import defaultdict
 
 def parse_results_algname(algname_str):
@@ -96,7 +97,7 @@ def main():
     parser = argparse.ArgumentParser(description="MHS algorithm benchmark runner")
 
     # Add arguments
-    parser.add_argument("output_file", help="Output file to write results")
+    parser.add_argument("output_file_basename", help="Base name for output files")
     parser.add_argument("input_files", help="Input file(s) to collate", nargs="+")
 
     # Process the arguments
@@ -105,10 +106,25 @@ def main():
     # Process the files
     results = panel4d_from_filenames(args.input_files)
 
-    # Write the t=1, c=0 results to the file
-    # TODO: This is an *extremely* preliminary thing to do!
-    results.ix[:,:,1,0].to_csv(args.output_file)
+    # Generate the results and write the plots to files
+    # For now, we only use the t=1 data
+    for cutoff_size in [0, 5, 7, 10]:
+        # Construct filename
+        output_file_name = "{0}.c{1}.pdf".format(args.output_file_basename, cutoff_size)
 
+        # Make sure the output file does not exist
+        if os.path.exists(output_file_name):
+            raise ValueError("Output file {0} already exists!".format(output_file_name))
+
+        # Generate the plot
+        try:
+            data = results.ix[:,:,1,cutoff_size].T.dropna(axis='columns', how='all') # Extract the data we want
+        except KeyError:
+            # If the requested cutoff_size is not available, just move on to the next one
+            print "Skipping cutoff_size {0}".format(cutoff_size)
+            continue
+        data.plot(logy = True, ylim = [0, 3600])
+        plt.savefig(output_file_name)
 
 if __name__ == "__main__":
     main()
