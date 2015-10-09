@@ -21,6 +21,9 @@
 #include <boost/log/expressions.hpp>
 
 namespace agdmhs {
+    // ugh globals
+    std::atomic<bool> found_new_hs;
+
     Hypergraph l4_full_cover(const Hypergraph& H,
                              const bitset& base_edge) {
         /**
@@ -111,8 +114,6 @@ namespace agdmhs {
          **/
 
         bitset new_hs (H.num_verts());
-        bool found_new_hs = false;
-
         bitset V = C.verts_covered();
 
         for (auto c: C) {
@@ -253,7 +254,7 @@ namespace agdmhs {
         // Apply the BM algorithm repeatedly, generating new transversals
         // until duality is confirmed
         bool still_searching_for_transversals = true;
-#pragma omp parallel shared(Hmin, G) num_threads(num_threads)
+#pragma omp parallel shared(Hmin, G, found_new_hs) num_threads(num_threads)
 #pragma omp master
         while (still_searching_for_transversals) {
             bitset new_hs = bm_find_new_hs(Hmin, G, Hmin.verts_covered());
@@ -261,6 +262,7 @@ namespace agdmhs {
             if (new_hs.none()) {
                 still_searching_for_transversals = false;
             } else {
+                found_new_hs = false;
                 bitset new_mhs = fk_minimize_new_hs(Hmin, G, new_hs);
                 BOOST_LOG_TRIVIAL(trace) << "New hitting set:"
                                          << "\nS:\t" << new_hs
