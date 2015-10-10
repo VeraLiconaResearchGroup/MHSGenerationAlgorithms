@@ -7,6 +7,8 @@
 #ifndef _HYPERGRAPH__H
 #define _HYPERGRAPH__H
 
+#include "concurrentqueue.h"
+
 #include <boost/filesystem.hpp>
 #include <boost/dynamic_bitset.hpp>
 
@@ -19,6 +21,7 @@ namespace agdmhs {
     typedef boost::dynamic_bitset<> bitset;
     typedef std::vector<bitset> bsvector;
     typedef bitset::size_type hindex;
+    typedef moodycamel::ConcurrentQueue<bitset> bsqueue;
 
     class Hypergraph {
     public:

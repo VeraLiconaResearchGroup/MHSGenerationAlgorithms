@@ -9,11 +9,14 @@
 
 #include "bm.hpp"
 
+#include "concurrentqueue.h"
 #include "fk-base.hpp"
 #include "hypergraph.hpp"
 
 #include <atomic>
 #include <cassert>
+
+#include <boost/dynamic_bitset.hpp>
 
 #define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
 #include <boost/log/core.hpp>
@@ -21,9 +24,6 @@
 #include <boost/log/expressions.hpp>
 
 namespace agdmhs {
-    // ugh globals
-    std::atomic<bool> found_new_hs;
-
     Hypergraph l4_full_cover(const Hypergraph& H,
                              const bitset& base_edge) {
         /**
@@ -105,46 +105,35 @@ namespace agdmhs {
         return empty_edge;
     }
 
-    bitset bm_find_new_hs_fork(const Hypergraph& H,
+    void bm_find_new_hses_fork(const Hypergraph& H,
                                const Hypergraph& G,
-                               const Hypergraph& C) {
+                               const Hypergraph& C,
+                               bsqueue& results) {
         /**
-           Find a new hitting set of H with respect to G if possible,
-           splitting the work over the full cover C of Tr(H).
+           Find any new hitting sets of H with respect to G,
+           splitting the work over the full cover C of Tr(H) and queueing
+           the results.
          **/
 
-        bitset new_hs (H.num_verts());
         bitset V = C.verts_covered();
 
         for (auto c: C) {
-            // TODO: Some un-aborted tasks may waste time on deep
-            // call trees :sadface:
-#pragma omp task shared(H, G, found_new_hs, new_hs)
+#pragma omp task shared(H, G, results)
             {
                 assert(c.is_subset_of(V));
-#pragma omp flush (found_new_hs)
-                if (not found_new_hs) {
-                    bitset task_result = bm_find_new_hs(H, G, c);
-#pragma omp critical (BM_fork)
-                    if (task_result.any()) {
-                        found_new_hs = true;
-#pragma omp flush (found_new_hs)
-
-                        new_hs = task_result;
-                    }
-                }
+                bm_find_new_hses(H, G, c, results);
             }
         }
 #pragma omp taskwait
-        return new_hs;
     }
 
-    bitset bm_find_new_hs(const Hypergraph& H,
+    void bm_find_new_hses(const Hypergraph& H,
                           const Hypergraph& G,
-                          const bitset& c) {
+                          const bitset& c,
+                          bsqueue& results) {
         /**
-           Find a new hitting set of H^c with respect to G_c if possible.
-           If not, return an empty edge as a signal.
+           Find any new hitting sets of H^c with respect to G_c, queueing the
+           results.
          **/
 
         // Construct the reduced hypergraphs
@@ -162,13 +151,13 @@ namespace agdmhs {
             // If any edge of Hc is empty, this is a dead end
             for (const auto& e: Hc) {
                 if (e.none()) {
-                    new_hs.reset();
-                    return new_hs;
+                    return;
                 }
             }
 
             // Otherwise, the support of Hc is a new hitting set
-            return new_hs;
+            results.enqueue(new_hs);
+            return;
         }
 
         // Step 2: Handle |Gc| = 1
@@ -184,13 +173,14 @@ namespace agdmhs {
 
             if (Hc_verts_to_cover.none()) {
                 // If so, this is a dead end
-                return bitset(Hc.num_verts());
+                return;
             } else {
                 // If not, we choose some vertex that was hit by Gc but was
                 // not a singleton in Hc
                 hindex uncovered_vertex = Hc_verts_to_cover.find_first();
                 new_hs.reset(uncovered_vertex);
-                return new_hs;
+                results.enqueue(new_hs);
+                return;
             }
 
             // We definitely shouldn't ever be here!
@@ -206,8 +196,8 @@ namespace agdmhs {
         // If found, form a full cover
         if (missed_edge.any()) {
             Hypergraph C = l4_full_cover(Hc, missed_edge);
-            new_hs = bm_find_new_hs_fork(H, G, C);
-            return new_hs;
+            bm_find_new_hses_fork(H, G, C, results);
+            return;
         }
 
         // Per lemma 8, look for a transversal that covers I
@@ -215,12 +205,60 @@ namespace agdmhs {
         // If found, form a full cover
         if (subtrans_edge.any()) {
             Hypergraph C = l5_full_cover(Hc, subtrans_edge);
-            new_hs = bm_find_new_hs_fork(H, G, C);
-            return new_hs;
+            bm_find_new_hses_fork(H, G, C, results);
+            return;
         }
 
         // If we reach this point, I itself is a new HS
-        return I;
+        results.enqueue(I);
+        return;
+    }
+
+    bitset bm_minimize_new_hs(const Hypergraph& H,
+                              bitset new_hs) {
+        /**
+           Given a hypergraph H and a new hitting set new_hs, find an
+           inclusion-minimal subset of new_hs which is still a hitting
+           set of H.
+         **/
+
+        BOOST_LOG_TRIVIAL(trace) << "Attempting minimization of"
+                                 << "\nS:\t" << new_hs;
+
+        // Input validation
+        assert(H.is_transversed_by(new_hs));
+
+        // Iterate through the vertices of new_hs, checking whether they can be
+        // removed
+        hindex v = new_hs.find_first();
+        while (v != bitset::npos) {
+            new_hs.reset(v);
+            if (not H.is_transversed_by(new_hs)) {
+                new_hs.set(v);
+            }
+
+            v = new_hs.find_next(v);
+        }
+
+        BOOST_LOG_TRIVIAL(trace) << "Minimized to:"
+                                 << "\nS:\t" << new_hs;
+
+        return new_hs;
+    }
+
+    void bm_minimize_new_hses(const Hypergraph& H,
+                              const Hypergraph& G,
+                              bsqueue& new_hses,
+                              bsqueue& new_mhses) {
+        bitset new_hs;
+        while (new_hses.try_dequeue(new_hs)) {
+#pragma omp task shared(H, G, new_hses, new_mhses)
+            {
+                bitset new_mhs = bm_minimize_new_hs(H, new_hs);
+                new_mhses.enqueue(new_mhs);
+            }
+#pragma omp taskwait
+        }
     }
 
     Hypergraph bm_transversal(const Hypergraph& H,
@@ -254,20 +292,26 @@ namespace agdmhs {
         // Apply the BM algorithm repeatedly, generating new transversals
         // until duality is confirmed
         bool still_searching_for_transversals = true;
-#pragma omp parallel shared(Hmin, G, found_new_hs) num_threads(num_threads)
+        bsqueue new_hses, new_mhses;
+#pragma omp parallel shared(Hmin, G, new_hses, new_mhses) num_threads(num_threads)
 #pragma omp master
         while (still_searching_for_transversals) {
-            bitset new_hs = bm_find_new_hs(Hmin, G, Hmin.verts_covered());
+            bm_find_new_hses(Hmin, G, Hmin.verts_covered(), new_hses);
 
-            if (new_hs.none()) {
+            if (new_hses.size_approx() == 0) {
                 still_searching_for_transversals = false;
             } else {
-                found_new_hs = false;
-                bitset new_mhs = fk_minimize_new_hs(Hmin, G, new_hs);
-                BOOST_LOG_TRIVIAL(trace) << "New hitting set:"
-                                         << "\nS:\t" << new_hs
-                                         << "\nMHS:\t" << new_mhs;
-                G.add_edge(new_mhs, true);
+                bm_minimize_new_hses(Hmin, G, new_hses, new_mhses);
+
+                bitset new_mhs;
+                while (new_mhses.try_dequeue(new_mhs)) {
+                    // The results will all be inclusion-minimal, but
+                    // there may be some overlap. Thus, we simply add
+                    // everything blindly at this stage...
+                    G.add_edge(new_mhs, false);
+                }
+                // And then force minimization here.
+                G = G.minimization();
                 BOOST_LOG_TRIVIAL(debug) << "New |G|: " << G.num_edges();
             }
         }

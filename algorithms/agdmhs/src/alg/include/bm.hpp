@@ -15,13 +15,15 @@ namespace agdmhs {
     Hypergraph bm_transversal(const Hypergraph& H,
                               const size_t num_threads);
 
-    bitset bm_find_new_hs(const Hypergraph& H,
+    void bm_find_new_hses(const Hypergraph& H,
                           const Hypergraph& G,
-                          const bitset& c);
+                          const bitset& c,
+                          bsqueue& results);
 
-    bitset bm_find_new_hs_fork(const Hypergraph& H,
+    void bm_find_new_hses_fork(const Hypergraph& H,
                                const Hypergraph& G,
-                               const Hypergraph& C);
+                               const Hypergraph& C,
+                               bsqueue& results);
 }
 
 #endif

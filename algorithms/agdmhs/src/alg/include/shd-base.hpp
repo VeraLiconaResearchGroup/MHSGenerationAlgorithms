@@ -17,8 +17,6 @@
 #include <utility>
 
 namespace agdmhs {
-    typedef moodycamel::ConcurrentQueue<bitset> bsqueue;
-
     // Types to record mappings of indices to bitsets
     // For example, each element of crit[] is a bitset
     typedef std::map<hindex, bitset> hsetmap;
