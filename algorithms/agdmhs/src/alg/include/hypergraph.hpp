@@ -12,6 +12,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/dynamic_bitset.hpp>
 
+#include <exception>
 #include <iostream>
 #include <vector>
 
@@ -22,6 +23,12 @@ namespace agdmhs {
     typedef std::vector<bitset> bsvector;
     typedef bitset::size_type hindex;
     typedef moodycamel::ConcurrentQueue<bitset> bsqueue;
+
+    class minimality_violated_exception: public std::exception {
+        virtual const char* what() const throw() {
+            return "A non-minimal edge was added.";
+        }
+    };
 
     class Hypergraph {
     public:

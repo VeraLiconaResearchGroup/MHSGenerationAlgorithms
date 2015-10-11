@@ -102,13 +102,11 @@ namespace agdmhs {
         if (test_simplicity) {
             for (auto const& existing_edge: _edges) {
                 if (existing_edge.is_subset_of(edge)) {
-                    BOOST_LOG_TRIVIAL(error) << "existing:\t" << existing_edge << "\n⊂ added:\t" << edge;
-                    throw std::runtime_error("Invalid edge addition.");
+                    throw minimality_violated_exception();
                 }
 
                 if (edge.is_subset_of(existing_edge)) {
-                    BOOST_LOG_TRIVIAL(error)  << "added:\t\t" << edge << "\n⊂ existing:\t" << existing_edge;
-                    throw std::runtime_error("Invalid edge addition.");
+                    throw minimality_violated_exception();
                 }
             }
         }

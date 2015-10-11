@@ -306,12 +306,15 @@ namespace agdmhs {
                 bitset new_mhs;
                 while (new_mhses.try_dequeue(new_mhs)) {
                     // The results will all be inclusion-minimal, but
-                    // there may be some overlap. Thus, we simply add
-                    // everything blindly at this stage...
-                    G.add_edge(new_mhs, false);
+                    // there may be some overlap. Thus, we try to add
+                    // them...
+                    try {
+                        G.add_edge(new_mhs, true);
+                    }
+                    // But ignore any minimality_violated_exception
+                    // that is thrown.
+                    catch (minimality_violated_exception& e) {}
                 }
-                // And then force minimization here.
-                G = G.minimization();
                 BOOST_LOG_TRIVIAL(debug) << "New |G|: " << G.num_edges();
             }
         }
