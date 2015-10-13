@@ -129,10 +129,24 @@ def main():
         alg_thread_list = num_threads if alg_entry.get("threads") else [1]
         alg_cutoff_list = cutoff_sizes if alg_entry.get("cutoff") else [0]
 
-        for t in alg_thread_list:
-            alg_has_timed_out = False
+        timeout_config_pairs = []
 
+        for t in alg_thread_list:
             for c in alg_cutoff_list:
+                # NOTE: We assume that increasing the cutoff or
+                # decreasing the number of threads will never decrease
+                # runtime. This only matters for runtimes that move
+                # from above to below the timeout, so it should be
+                # safe as long as the timeout is large and the
+                # algorithms aren't *very* badly behaved.
+
+                # Check whether a faster configuration has timed out
+                alg_has_timed_out = False
+                for old_t, old_c in timeout_config_pairs:
+                    if old_t >= t and old_c <= c:
+                        print "{0} <= {1}, so killing".format((old_t, old_c), (t, c))
+                        alg_has_timed_out = True
+
                 for i in range(args.num_tests):
                     logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
                     config = {"THREADS": t, "CUTOFF_SIZE": c}
@@ -143,6 +157,8 @@ def main():
                     if c > 0:
                         newname += "-c{0}".format(c)
 
+                    # Only execute this run if a faster configuration
+                    # has not timed out
                     if not alg_has_timed_out:
                         try:
                             result_str = alg.run_alg(input_str, timeout)
@@ -151,8 +167,9 @@ def main():
                         except (pyalgorun.AlgorunTimeout, ValueError) as e:
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
                             logging.info("Error message: {0}".format(e))
-                            alg_has_timed_out = True
+                            timeout_config_pairs.append((t, c))
                             time_taken = float('inf')
+                            alg.restart()
                     else:
                         time_taken = float('inf')
 
