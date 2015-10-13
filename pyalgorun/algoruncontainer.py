@@ -31,25 +31,45 @@ class AlgorunContainer:
     docker_base_url -- base URL for the Docker client (optional)
     """
     def __init__(self, container_name, algorithm_name = None, docker_base_url = None):
-        docker_client = docker.Client(base_url = docker_base_url)
-
         if algorithm_name is not None:
             alg_name = algorithm_name
         else:
             alg_name = container_name
 
-        logging.debug("Spawning container {0} from image {1}".format(algorithm_name, container_name))
+        # Store configuration variables
+        self._name = alg_name
+        self._container_name = container_name
+        self._docker_base_url = docker_base_url
+
+        # Start the container
+        self.start()
+
+    def __del__(self):
+        try:
+            self.stop()
+            self.remove()
+        except docker.errors.NotFound:
+            pass
+
+    def start(self):
+        """
+        Start the underlying Docker container
+        """
+        logging.debug("Spawning container {0} from image {1}".format(self._name, self._container_name))
+        # Set up Docker client
+        docker_client = docker.Client(base_url = self._docker_base_url)
+
         # Configure port mapping
         port_map = {ALGORUN_PORT: ('',)}
         host_config = docker.utils.create_host_config(port_bindings = port_map)
 
         # Create the container
         try:
-            docker_container = docker_client.create_container(image = container_name,
+            docker_container = docker_client.create_container(image = self._container_name,
                                                               ports = [ALGORUN_PORT],
                                                               host_config = host_config)
         except docker.errors.APIError:
-            raise ValueError("Invalid image name {0}".format(container_name))
+            raise ValueError("Invalid image name {0}".format(self._container_name))
 
         # Start the container
         docker_client.start(docker_container)
@@ -63,10 +83,7 @@ class AlgorunContainer:
             container_network_address = 'localhost'
 
         # Store the container and port as attributes
-        self._name = alg_name
-        self._container_name = container_name
         self._docker_container = docker_container
-        self._docker_base_url = docker_base_url
         self._local_port = local_port
         self._container_network_address = container_network_address
         self._api_url_base = "http://" + container_network_address + ":" + local_port
@@ -84,20 +101,20 @@ class AlgorunContainer:
                 time.sleep(1)
                 continue
 
-    def __del__(self):
-        try:
-            self.stop()
-            self.remove()
-        except docker.errors.NotFound:
-            pass
-
     def stop(self):
         """
         Stop the underlying Docker container
         """
         docker_client = docker.Client(base_url = self._docker_base_url)
         logging.debug("Stopping container {0}".format(self.name()))
-        docker_client.stop(self._docker_container)
+        docker_client.stop(self._docker_container, timeout=2)
+
+    def restart(self):
+        """
+        Restart the underlying Docker container
+        """
+        self.stop()
+        self.start()
 
     def remove(self):
         """
