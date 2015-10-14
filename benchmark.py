@@ -52,11 +52,6 @@ def main():
     with open(args.algorithm_list_file) as algorithm_list_file:
         alg_list = json.load(algorithm_list_file)["containers"]
 
-    with open(args.input_data_file) as input_data_file:
-        input_dict = json.load(input_data_file)
-
-    input_str = json.dumps(input_dict)
-
     # Filter out slow algorithms if requested
     if not args.slow:
         alg_list = filter(lambda alg: not alg.get("slow"), alg_list)
@@ -95,11 +90,13 @@ def main():
     logging.info("Launching containers")
     alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url)
 
-    # Set up a dict to store the timing results
+    # Set up dicts to store the results
     runtimes = defaultdict(list)
+    transcounts = defaultdict(list)
 
     # Load the previous results if requested
     original_runtimes = []
+    original_transcounts = []
     original_algs = []
     original_timeout = timeout
 
@@ -108,6 +105,7 @@ def main():
             with open(args.output_data_file) as output_data_file:
                 original_output = json.load(output_data_file)
             original_runtimes = original_output["runtimes"]
+            original_transcounts = original_output["transversal_counts"]
             original_algs = original_output["algs"]
             original_timeout = original_output["timeout_secs"]
         except IOError:
@@ -161,10 +159,11 @@ def main():
                     # has not timed out
                     if not alg_has_timed_out:
                         try:
-                            result_str = alg.run_alg(input_str, timeout)
+                            result_str = alg.run_alg(args.input_data_file, timeout)
                             result = json.loads(result_str)
                             time_taken = float(result["timeTaken"])
-                        except (pyalgorun.AlgorunTimeout, ValueError) as e:
+                            transcounts[newname].append(len(result["sets"]))
+                        except (pyalgorun.AlgorunError, ValueError) as e:
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
                             logging.info("Error message: {0}".format(e))
                             timeout_config_pairs.append((t, c))
@@ -192,15 +191,20 @@ def main():
 
     alg_list += original_algs
 
-    # Then combine runtime lists, giving preference to new ones
+    # Then combine result lists, giving preference to new ones
     for orig_alg in original_runtimes:
         if orig_alg not in runtimes:
             runtimes[orig_alg] = original_runtimes[orig_alg]
+
+    for orig_alg in original_transcounts:
+        if orig_alg not in transcounts:
+            transcounts[orig_alg] = original_transcounts[orig_alg]
 
     # Build output dict
     output = {
         "timeout_secs": timeout,
         "runtimes": runtimes,
+        "transversal_counts": transcounts,
         "algs": alg_list,
     }
 

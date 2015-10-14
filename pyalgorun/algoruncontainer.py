@@ -14,7 +14,14 @@ ALGORUN_PORT = 8765
 RUN_URL_SUFFIX = "/v1/run"
 CONF_URL_SUFFIX = "/v1/config"
 
-class AlgorunTimeout(Exception):
+class AlgorunError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return repr(self.message)
+
+class AlgorunTimeout(AlgorunError):
     def __init__(self, value):
         self.value = value
 
@@ -108,6 +115,7 @@ class AlgorunContainer:
         docker_client = docker.Client(base_url = self._docker_base_url)
         logging.debug("Stopping container {0}".format(self.name()))
         docker_client.stop(self._docker_container, timeout=2)
+        docker_client.remove_container(self._docker_container)
 
     def restart(self):
         """
@@ -124,30 +132,30 @@ class AlgorunContainer:
         logging.debug("Removing container {0}".format(self.name()))
         docker_client.remove_container(self._docker_container)
 
-    def run_alg(self, data, timeout = None):
+    def run_alg(self, datafilename, timeout = None):
         """
         Run the algorithm on some data
 
         Keyword arguments:
-        data -- input data for the algorithm, ready to urlencode
+        datafilename -- filename of the data to send
         """
         logging.debug("Running algorithm {0}".format(self._name))
 
         # Build the API url
         run_url = self._api_url_base + RUN_URL_SUFFIX
 
-        # Set up the HTTP request payload
-        payload = {"input": data}
-        headers = {"content-type": "application/x-www-form-urlencoded"}
-
         # Submit the request
-        try:
-            r = requests.post(run_url, data = payload, headers = headers, timeout = timeout)
-        except requests.exceptions.Timeout:
-            raise AlgorunTimeout(timeout)
-        except:
-            logging.critical("Container {0} threw an exception on analysis POST!".format({self._name}))
-            raise
+        with open(datafilename, 'rb') as datafile:
+            try:
+                files = {'input': datafile}
+                r = requests.post(run_url, files = files, timeout = timeout)
+            except requests.exceptions.Timeout:
+                raise AlgorunTimeout(timeout)
+            except requests.exceptions.ConnectionError:
+                raise AlgorunError("Connection error.")
+            except:
+                logging.critical("Container {0} threw an exception on analysis POST!".format({self._name}))
+                raise
 
         # Check for errors
         r.raise_for_status()
