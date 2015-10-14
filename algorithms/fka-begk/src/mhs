@@ -85,10 +85,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
                       separators=(',', ': '),
                       iterable_as_array = True)
 
-# Write the results to the output file
-with open(args.output_file, 'w') as output_file:
-    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
-
 ### Emacs configuration
 # Local Variables:
 # mode: python
