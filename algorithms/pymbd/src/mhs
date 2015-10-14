@@ -7,7 +7,8 @@
 from pymbd.diagnosis.problem import Problem
 from pymbd.diagnosis.description import Description
 import sys, os
-import json, jsonschema
+import simplejson as json
+import jsonschema
 import argparse
 
 algname_map  = {
@@ -67,7 +68,7 @@ MBDresult = problem.compute_with_description(description, alg, prune=True, cache
 # Process the results
 hs = MBDresult.get_diagnoses()
 stats = MBDresult.get_stats()
-formatted_hs = [list(h) for h in hs]
+formatted_hs = (list(h) for h in hs)
 total_time = float(stats['total_time'])
 results = input_json
 results['transversals'] = formatted_hs
@@ -76,14 +77,14 @@ results['guaranteedMinimal'] = False
 results['guaranteedComplete'] = True
 results['algName'] = algarg
 
-# Validate the output
-with open(output_schema_path) as output_schema_file:
-    output_schema = json.load(output_schema_file)
-    jsonschema.validate(results, output_schema)
-
 # Write the results to the output file
 with open(args.output_file, 'w') as output_file:
-    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+    # Pretty-print the output
+    json.dump(results,
+              output_file,
+              indent=4,
+              separators=(',', ': '),
+              iterable_as_array = True)
 
 ### Emacs configuration
 # Local Variables:

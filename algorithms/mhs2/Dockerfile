@@ -8,9 +8,13 @@ RUN apt-get update \
     ca-certificates \
     git \
     libboost-system-dev \
-    python-jsonschema \
+    python-pip \
     scons \
     && rm -rf /var/lib/apt/lists/
+
+RUN pip install \
+    jsonschema \
+    simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/

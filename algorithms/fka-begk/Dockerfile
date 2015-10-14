@@ -8,8 +8,12 @@ RUN dpkg --add-architecture i386 && \
     apt-get install -y --no-install-recommends \
     libc6:i386 \
     libstdc++5:i386 \
-    python-jsonschema && \
-    rm -rf /var/lib/apt/lists/
+    python-pip \
+    && rm -rf /var/lib/apt/lists/
+
+RUN pip install \
+    jsonschema \
+    simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/

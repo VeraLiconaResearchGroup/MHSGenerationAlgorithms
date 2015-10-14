@@ -4,7 +4,8 @@
 # Copyright Vera-Licona Research Group (C) 2015
 # Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
-import json, jsonschema
+import simplejson as json
+import jsonschema
 import argparse
 import tempfile
 import timeit
@@ -18,11 +19,6 @@ def input_file_lines(edges):
     for edge in edges:
         edge_as_string = " ".join(map(str, edge))
         yield edge_as_string
-
-def transversals_from_output_file(output_file):
-    output_file.seek(0)
-    for line in output_file:
-        yield map(int, line.split())
 
 def main():
     # Set up argument processing
@@ -88,24 +84,24 @@ def main():
                                        number=1)
 
             # Process the results
-            transversals = list(transversals_from_output_file(temp_output_file))
+            transversals = (map(int, line.split()) for line in temp_output_file)
 
-    results = input_json
-    results["guaranteedMinimal"] = True
-    results["guaranteedComplete"] = True
-    results["transversals"] = transversals
-    results["timeTaken"] = time_taken
+            results = input_json
+            results["guaranteedMinimal"] = True
+            results["guaranteedComplete"] = True
+            results["transversals"] = transversals
+            results["timeTaken"] = time_taken
 
-    # Validate the output
-    with open(output_schema_path) as output_schema_file:
-        output_schema = json.load(output_schema_file)
-        jsonschema.validate(results, output_schema)
+            print "Finished run in " + str(time_taken) + " s."
 
-    print "Finished run in " + str(time_taken) + " s."
-
-    # Write the results to the output file
-    with open(args.output_file, 'w') as output_file:
-        json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the outputa
+            # Write the results to the output file
+            with open(args.output_file, 'w') as output_file:
+                # Pretty-print the output
+                json.dump(results,
+                          output_file,
+                          indent=4,
+                          separators=(',', ': '),
+                          iterable_as_array = True)
 
 if __name__ == "__main__":
     main()

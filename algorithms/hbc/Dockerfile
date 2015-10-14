@@ -3,10 +3,14 @@ FROM algorun/algorun:latest
 MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 # Add any algorithm dependencies here
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    python-jsonschema && \
-    rm -rf /var/lib/apt/lists/
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    python-pip \
+    && rm -rf /var/lib/apt/lists/
+
+RUN pip install \
+    jsonschema \
+    simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/

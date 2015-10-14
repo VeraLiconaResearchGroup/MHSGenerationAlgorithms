@@ -4,7 +4,8 @@
 # Copyright Vera-Licona Research Group (C) 2015
 # Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
-import json, jsonschema
+import simplejson as json
+import jsonschema
 import argparse
 import tempfile
 import timeit
@@ -53,23 +54,24 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
                                    number=1)
 
         # Process the results
+        # Read the output file but skip the first line
         temp_output_file.seek(0)
-        transversal_lines = temp_output_file.readlines()
-        transversals = [map(int, line.split()) for line in transversal_lines[1:]]
+        next(temp_output_file)
+        transversals = (map(int, line.split()) for line in temp_output_file)
         results = input_json
         results["guaranteedMinimal"] = True
         results["guaranteedComplete"] = True
         results["transversals"] = transversals
         results["timeTaken"] = time_taken
 
-# Validate the output
-with open(output_schema_path) as output_schema_file:
-    output_schema = json.load(output_schema_file)
-    jsonschema.validate(results, output_schema)
-
-# Write the results to the output file
-with open(args.output_file, 'w') as output_file:
-    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+        # Write the results to the output file
+        with open(args.output_file, 'w') as output_file:
+            # Pretty-print the outputa
+            json.dump(results,
+                      output_file,
+                      indent=4,
+                      separators=(',', ': '),
+                      iterable_as_array = True)
 
 ### Emacs configuration
 # Local Variables:

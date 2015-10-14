@@ -4,7 +4,8 @@
 # Copyright Vera-Licona Research Group (C) 2015
 # Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
-import json, jsonschema
+import simplejson as json
+import jsonschema
 import argparse
 import tempfile
 import timeit
@@ -65,6 +66,9 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         temp_input_file.flush()
 
+        import shutil
+        shutil.copyfile(temp_input_file.name, 'testin')
+
         # Process the input file
         alg_call_parts = ['./alg/build/mhs2', '-i', temp_input_file.name, '-o', temp_output_file.name, '-T', threads]
         if cutoff_size > 0:
@@ -77,24 +81,24 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
                                    number=1)
 
         # Process the results
+        shutil.copyfile(temp_output_file.name, 'testout')
         temp_output_file.seek(0)
-        transversal_lines = temp_output_file.readlines()[:-1]
         lineprocessor = lambda line: sorted(map(int, line.split()[:-1]))
-        transversals = map(lineprocessor, transversal_lines)
+        transversals = (lineprocessor(line) for line in temp_output_file if line[0] != '0')
         results = input_json
         results["guaranteedMinimal"] = True
         results["guaranteedComplete"] = True
         results["transversals"] = transversals
         results["timeTaken"] = time_taken
 
-# Validate the output
-with open(output_schema_path) as output_schema_file:
-    output_schema = json.load(output_schema_file)
-    jsonschema.validate(results, output_schema)
-
-# Write the results to the output file
-with open(args.output_file, 'w') as output_file:
-    json.dump(results, output_file, indent=4, separators=(',', ': ')) # Pretty-print the output
+        # Write the results to the output file
+        with open(args.output_file, 'w') as output_file:
+            # Pretty-print the outputa
+            json.dump(results,
+                      output_file,
+                      indent=4,
+                      separators=(',', ': '),
+                      iterable_as_array = True)
 
 ### Emacs configuration
 # Local Variables:

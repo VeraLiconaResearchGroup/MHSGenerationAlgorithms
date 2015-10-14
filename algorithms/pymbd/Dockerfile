@@ -5,11 +5,16 @@ MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 # Add any algorithm dependencies here
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    python-blist \
-    python-pygraph \
-    python-jsonschema \
-    python-numpy \
+    python-dev \
+    python-pip \
     && rm -rf /var/lib/apt/lists/
+
+RUN pip install \
+    blist \
+    jsonschema \
+    numpy \
+    python-graph-core \
+    simplejson
 
 # Fetch the code
 COPY ./src /home/algorithm/src/

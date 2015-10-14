@@ -8,8 +8,13 @@ RUN apt-get update \
     libboost-log-dev \
     libboost-program-options-dev \
     libboost-system-dev \
-    python-jsonschema \
+    python-dev \
+    python-pip \
     && rm -rf /var/lib/apt/lists/
+
+RUN pip install \
+    jsonschema \
+    simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/

@@ -6,8 +6,12 @@ MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     libboost-program-options-dev \
-    python-jsonschema \
+    python-pip \
     && rm -rf /var/lib/apt/lists/
+
+RUN pip install \
+    jsonschema \
+    simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
