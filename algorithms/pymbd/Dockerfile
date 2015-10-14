@@ -6,13 +6,13 @@ MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     python-dev \
+    python-numpy \
     python-pip \
     && rm -rf /var/lib/apt/lists/
 
 RUN pip install \
     blist \
     jsonschema \
-    numpy \
     python-graph-core \
     simplejson
 
