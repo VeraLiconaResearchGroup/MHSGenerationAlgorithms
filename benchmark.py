@@ -131,21 +131,21 @@ def main():
 
         for t in alg_thread_list:
             for c in alg_cutoff_list:
-                # NOTE: We assume that increasing the cutoff or
-                # decreasing the number of threads will never decrease
-                # runtime. This only matters for runtimes that move
-                # from above to below the timeout, so it should be
-                # safe as long as the timeout is large and the
-                # algorithms aren't *very* badly behaved.
-
-                # Check whether a faster configuration has timed out
-                alg_has_timed_out = False
-                for old_t, old_c in timeout_config_pairs:
-                    if old_t >= t and old_c <= c:
-                        print "{0} <= {1}, so killing".format((old_t, old_c), (t, c))
-                        alg_has_timed_out = True
-
                 for i in range(args.num_tests):
+                    # NOTE: We assume that increasing the cutoff or
+                    # decreasing the number of threads will never decrease
+                    # runtime. This only matters for runtimes that move
+                    # from above to below the timeout, so it should be
+                    # safe as long as the timeout is large and the
+                    # algorithms aren't *very* badly behaved.
+
+                    # Check whether a faster configuration has timed out
+                    alg_has_timed_out = False
+                    for old_t, old_c in timeout_config_pairs:
+                        if old_t >= t and old_c <= c:
+                            print "{0} <= {1}, so killing".format((old_t, old_c), (t, c))
+                            alg_has_timed_out = True
+
                     logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
                     config = {"THREADS": t, "CUTOFF_SIZE": c}
                     alg.change_config(config)
