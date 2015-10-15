@@ -143,7 +143,7 @@ def main():
                     alg_has_timed_out = False
                     for old_t, old_c in timeout_config_pairs:
                         if old_t >= t and old_c <= c:
-                            print "{0} <= {1}, so killing".format((old_t, old_c), (t, c))
+                            logging.info("{0} <= {1}, so killing".format((old_t, old_c), (t, c)))
                             alg_has_timed_out = True
 
                     logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
