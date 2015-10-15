@@ -148,7 +148,7 @@ def main():
                     # Check whether a faster configuration has timed out
                     alg_has_timed_out = False
                     for old_t, old_c in timeout_config_pairs:
-                        if old_t >= t and old_c <= c:
+                        if old_t >= t and (old_c <= c or c == 0):
                             logging.info("{0} <= {1}, so killing".format((old_t, old_c), (t, c)))
                             alg_has_timed_out = True
 
