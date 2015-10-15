@@ -172,11 +172,12 @@ def main():
                             result_str = alg.run_alg(args.input_data_file, timeout)
                             result = json.loads(result_str)
                             time_taken = float(result["timeTaken"])
-                            transcounts[newname].append(len(result["sets"]))
+                            transcount = len(result["sets"])
                         except (pyalgorun.AlgorunTimeout):
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
                             timeout_config_pairs.append((t, c))
                             time_taken = float('inf')
+                            transcount = None
                             alg.restart()
                         except (pyalgorun.AlgorunError, ValueError) as e:
                             # Rerun to see if this was a one-off glitch
@@ -188,9 +189,12 @@ def main():
 
                     else:
                         time_taken = float('inf')
+                        transcount = None
 
                     runtimes[newname].append(time_taken)
-                    logging.info("Finished {0} run in {1} sec.".format(newname, time_taken))
+                    if transcount is not None:
+                        transcounts[newname].append(transcount)
+                    logging.info("Finished {0} run in {1} sec., found {2} MHSes".format(newname, time_taken, transcount))
 
         # Kill the algorithm once we're done computing with it,
         # regardless of the outcome
