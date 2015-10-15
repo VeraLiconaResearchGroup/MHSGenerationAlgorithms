@@ -10,8 +10,23 @@ import json
 import pandas
 import numpy
 import os
-from matplotlib import pyplot as plt
 from collections import defaultdict
+
+cutoff_algs = ["berge",
+               "hs_dag",
+               "hst",
+               "bool_iterative",
+               "staccato",
+               "mhs2",
+               "hbc",
+               "pMMCS",
+               "pRS"]
+
+thread_algs = ["partran",
+               "mhs2",
+               "pMMCS",
+               "pRS",
+               "bm"]
 
 def parse_results_algname(algname_str):
     orig_name = algname_str
@@ -92,6 +107,80 @@ def panel4d_from_filenames(alg_filenames):
     result_panel = pandas.Panel4D(results)
     return result_panel
 
+def generate_full_csv(data4d, basename, reverse_data_sort):
+    print "Processing base case"
+
+     # Extract the data we want
+    data = data4d.ix[:,:,1,0].T.dropna(axis='columns', how='all')
+
+    # Sort the input sets lexicographically
+    data.sort(ascending = not reverse_data_sort,
+              inplace = True)
+
+    # Construct filename
+    output_file_name = "{0}.full.csv".format(basename)
+
+    # Write the data
+    data.to_csv(output_file_name,
+                index_label = "Input")
+
+def generate_cutoff_csv(data4d, basename):
+    print "Processing cutoff cases"
+
+    # Find cutoff size list
+    orig_cutoff_order = data4d.axes[3]
+
+    # Put 0 last, if appropriate, for later reordering of dataframe
+    if 0 in orig_cutoff_order:
+        new_cutoff_order = list(orig_cutoff_order)
+        new_cutoff_order.remove(0)
+        new_cutoff_order.append(0)
+    else:
+        new_cutoff_order = list(orig_cutoff_order)
+
+    # Iterate over datasets
+    num_datasets = len(data4d.axes[0])
+
+    for i in xrange(num_datasets):
+        # Extract the data we want
+        data = data4d.ix[i,:,1,:].filter(items = cutoff_algs, axis=1)
+
+        # Reorder cutoffs to put 0 last
+        data = data.reindex(new_cutoff_order)
+
+        # Rename 0 to "None"
+        data.rename(index = {0: 'None'}, inplace = True)
+
+        # Get the name of the dataset we sliced
+        datasetname = data4d.axes[0][i]
+
+        # Construct filename
+        output_file_name = "{0}.{1}.cutoff.csv".format(basename, datasetname)
+
+        # Write the data
+        data.to_csv(output_file_name,
+                    index_label = "Cutoff")
+
+def generate_thread_csv(data4d, basename):
+    print "Processing parallel cases"
+
+    # Iterate over datasets
+    num_datasets = len(data4d.axes[0])
+
+    for i in xrange(num_datasets):
+        # Extract the data we want
+        data = data4d.ix[i,:,:,0].filter(items = thread_algs, axis=1)
+
+        # Get the name of the dataset we sliced
+        datasetname = data4d.axes[0][i]
+
+        # Construct filename
+        output_file_name = "{0}.{1}.thread.csv".format(basename, datasetname)
+
+        # Write the data
+        data.to_csv(output_file_name,
+                    index_label = "Threads")
+
 def main():
     # Set up argument processing
     parser = argparse.ArgumentParser(description="MHS algorithm benchmark runner")
@@ -99,32 +188,19 @@ def main():
     # Add arguments
     parser.add_argument("output_file_basename", help="Base name for output files")
     parser.add_argument("input_files", help="Input file(s) to collate", nargs="+")
+    parser.add_argument("-r", "--reverse_data_sort", action="store_true", help="Sort data sets in reverse lex order")
+    parser.add_argument("-t", "--title", help="Title for plot")
 
     # Process the arguments
     args = parser.parse_args()
 
     # Process the files
-    results = panel4d_from_filenames(args.input_files)
+    data4d = panel4d_from_filenames(args.input_files)
 
-    # Generate the results and write the plots to files
-    # For now, we only use the t=1 data
-    for cutoff_size in [0, 5, 7, 10]:
-        # Construct filename
-        output_file_name = "{0}.c{1}.pdf".format(args.output_file_basename, cutoff_size)
-
-        # Make sure the output file does not exist
-        if os.path.exists(output_file_name):
-            raise ValueError("Output file {0} already exists!".format(output_file_name))
-
-        # Generate the plot
-        try:
-            data = results.ix[:,:,1,cutoff_size].T.dropna(axis='columns', how='all') # Extract the data we want
-        except KeyError:
-            # If the requested cutoff_size is not available, just move on to the next one
-            print "Skipping cutoff_size {0}".format(cutoff_size)
-            continue
-        data.plot(logy = True, ylim = [0, 3600])
-        plt.savefig(output_file_name)
+    # Generate the data4d and write the plots to files
+    generate_full_csv(data4d, args.output_file_basename, args.reverse_data_sort)
+    generate_cutoff_csv(data4d, args.output_file_basename)
+    generate_thread_csv(data4d, args.output_file_basename)
 
 if __name__ == "__main__":
     main()
