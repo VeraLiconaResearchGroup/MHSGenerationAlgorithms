@@ -26,7 +26,7 @@ class AlgorunTimeout(AlgorunError):
         self.value = value
 
     def __str__(self):
-        return repr(self.value)
+        return repr("Timed out after {0} s.".format(self.value))
 
 class AlgorunContainer:
     """
@@ -37,7 +37,7 @@ class AlgorunContainer:
     algorithm_name -- a human-readable name for the algorithm
     docker_base_url -- base URL for the Docker client (optional)
     """
-    def __init__(self, container_name, algorithm_name = None, docker_base_url = None):
+    def __init__(self, container_name, algorithm_name = None, base_config = None, docker_base_url = None):
         if algorithm_name is not None:
             alg_name = algorithm_name
         else:
@@ -46,6 +46,7 @@ class AlgorunContainer:
         # Store configuration variables
         self._name = alg_name
         self._container_name = container_name
+        self._base_config = base_config
         self._docker_base_url = docker_base_url
 
         # Start the container
@@ -108,6 +109,10 @@ class AlgorunContainer:
                 time.sleep(1)
                 continue
 
+        # Send the base configuration
+        if self._base_config is not None:
+            self.change_config(self._base_config)
+
     def stop(self):
         """
         Stop the underlying Docker container
@@ -115,6 +120,7 @@ class AlgorunContainer:
         docker_client = docker.Client(base_url = self._docker_base_url)
         logging.debug("Stopping container {0}".format(self.name()))
         docker_client.stop(self._docker_container, timeout=2)
+        docker_client.wait(self._docker_container)
         docker_client.remove_container(self._docker_container)
 
     def restart(self):

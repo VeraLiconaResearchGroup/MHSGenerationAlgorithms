@@ -10,13 +10,6 @@ import jsonschema
 import requests
 import docker
 
-# Helper function to build a single container
-def build_container(container_name, alg_name, conf, docker_base_url):
-    container = AlgorunContainer(container_name, alg_name, docker_base_url)
-    if conf is not None:
-        container.change_config(conf)
-    return container
-
 # Helper function to run an algorithm on some data
 def result_pair(arg_tuple):
     container, data = arg_tuple
@@ -42,10 +35,10 @@ class AlgorunContainerCollection:
     def __init__(self, alg_set, docker_base_url = None):
         # Set up the containers
         # Note: Docker build doesn't parallelize well, so we do this serially
-        containers = [build_container(alg.get("containerName"),
-                                      alg.get("algName"),
-                                      alg.get("config"),
-                                      docker_base_url)
+        containers = [AlgorunContainer(alg.get("containerName"),
+                                       alg.get("algName"),
+                                       alg.get("config"),
+                                       docker_base_url)
                       for alg in alg_set]
 
         # Store the container collection in a member
