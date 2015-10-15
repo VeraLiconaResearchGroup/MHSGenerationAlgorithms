@@ -13,6 +13,8 @@ import time
 import sys
 from collections import defaultdict
 
+MAX_TRIES = 1
+
 def main():
     # Set up argument processing
     parser = argparse.ArgumentParser(description="MHS algorithm benchmark runner")
@@ -131,6 +133,10 @@ def main():
 
         for t in alg_thread_list:
             for c in alg_cutoff_list:
+                # We'll try this run up to MAX_TRIES times, allowing
+                # for certain sporadic errors
+                num_tries = 0
+
                 for i in range(args.num_tests):
                     # NOTE: We assume that increasing the cutoff or
                     # decreasing the number of threads will never decrease
@@ -146,29 +152,40 @@ def main():
                             logging.info("{0} <= {1}, so killing".format((old_t, old_c), (t, c)))
                             alg_has_timed_out = True
 
-                    logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
-                    config = {"THREADS": t, "CUTOFF_SIZE": c}
-                    alg.change_config(config)
-                    newname = alg._name
-                    if t > 1:
-                        newname += "-t{0}".format(t)
-                    if c > 0:
-                        newname += "-c{0}".format(c)
+                    if num_tries > MAX_TRIES:
+                        logging.info("{0} tries failed, so killing".format(num_tries))
+                        alg_has_timed_out = True
 
                     # Only execute this run if a faster configuration
                     # has not timed out
                     if not alg_has_timed_out:
+                        logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
+                        config = {"THREADS": t, "CUTOFF_SIZE": c}
+                        alg.change_config(config)
+                        newname = alg._name
+                        if t > 1:
+                            newname += "-t{0}".format(t)
+                        if c > 0:
+                            newname += "-c{0}".format(c)
+
                         try:
                             result_str = alg.run_alg(args.input_data_file, timeout)
                             result = json.loads(result_str)
                             time_taken = float(result["timeTaken"])
                             transcounts[newname].append(len(result["sets"]))
-                        except (pyalgorun.AlgorunError, ValueError) as e:
+                        except (pyalgorun.AlgorunTimeout):
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
-                            logging.info("Error message: {0}".format(e))
                             timeout_config_pairs.append((t, c))
                             time_taken = float('inf')
                             alg.restart()
+                        except (pyalgorun.AlgorunError, ValueError) as e:
+                            # Rerun to see if this was a one-off glitch
+                            logging.info("Run {0} failed to complete with error {1}".format(newname, e))
+                            alg.restart()
+                            num_tries += 1
+                            i -= 1
+                            continue
+
                     else:
                         time_taken = float('inf')
 
