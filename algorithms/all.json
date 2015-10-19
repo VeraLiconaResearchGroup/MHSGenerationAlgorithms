@@ -57,15 +57,6 @@
             }
         },
         {
-            "algName": "bool_recursive",
-            "containerName": "agdphd/pymbd",
-            "cutoff": true,
-            "slow": true,
-            "config": {
-                "ALGORITHM_NAME": "bool-recursive"
-            }
-        },
-        {
             "algName": "hst",
             "containerName": "agdphd/pymbd",
             "cutoff": true,
@@ -108,14 +99,6 @@
             "cutoff": true,
             "config": {
                 "ALGORITHM": "prs"
-            }
-        },
-        {
-            "algName": "fka_agd",
-            "containerName": "agdphd/agdmhs",
-            "slow": "true",
-            "config": {
-                "ALGORITHM": "fka"
             }
         },
         {
