@@ -1,5 +1,8 @@
 ## Set up scales
-yscale <- scale_y_log10(limits = c(0.001, 3600), breaks=c(0.001, 0.01, 0.1, 1, 10, 100, 1000), oob = scales::rescale_none)
+yscale <- scale_y_log10(limits = c(0.001, 3600), 
+                        breaks = trans_breaks("log10", function(x) 10^x, 6), 
+                        labels = trans_format("log10", math_format(10^.x)), 
+                        oob = scales::rescale_none)
 ylabel <- ylab("Runtime (s., log. scale)")
 yticks <- annotation_logticks(side="lr")
 
