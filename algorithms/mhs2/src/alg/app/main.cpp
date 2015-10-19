@@ -69,17 +69,15 @@ int main (int argc, char ** argv) {
 
     options.debug() << options << std::endl;
 
-    while (options.input().good()) {
+    if (options.input().good()) {
         t_count_spectra spectra;
         spectra.read(options.input());
 
-        if (options.input().fail() || options.input().bad()) {
-            std::cerr << "Problem reading spectra" << std::endl;
-            return 1;
-        }
-
         if (!do_stuff(spectra, options))
             return 1;
+    } else {
+        std::cerr << "Problem reading spectra" << std::endl;
+        return 1;
     }
 
     return 0;
