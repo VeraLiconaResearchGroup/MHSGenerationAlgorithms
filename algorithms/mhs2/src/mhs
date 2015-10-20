@@ -66,9 +66,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         temp_input_file.flush()
 
-        import shutil
-        shutil.copyfile(temp_input_file.name, 'testin')
-
         # Process the input file
         alg_call_parts = ['./alg/build/mhs2', '-i', temp_input_file.name, '-o', temp_output_file.name, '-T', threads]
         if cutoff_size > 0:
@@ -81,7 +78,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
                                    number=1)
 
         # Process the results
-        shutil.copyfile(temp_output_file.name, 'testout')
         temp_output_file.seek(0)
         lineprocessor = lambda line: sorted(map(int, line.split()[:-1]))
         transversals = (lineprocessor(line) for line in temp_output_file if line[0] != '0')
