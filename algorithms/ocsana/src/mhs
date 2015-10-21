@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+# MHS algorithm runner: OCSANA-Greedy
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
+import simplejson as json
+import jsonschema
+import argparse
+import tempfile
+import timeit
+import sys
+import os
+
+def input_file_lines(edges):
+    # Generate the input file
+    num_verts = max(vert for edge in edges for vert in edge)
+
+    for edge in edges:
+        edge_as_string = " ".join(map(str, edge))
+        yield edge_as_string
+
+def main():
+    # Set up argument processing
+    parser = argparse.ArgumentParser(description='MHS runner: AGDMHS')
+
+    # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+    parser.add_argument("input_file", help="Input file to process")
+    parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
+
+    args = parser.parse_args()
+
+    # Fetch the relevant environment variables
+    try:
+        cutoff_size = int(os.environ.get("CUTOFF_SIZE"))
+    except (ValueError, TypeError): # Invalid or no value
+        cutoff_size = 0
+
+    # Configure path and validation
+    script_dir = sys.path[0]
+    input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+    output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+
+    # Read the input file
+    with open(args.input_file) as input_file:
+        input_json = json.load(input_file)
+
+    # Validate the input
+    with open(input_schema_path) as input_schema_file:
+        input_schema = json.load(input_schema_file)
+        jsonschema.validate(input_json, input_schema)
+
+    # Set up temporary files for input and output
+    with tempfile.NamedTemporaryFile() as temp_input_file:
+        with tempfile.NamedTemporaryFile() as temp_output_file:
+            for line in input_file_lines(input_json["sets"]):
+                temp_input_file.write(line + "\n")
+            temp_input_file.flush()
+
+            # Set up the algorithm call
+            alg_call_parts = ['java', '-jar', './alg/hittingSetGreedy.jar', temp_input_file.name, temp_output_file.name]
+
+            if cutoff_size > 0:
+                alg_call_parts += [cutoff_size]
+
+            alg_call_string = [str(arg) for arg in alg_call_parts]
+
+            # Call the algorithm
+            time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+                                       setup="import subprocess",
+                                       number=1)
+
+            # Process the results
+            transversals = (map(int, line.split()) for line in temp_output_file)
+
+            results = input_json
+            results["guaranteedMinimal"] = True
+            results["guaranteedComplete"] = True
+            results["transversals"] = transversals
+            results["timeTaken"] = time_taken
+
+            print "Finished run in " + str(time_taken) + " s."
+
+            # Write the results to the output file
+            with open(args.output_file, 'w') as output_file:
+                # Pretty-print the output
+                json.dump(results,
+                          output_file,
+                          indent=4,
+                          separators=(',', ': '),
+                          iterable_as_array = True)
+
+if __name__ == "__main__":
+    main()
+
+### Emacs configuration
+# Local Variables:
+# mode: python
+# End:

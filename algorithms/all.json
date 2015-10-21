@@ -117,6 +117,11 @@
             "config": {
                 "ALGORITHM": "bm"
             }
+        },
+        {
+            "algName": "ocsana-greedy",
+            "containerName": "agdphd/ocsana-greedy",
+            "cutoff": true
         }
     ]
 }
