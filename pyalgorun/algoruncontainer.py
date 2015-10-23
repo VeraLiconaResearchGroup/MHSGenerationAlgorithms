@@ -119,9 +119,12 @@ class AlgorunContainer:
         """
         docker_client = docker.Client(base_url = self._docker_base_url)
         logging.debug("Stopping container {0}".format(self.name()))
-        docker_client.stop(self._docker_container, timeout=2)
-        docker_client.wait(self._docker_container)
-        docker_client.remove_container(self._docker_container)
+        try:
+            docker_client.stop(self._docker_container, timeout=2)
+            docker_client.wait(self._docker_container)
+            docker_client.remove_container(self._docker_container)
+        except docker.errors.APIError:
+            logging.warning("Failed to stop container {0}".format(self.name()))
 
     def restart(self):
         """
