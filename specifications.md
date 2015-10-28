@@ -19,7 +19,6 @@ An input file represents a collection of sets whose minimal hitting sets are to 
   The indices MAY appear in any order within a set, and the sets MAY appear in any order.
   The hypergraph SHOULD be simple, which is to say that no edge should be a subset of any other edge.
 
-The input file MUST NOT contain pairs with the keys `guaranteedComplete`, `guaranteedMinimal`, or `transversals`.
 `mhs` SHOULD assume that the vertex set is 1, 2, …, n where n is the largest index appearing in the file.
 `mhs` MAY accept other keys; each such key SHOULD be documented appropriately in the `README.md` file.
 `mhs` MUST ignore all unknown keys.
@@ -48,8 +47,6 @@ In addition, it MUST contain the following key/value pairs:
 
 * `timeTaken'`: a (positive) number giving the execution time of the algorithm.
   This value SHOULD represent the running time of the algorithm itself, omitting any time spend on input and output conversion.
-* `guaranteedMinimal`: a boolean, `true` if every hitting set in the file is guaranteed to be minimal and `false` otherwise.
-* `guaranteedComplete`: a boolean, `true` if the collection of hitting sets is guaranteed to contain all minimal hitting sets and `false` otherwise.
 * `transversals`: a nonempty array of nonempty arrays of positive integers.
   Each of these arrays represents a hitting set of the input collection or a transversal of the input hypergraph.
   Each integer in the set is an *index*, matching the corresponding index in the input sets.

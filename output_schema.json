@@ -14,12 +14,6 @@
         "timeTaken": {
             "type": "number"
         },
-        "guaranteedMinimal": {
-            "type": "boolean"
-        },
-        "guaranteedComplete": {
-            "type": "boolean"
-        },
         "transversals": {
             "type": "array",
             "items": {
@@ -30,5 +24,5 @@
             }
         }
     },
-    "required": ["guaranteedMinimal", "guaranteedComplete", "transversals"]
+    "required": ["transversals"]
 }
