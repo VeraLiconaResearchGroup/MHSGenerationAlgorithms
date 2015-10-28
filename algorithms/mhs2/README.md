@@ -1,6 +1,6 @@
 # MHS2
 This directory contains an Algorun container implementing the MHS² algorithm for minimal hitting set enumeration.
-For details of the algorithm, see
+For details of the algorithm, see _An efficient distributed algorithm for computing minimal hitting sets_ ([PDF](//dx-2014.ist.tugraz.at/papers/DX14_Mon_PM_S1_paper1.pdf)) by Cardoso and Abreu.
 Implementation of the [MHS2](https://github.com/npcardoso/MHS2) parallel approximating MHS algorithm.
 
 ## Implementation

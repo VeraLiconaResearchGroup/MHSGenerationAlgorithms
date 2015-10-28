@@ -15,11 +15,13 @@ Once this is done, you can spool up the container by running
     docker run -p 31331:8765 agdphd/mhs2
 
 You may replace the port `31331` with another if you prefer; however, the port `8765` is defined by Algorun and must be left as-is.
-Point your web browser to [//localhost:31331] to access the Web interface for the algorithm container.
+Point your web browser to [http://localhost:31331](//localhost:31331) to access the Web interface for the algorithm container.
+
+For more information about the algorithms, see the [algorithms](algorithms/) directory `README`.
 
 ## PyAlgorun
 We also provide a Python package for managing Algorun containers in a convenient, procedural way.
-It requires the [jsonschema] Python library, which is available in the Debian `python-jsonschema` package or with `pip install jsonschema`.
+It requires the [jsonschema][] Python library, which is available in the Debian `python-jsonschema` package or with `pip install jsonschema`.
 
 ## License
 Code in this repository is distributed under a mixture of licenses.
