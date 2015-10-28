@@ -30,7 +30,6 @@
         {
             "algName": "partran",
             "containerName": "agdphd/partran",
-            "cutoff": true,
             "threads": true,
             "slow": true
         },
@@ -119,7 +118,7 @@
             }
         },
         {
-            "algName": "ocsana-greedy",
+            "algName": "ocsanaGreedy",
             "containerName": "agdphd/ocsana-greedy",
             "cutoff": true
         }
