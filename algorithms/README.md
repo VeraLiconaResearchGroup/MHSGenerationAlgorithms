@@ -32,12 +32,16 @@ A variation of Berge's algorithm which searches depth first and thus avoids the 
 Published in [_An efficient algorithm for the transversal hypergraph generation_](//doi.org/10.7155/jgaa.00107) by Kavvadias and Stavroupoulos.
 A Pascal implementation by D. Kavvadias and E. Stavropoulos is available from the [Hypergraph Dualization Repository][hdr] and the [author's page](//lca.ceid.upatras.gr/~estavrop/transversal/) and is provided here in the [ks][] container by permission from the authors.
 
+***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
+
 ## Divide and conquer
 ### FK-A
 The A algorithm from [_On the complexity of dualization of monotone disjunctive normal forms_](//doi.org/10.1006/jagm.1996.0062), Fredman, M. and Khachiyan, L, as improved in [_An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation_](//doi.org/10.1.1.85.6762), E. Boros et al.
 Has the best known asymptotic bounds on runtime of any serial algorithm with a public implementation.
 An implementation in compiled C is available from the [Hypergraph Dualization Repository][hdr] and is provided here in the [fka-begk][] container by permission from the authors.
 An implementation in C++ of the original, unmodified algorithm is provided here in the [agdmhs][] container.
+
+***WARNING***: Testing has revealed that the BEGK software does not accurately generate all MHSes.
 
 ### BOOL
 A divide-and-conquer algorithm introduced in [_The computation of hitting sets: review and new algorithms_](//dx.doi.org/10.1016/S0020-0190(02)00506-9) by Lin and Jiang.
@@ -53,6 +57,8 @@ The implementation is provided here in the [pymbd][] container under the terms o
 A parallel algorithm using a Berge-like calculation on divided subhypergraphs, published in [_Parallel computation of the minimal elements of a poset_](//doi.org/10.1145/1837210.1837221) by Leiserson et al.
 An implementation in Cilk++ by those authors is available from the BPASlib project's [webpage](//bpaslib.org) and is provided here in the [partran][] container.
 
+***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
+
 ### MHS²
 A parallel algorithm from _An efficient distributed algorithm for computing minimal hitting sets_ ([PDF](//dx-2014.ist.tugraz.at/papers/DX14_Mon_PM_S1_paper1.pdf)) by Cardoso and Abreu.
 An implementation in C++ by those authors is available from their [GitHub repository](//github.com/npcardoso/MHS2) and is provided here in the [mhs2][] container under the terms of the GPL3 open-source license.
@@ -61,6 +67,8 @@ An implementation in C++ by those authors is available from their [GitHub reposi
 ### HBC
 A vertex-wise algorithm inspired by ideas from data mining and published in [_A data mining formalization to improve hypergraph minimal transversal computation_](//www.infona.pl/resource/bwmeta1.element.baztech-article-BUS5-0014-0020) ([PDF](//cremilleux.users.greyc.fr/papers/FundInfoFinal07.pdf)) by Hébert, Bretto, and Crémilleux.
 An implementation in C++, written by C. Hébert and now maintained by F. Rioult, is available as [MtMiner](//forge.greyc.fr/projects/kdariane/wiki/Mtminer) and is provided here in the [hbc][] container by permission from the authors.
+
+***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
 
 ### OCSANA-Greedy
 A vertex-wise "greedy" algorithm published in [_OCSANA: optimal combinations of interventions from network analysis_](//doi.org/10.1093/bioinformatics/btt195).

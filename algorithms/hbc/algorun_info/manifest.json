@@ -1,7 +1,7 @@
 {
     "algo_name": "HBC",
     "algo_summary": "HBC algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"//www.infona.pl/resource/bwmeta1.element.baztech-article-BUS5-0014-0020\">A data mining formalization to improve hypergraph minimal transversal computation</a> (<a href=\"//cremilleux.users.greyc.fr/papers/FundInfoFinal07.pdf\">PDF</a>) by Hébert, Bretto, and Crémilleux.",
+    "algo_description": "Introduced in <a href=\"//www.infona.pl/resource/bwmeta1.element.baztech-article-BUS5-0014-0020\">A data mining formalization to improve hypergraph minimal transversal computation</a> (<a href=\"//cremilleux.users.greyc.fr/papers/FundInfoFinal07.pdf\">PDF</a>) by Hébert, Bretto, and Crémilleux. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes.",
     "algo_website": "//forge.greyc.fr/projects/kdariane/wiki/Mtminer",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [

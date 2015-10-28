@@ -5,3 +5,4 @@ For details of the algorithm, see [_A data mining formalization to improve hyper
 ## Implementation
 The implementation provided in [src/alg](src/alg) is compiled from C++ code written by Céline Hébert and available from the MTMiner project [website](//forge.greyc.fr/projects/kdariane/wiki/Mtminer).
 It is provide as-is and without warranty.
+***WARNING***: Testing has revealed that this sofwtare does not accurately generate all MHSes.

@@ -1,7 +1,7 @@
 {
     "algo_name": "ParTran",
     "algo_summary": "ParTran algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"http://doi.org/10.1145/1837210.1837221\">Parallel computation of the minimal elements of a poset</a>. Can be run in multiple threads.",
+    "algo_description": "Introduced in <a href=\"http://doi.org/10.1145/1837210.1837221\">Parallel computation of the minimal elements of a poset</a>. Can be run in multiple threads. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes.",
     "algo_website": "//bpaslib.org",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS", "parallel"],
     "algo_authors": [

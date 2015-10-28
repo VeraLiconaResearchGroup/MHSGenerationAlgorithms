@@ -5,3 +5,4 @@ For details of the algorithm, see [_Parallel computation of the minimal elements
 ## Implementation
 The implementation provided in [src/alg](src/alg) is Cilk++ code written by Leiserson et al. and distributed at the BPASlib project's [webpage](//bpaslib.org).
 TODO: update with license information.
+***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
