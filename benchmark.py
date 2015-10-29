@@ -11,6 +11,7 @@ import pyalgorun
 import logging
 import time
 import sys
+import os
 from collections import defaultdict
 
 MAX_TRIES = 1
@@ -25,7 +26,7 @@ def main():
     # Add arguments
     parser.add_argument("algorithm_list_file", help="JSON file of algorithms to benchmark")
     parser.add_argument("input_data_file", help="Input file to be passed to each algorithm")
-    parser.add_argument("output_data_file", help="Output file to write results")
+    parser.add_argument("output_dir", help="Output directory to write results")
     parser.add_argument("-n", "--num_tests", type=int, default=1, help="Number of test iterations")
     parser.add_argument("-j", "--num_threads", type=int, nargs='*', help="Numbers of threads to use for supporting algorithms")
     parser.add_argument("-c", "--cutoff_sizes", type=int, nargs='*', help="Cutoff sizes to use for supporting algorithms (if specified, full test is not run unless 0 is included)")
@@ -49,6 +50,12 @@ def main():
         log_level = logging.DEBUG
 
     logging.basicConfig(format = log_format, level = log_level)
+
+    infile_basename = os.path.splitext(os.path.basename(args.input_data_file))[0]
+    logfile_path = "{0}/{1}.log".format(args.output_dir, infile_basename)
+
+    logfile_handler = logging.FileHandler(logfile_path)
+    logging.getLogger().addHandler(logfile_handler)
 
     # Read and process files
     with open(args.algorithm_list_file) as algorithm_list_file:
@@ -88,6 +95,16 @@ def main():
     if timeout == 0:
         timeout = None
 
+    # Process filenames
+    output_data_filename = "{0}/{1}.json".format(args.output_dir, infile_basename)
+
+    alg_results_dirname = "{0}/alg-output/".format(args.output_dir)
+    try:
+        os.makedirs(alg_results_dirname)
+    except OSError:
+        if not os.path.isdir(alg_results_dirname):
+            raise
+
     # Launch containers
     logging.info("Launching containers")
     alg_collection = pyalgorun.AlgorunContainerCollection(alg_list, docker_base_url = args.docker_base_url)
@@ -104,17 +121,16 @@ def main():
 
     if args.append:
         try:
-            with open(args.output_data_file) as output_data_file:
+            with open(output_data_filename) as output_data_file:
                 original_output = json.load(output_data_file)
             original_runtimes = original_output["runtimes"]
-            original_transcounts = original_output["transversal_counts"]
             original_algs = original_output["algs"]
             original_timeout = original_output["timeout_secs"]
         except IOError:
-            sys.stderr.write("Requested file " + args.output_data_file + " did not exist, so we could not append. Continuing.\n")
+            sys.stderr.write("Requested file " + output_data_filename + " did not exist, so we could not append. Continuing.\n")
             pass
         except (ValueError, KeyError):
-            sys.stderr.write("Requested file " + args.output_data_file + " did not contain valid results JSON.\n")
+            sys.stderr.write("Requested file " + output_data_filename + " did not contain valid results JSON.\n")
             sys.stderr.write("Aborting so we don't destroy data.\n")
             sys.exit(1)
 
@@ -137,6 +153,7 @@ def main():
                 # for certain sporadic errors
                 num_tries = 0
 
+
                 for i in range(args.num_tests):
                     # NOTE: We assume that increasing the cutoff or
                     # decreasing the number of threads will never decrease
@@ -146,15 +163,32 @@ def main():
                     # algorithms aren't *very* badly behaved.
 
                     # Check whether a faster configuration has timed out
+                    def old_test_subsumes_new_test(old_pair, new_pair):
+                        old_t, old_c = old_pair
+                        t, c = new_pair
+
+                        if t <= old_t:
+                            if c == 0:
+                                return True
+                            if (old_c <= c and old_c != 0):
+                                return True
+                        return False
+
                     alg_has_timed_out = False
-                    for old_t, old_c in timeout_config_pairs:
-                        if old_t >= t and (old_c <= c or c == 0):
-                            logging.info("{0} <= {1}, so killing".format((old_t, old_c), (t, c)))
+                    for old_pair in timeout_config_pairs:
+                        if old_test_subsumes_new_test(old_pair, (t, c)):
+                            logging.info("{0} <= {1}, so killing".format(old_pair, (t, c)))
                             alg_has_timed_out = True
 
                     if num_tries > MAX_TRIES:
                         logging.info("{0} tries failed, so killing".format(num_tries))
                         alg_has_timed_out = True
+
+                    newname = alg._name
+                    if t > 1:
+                        newname += "-t{0}".format(t)
+                    if c > 0:
+                        newname += "-c{0}".format(c)
 
                     # Only execute this run if a faster configuration
                     # has not timed out
@@ -162,17 +196,16 @@ def main():
                         logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, args.num_tests))
                         config = {"THREADS": t, "CUTOFF_SIZE": c}
                         alg.change_config(config)
-                        newname = alg._name
-                        if t > 1:
-                            newname += "-t{0}".format(t)
-                        if c > 0:
-                            newname += "-c{0}".format(c)
 
                         try:
                             result_str = alg.run_alg(args.input_data_file, timeout)
                             result = json.loads(result_str)
                             time_taken = float(result["timeTaken"])
-                            transcount = len(result["sets"])
+                            transcount = len(result["transversals"])
+
+                            result_out_filename = "{0}/{1}.r{2}.json".format(alg_results_dirname, newname, i)
+                            with open(result_out_filename, 'w') as result_outfile:
+                                json.dump(result, result_outfile, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
                         except (pyalgorun.AlgorunTimeout):
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
                             timeout_config_pairs.append((t, c))
@@ -194,14 +227,14 @@ def main():
                     runtimes[newname].append(time_taken)
                     if transcount is not None:
                         transcounts[newname].append(transcount)
-                    logging.info("Finished {0} run in {1} sec., found {2} MHSes".format(newname, time_taken, transcount))
+                    else:
+                        transcount = "no" # This is only used in the logging statement below
+
+                    logging.info("Finished {0} run in {1} sec., found {2} MHSes.".format(newname, time_taken, transcount))
 
         # Kill the algorithm once we're done computing with it,
         # regardless of the outcome
         alg.stop()
-
-    # All done! Time to close up shop.
-    alg_collection.close()
 
     # Combine old data with new
     # First, combine algorithm lists, giving preference to new ones
@@ -230,7 +263,7 @@ def main():
     }
 
     # Print the results
-    with open(args.output_data_file, 'w') as output_data_file:
+    with open(output_data_filename, 'w') as output_data_file:
         json.dump(output, output_data_file, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
 
 if __name__ == "__main__":
