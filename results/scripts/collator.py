@@ -22,11 +22,13 @@ cutoff_algs = ["berge",
                "pMMCS",
                "pRS"]
 
-thread_algs = ["partran",
-               "mhs2",
+thread_algs = ["mhs2",
                "pMMCS",
                "pRS",
                "bm"]
+
+omit_algs = ['ks',
+             'partran']
 
 def parse_results_algname(algname_str):
     orig_name = algname_str
@@ -82,7 +84,7 @@ def problem_results_panel(results_json):
     runtimes = results_json["runtimes"]
 
     # Get the list of algorithm names
-    algs = set(alg["algName"] for alg in results_json["algs"])
+    algs = set(alg["algName"] for alg in results_json["algs"] if alg["algName"] not in omit_algs)
 
     # For each algorithm, build a DataFrame with its results
     results = dict()
@@ -114,8 +116,8 @@ def generate_full_csv(data4d, basename, reverse_data_sort):
     data = data4d.ix[:,:,1,0].T.dropna(axis='columns', how='all')
 
     # Sort the input sets lexicographically
-    data.sort(ascending = not reverse_data_sort,
-              inplace = True)
+    data.sort_index(ascending = not reverse_data_sort,
+                    inplace = True)
 
     # Construct filename
     output_file_name = "{0}.full.csv".format(basename)
