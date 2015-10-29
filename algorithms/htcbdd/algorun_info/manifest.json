@@ -1,0 +1,22 @@
+{
+    "algo_name": "HTC-BDD",
+    "algo_summary": "HTC-BDD algorithm for minimal hitting set computations",
+    "algo_description": "Introduced in <a href=\"//doi.org/10.1007/978-3-642-38527-8_10\">Hypergraph transversal computation with binary decision diagrams</a> by T. Toda. Available algorithms:<ul><li><code>toda</code>Full HTC-BDD algorithm.</li><li><code>knuth</code>Knuth algorithm from Knuth's 'The Art of Computer Programming' vol. 4 §7.1.4.</li></ul>'",
+    "algo_website": "//www.sd.is.uec.ac.jp/toda/htcbdd.html",
+    "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
+    "algo_authors": [
+        {
+            "name": "Takahisa Toda",
+            "email": "toda.takahisa@gmail.com",
+            "personal_website": "//www.sd.is.uec.ac.jp/toda",
+            "organization": "Discrete Structure Manipulation System Project, Japan Science and Technology Agency, Hokkaido University,",
+            "org_website": "//www.sd.is.uec.ac.jp"
+        }
+    ],
+    "algo_exec": "./mhs",
+    "algo_output_filename": "out.dat",
+    "algo_parameters": {
+        "MODE": "toda"
+    },
+    "algo_image": ""
+}

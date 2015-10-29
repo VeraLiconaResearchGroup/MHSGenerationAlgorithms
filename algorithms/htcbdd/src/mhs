@@ -1,0 +1,93 @@
+#!/usr/bin/env python
+
+# MHS algorithm runner: HTC-BDD
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
+import simplejson as json
+import jsonschema
+import argparse
+import tempfile
+import timeit
+import sys
+import os
+
+# Set up argument processing
+parser = argparse.ArgumentParser(description='MHS runner: HTC-BDD')
+
+# Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+parser.add_argument("input_file", help="Input file to process")
+parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
+
+args = parser.parse_args()
+
+# Fetch the relevant environment variables
+mode = os.environ.get("MODE", "toda")
+
+# Configure path and validation
+script_dir = sys.path[0]
+input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+
+# Read the input file
+with open(args.input_file) as input_file:
+    input_json = json.load(input_file)
+
+# Validate the input
+with open(input_schema_path) as input_schema_file:
+    input_schema = json.load(input_schema_file)
+    jsonschema.validate(input_json, input_schema)
+
+# Set up temporary files for input and output
+with tempfile.NamedTemporaryFile() as temp_input_file:
+    with tempfile.NamedTemporaryFile() as temp_output_file:
+        # Generate the input file
+        num_verts = max(vert for edge in input_json["sets"] for vert in edge)
+
+        for edge in input_json["sets"]:
+            edge_as_string = " ".join(map(str, edge))
+            temp_input_file.write(edge_as_string + "\n")
+
+        temp_input_file.flush()
+
+        # Process the input file
+        alg_call_parts = ['./alg/htcbdd']
+
+        if mode == "toda":
+            alg_call_parts += '-t'
+        elif mode == "knuth":
+            alg_call_parts += '-k'
+        else:
+            raise ValueError("Invalid mode name {0}".format(mode))
+
+        alg_call_parts += [temp_input_file.name, temp_output_file.name]
+
+        alg_call_string = [str(arg) for arg in alg_call_parts]
+
+        time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+                                   setup="import subprocess",
+                                   number=1)
+
+        # Process the results
+        temp_output_file.seek(0)
+        transversal_lines = temp_output_file.readlines()
+        transversals = (map(int, line.split()) for line in transversal_lines)
+        results = input_json
+        results["guaranteedMinimal"] = True
+        results["guaranteedComplete"] = True
+        results["transversals"] = transversals
+        results["timeTaken"] = time_taken
+
+        # Write the results to the output file
+        with open(args.output_file, 'w') as output_file:
+            # Pretty-print the output
+            json.dump(results,
+                      output_file,
+                      indent=4,
+                      separators=(',', ': '),
+                      iterable_as_array = True)
+
+### Emacs configuration
+# Local Variables:
+# mode: python
+# End:

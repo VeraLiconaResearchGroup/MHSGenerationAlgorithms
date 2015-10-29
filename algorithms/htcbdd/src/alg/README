@@ -1,0 +1,151 @@
+
+HTC-BDD: Hypergraph Transversal Computation with Binary Decision Diagrams
+coded in C (c99 standard)
+Version 1.2.2 (released on 14th May, 2015)
+
+Contact:
+Takahisa Toda <toda.takahisa(at)gmail.com>
+Graduate School of Information Systems, the University of Electro-Communications
+1-5-1 Chofugaoka, Chofu, Tokyo 182-8585, Japan
+http://kuma-san.net/
+-------------------------------------------------------------------------
+
+- PROBLEM
+
+Given a hypergraph H=(V,E), this program computes the transversal hypergraph of H 
+by generating all minimal hitting sets for E.
+
+- BASIC NOTION
+
+A hypergraph is a pair H=(V,E) of a set V and a family E of subsets of V, 
+where the sets in E are called hyperedges.
+A hitting set (or transversal) for E is a subset T of V such that T meets
+every hyperedge in E.
+A hitting set is minimal if no proper subsets are hitting sets.
+The transversal hypergraph of H is a hypergraph whose ground set is V and
+whose hyperedges are the minimal hitting sets for E.
+
+Binary decision diagrams (BDDs) and zero-suppressed BDDs (ZDDs) are compresssed
+data structures for Boolean functions and set families, respectively.
+
+- BDD/ZDD LIBRARIES
+
+CU Decision Diagram Package Release 2.5.0 is used in our program.
+For detailed information, see README in the directory "cudd-2.5.0".
+
+- FILE FORMAT
+The requirement for an input file format is:
+-- Entries must be sorted in increasing order and separated by 
+   at least one blank character.
+-- No duplicated entries appear in the same row.
+-- Each entry must be a nonzero positive number.
+-- Empty line is allowed.
+-- The length of a row must be less than the value indicated by the macro 
+   MAX_ROWLEN.
+
+====================
+2 4 7 
+7 8 
+9 
+9 10 
+[EOF]
+====================
+
+The data above corresponds to the hypergraph H = {{2,4,7}, {7,8}, {9}, {9,10}} on the 
+vertex set {1,...,10}.
+Given this data, our program outputs the following hypergraph:
+====================
+7 9 
+4 8 9 
+2 8 9 
+[EOF]
+====================
+
+There are sample datasets in the directory "data".
+
+- HOW TO COMPILE
+
+Before you compile our code, build BDD/ZDD libraries.
+To do this, execute make in the directory cudd-2.5.0/ .
+See cudd-2.5.0/README for details about CUDD.
+
+Remark: for MacOSX, the default setting of Makefile may lead to compilation error.
+In my environment (Mac OSX 10.10.3, gcc: Apple LLVM version 6.1.0, i386, x86_64), I confirmed that compilation succeeded by commenting out all lines concerning XCFLAGS in Makefile.
+
+After that, execute make in the top directory.
+Then the executable file htcbdd will be produced.
+For additional information, see Makefile.
+
+Remark: for version 1.2.1 or former of htcbdd and for MacOSX, the compilation at the top directory may fail because of inclusion of malloc.h.
+This was fixed in version 1.2.2 by not including malloc.h.
+
+- USAGE
+
+$ ./htcbdd [option] input-filename [output-filename]
+-t   :Toda method (default)
+-k   :Knuth method
+
+(*) If output-filename is not given, our program does not decompress
+an output ZDD and does not produce any datafile.
+
+- NOTICE
+
+HTC-BDD does not maintain reference counts of BDD and ZDD nodes.
+Hence, an error will occur if either the number of nodes exceeds 
+the limit size or the memory space available in a computer is exhausted.
+
+- STANDARD OUTPUT
+
+If the macros MISC_LOG, TIME_LOG are defined in Makefile,
+the following information will be outputed to stdout.
+The meaning of each line is described as a comment following //.
+
+$ ./htcbdd data/TH-3-30.dat 
+date  Thu May 14 13:25:30 2015
+program HTCBDD-1.2.2
+package CU Decision Diagram Package Release 2.5.0
+input data/TH-3-30.dat
+method  Toda
+
+generator_type  default         // selected random number generator
+first_value 1627153179          // the first generated random number
+max_value 2147483647            // the maximum value of random numbers
+seed  1431577530
+
+maxval  30                      // the maximum value of items in input
+#row  435                       // the number of rows in input
+#entry  12180                   // the number of entries in input with repetition
+
+GC  disabled                    // garbage collection was disabled
+time(INPUT) 0.00  sec           // time for compression phase
+|zdd| 86                        // the number of nodes in a ZDD
+#sets 435                       // the number of sets represented in a ZDD
+
+time(HIT) 0.03  sec             // time for hitting set generation phase
+|bdd| 85                        // the number of nodes in an intermediate BDD
+
+time(MIN) 0.05  sec             // time for restricting into minimal sets
+|zdd| 86                        // the number of nodes in an output ZDD
+#sets 4060                      // the number of sets in output
+
+- REFERENCES
+
+T.Toda, Hypergraph Transversal Computation with Binary Decision Diagrams, 
+in Proc. of 12th International Symposium on Experimental Algorithms (SEA2013), 
+LNCS 7933, pp.91-102, Rome, Italy (2013). 
+
+Eiter, T., Gottlob, G.: Hypergraph transversal computation and related 
+problems in logic and AI. LNAI 2424 (2002) 549–564
+
+Knuth, D.E.: The Art of Computer Programming Volume 4a, Addison-Wesley 
+Professional, New Jersey, USA (2011)
+
+Bryant, R.E.: Graph-Based algorithm for Boolean function manipulation, 
+IEEE Trans. Comput., Vol.35, pp.677-691 (1986)
+
+Minato, S.: Zero-Suppressed BDDs for Set Manipulation in Combinatorial 
+Problems, 30th ACM/IEEE Design Automation Conference (DAC-93), Dallas, 
+Texas, USA, Jun, pp.272-277 (1993)
+
+Somenzi, F. CUDD: CU Decision Diagram Package: Release 2.5.0. Available online:
+http://vlsi.colorado.edu/fabio/CUDD/ accessed on date September 2012.

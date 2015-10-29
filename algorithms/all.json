@@ -48,6 +48,20 @@
             }
         },
         {
+            "algName": "htcbdd",
+            "containerName": "agdphd/htcbdd",
+            "config": {
+                "MODE": "toda"
+            }
+        },
+        {
+            "algName": "knuth",
+            "containerName": "agdphd/htcbdd",
+            "config": {
+                "MODE": "knuth"
+            }
+        },
+        {
             "algName": "bool_iterative",
             "containerName": "agdphd/pymbd",
             "cutoff": true,

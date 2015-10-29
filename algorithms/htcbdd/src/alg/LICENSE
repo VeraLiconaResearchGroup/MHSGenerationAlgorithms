@@ -1,0 +1,5 @@
+HTC-BDD 1.2.2: all programs except for the CUDD package
+Copyright (c) 2015, Takahisa Toda
+Released under the MIT License.
+
+See cudd-2.5.0/LICENSE for the license of CUDD package.

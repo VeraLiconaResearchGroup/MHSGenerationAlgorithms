@@ -1,0 +1,3 @@
+Version 1.2.2 
+=========================================
+* malloc.h is no longer included because it is a non-standard linux-specific header.
