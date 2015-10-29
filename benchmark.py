@@ -111,9 +111,21 @@ def run_benchmarks(alg_list,
                     if c > 0:
                         newname += "-c{0}".format(c)
 
+                    result_out_filename = "{0}/{1}.r{2}.json".format(alg_results_dirname, newname, i)
+                    result = None
+
+                    # Try to load old results if applicable
+                    try:
+                        with open(result_out_filename) as result_out_file:
+                            result = json.load(result_out_file)
+                            time_taken = float(result["timeTaken"])
+                            transcount = len(result["transversals"])
+                    except (IOError, ValueError):
+                        pass
+
                     # Only execute this run if a faster configuration
                     # has not timed out
-                    if not alg_has_timed_out:
+                    if not alg_has_timed_out and result is None:
                         logging.info("Running algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, num_tests))
                         config = {"THREADS": t, "CUTOFF_SIZE": c}
                         alg.change_config(config)
@@ -123,8 +135,6 @@ def run_benchmarks(alg_list,
                             result = json.loads(result_str)
                             time_taken = float(result["timeTaken"])
                             transcount = len(result["transversals"])
-
-                            result_out_filename = "{0}/{1}.r{2}.json".format(alg_results_dirname, newname, i)
                             with open(result_out_filename, 'w') as result_outfile:
                                 json.dump(result, result_outfile, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
                         except (pyalgorun.AlgorunTimeout):
@@ -140,8 +150,7 @@ def run_benchmarks(alg_list,
                             num_tries += 1
                             i -= 1
                             continue
-
-                    else:
+                    elif alg_has_timed_out:
                         time_taken = float('inf')
                         transcount = None
 
@@ -223,6 +232,12 @@ def main():
 
     infile_basename = os.path.splitext(os.path.basename(args.input_data_file))[0]
     logfile_path = "{0}/{1}.log".format(args.output_dir, infile_basename)
+
+    try:
+        os.makedirs(args.output_dir)
+    except OSError:
+        if not os.path.isdir(args.output_dir):
+            raise
 
     logfile_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logfile_handler = logging.FileHandler(logfile_path)
