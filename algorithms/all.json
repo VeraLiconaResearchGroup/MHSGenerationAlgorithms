@@ -9,7 +9,7 @@
             "containerName": "agdphd/dl"
         },
         {
-            "algName": "fka_begk",
+            "algName": "fka.begk",
             "containerName": "agdphd/fka-begk"
         },
         {
@@ -62,7 +62,7 @@
             }
         },
         {
-            "algName": "bool_iterative",
+            "algName": "bool.iterative",
             "containerName": "agdphd/pymbd",
             "cutoff": true,
             "config": {
