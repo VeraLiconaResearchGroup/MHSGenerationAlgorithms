@@ -54,17 +54,17 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         alg_call_parts = ['./alg/htcbdd']
 
         if mode == "toda":
-            alg_call_parts += '-t'
+            alg_call_parts.append('-t')
         elif mode == "knuth":
-            alg_call_parts += '-k'
+            alg_call_parts.append('-k')
         else:
             raise ValueError("Invalid mode name {0}".format(mode))
 
         alg_call_parts += [temp_input_file.name, temp_output_file.name]
 
-        alg_call_string = [str(arg) for arg in alg_call_parts]
+        print alg_call_parts
 
-        time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_string, script_dir),
+        time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_parts, script_dir),
                                    setup="import subprocess",
                                    number=1)
 
