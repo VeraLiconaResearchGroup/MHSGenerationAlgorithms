@@ -29,7 +29,7 @@ all: htcbdd
 htcbdd: $(OBJ1)
 	$(CC) $(CFLAGS) $(MYFLAGS) -o $@ $(OBJ1) $(LIB)
 clean:
-	rm -f *.o *.exe *~ mon.out gmon.out
+	rm -f *.o *.exe *~ mon.out gmon.out htcbdd
 
 htcbdd.o:					my_io_setfam.h bdd_io_setfam.h bdd_interface.h bdd_min.h bdd_hit.h my_hash.h ssort1.h my_def.h rng.h
 my_io_setfam.o:		my_io_setfam.h my_def.h
