@@ -45,6 +45,7 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         num_verts = max(vert for edge in input_json["sets"] for vert in edge)
 
         for edge in input_json["sets"]:
+            edge.sort()
             edge_as_string = " ".join(map(str, edge))
             temp_input_file.write(edge_as_string + "\n")
 
