@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -std=c99 -pedantic-errors -Wall -O3 -Winline -DNDEBUG
 
 MYFLAGS = -DSELECT_CUDD
-#MYFLAGS += -DRECDEPTH_GUARD        # prevent recursive function calls from stack overf low.
+MYFLAGS += -DRECDEPTH_GUARD        # prevent recursive function calls from stack overf low.
 MYFLAGS += -DMISC_LOG -DTIME_LOG   # provide basic information on program behavior and various settings in stdout.
 #MYFLAGS += -DSIZE_LOG              # output intermediate decision diagram sizes as files.
 MYFLAGS += -DOPCACHE_LOG           # provide detailed log of operation cache in stdout.
