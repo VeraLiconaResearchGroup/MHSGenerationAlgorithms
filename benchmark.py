@@ -111,7 +111,8 @@ def run_benchmarks(alg_list,
                     if c > 0:
                         newname += "-c{0}".format(c)
 
-                    result_out_filename = "{0}/{1}.r{2}.json".format(alg_results_dirname, newname, i)
+                    input_shortname = os.path.splitext(os.path.basename(input_data_filename))[0]
+                    result_out_filename = "{0}/{1}.{2}.r{3}.json".format(alg_results_dirname, input_shortname, newname, i)
                     result = None
 
                     # Try to load old results if applicable
