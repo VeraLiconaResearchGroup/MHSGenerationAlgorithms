@@ -62,8 +62,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         alg_call_parts += [temp_input_file.name, temp_output_file.name]
 
-        print alg_call_parts
-
         time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_parts, script_dir),
                                    setup="import subprocess",
                                    number=1)
