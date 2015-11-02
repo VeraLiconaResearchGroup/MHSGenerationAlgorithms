@@ -1,5 +1,5 @@
 /** \file   my_io_setfam.c
- *  \brief  Implementation of IO functions for data files that represent set families. 
+ *  \brief  Implementation of IO functions for data files that represent set families.
  *  \author Takahisa Toda
  */
 
@@ -41,7 +41,7 @@ int getfileinfo(uintmax_t *prow_count, itemval *pmaxval, uintmax_t *pentry_count
       }
       if(*ep == SF_DELIMITER) {assert(ep < buf+MAX_ROWLEN); *ep = '\0'; ep++;}
       if(sp != ep) {
-        itemval v = strtoull(sp, NULL, 10); n++;
+        itemval v = strtoull(sp, NULL, 10) + 1; n++;
         ENSURE_TRUE_MSG(0 < v && v < INFTY, "invalid value");
         ENSURE_TRUE_MSG(prev < v,           "entries not sorted");
         if(m < v) m = v;
@@ -71,7 +71,7 @@ int getfileinfo(uintmax_t *prow_count, itemval *pmaxval, uintmax_t *pentry_count
  *  \param    entry_count   The number of entries with repetition in a datafile
  *  \param    in            Pointer to a dafafile
  *  \note
- *  - sf->elem[i-1][j-1] corresponds to the j-th entry in the i-th set. 
+ *  - sf->elem[i-1][j-1] corresponds to the j-th entry in the i-th set.
  *  - sf->elem[i-1][k] == INFTY if the i-th set contains exactly k elements.
  *  - The returned data structure must be destroyed when it becomes unnecessary.
  *  \see      getfileinfo, destroy_setfam
@@ -88,7 +88,7 @@ struct setfam *create_setfam(uintmax_t row_count, uintmax_t entry_count, FILE *i
   sf->elem  = (itemval**)malloc(sizeof(itemval*)*row_count);
   ENSURE_TRUE_MSG(sf->elem  != NULL, "memory allocation failed");
   sf->mem   = (itemval*)malloc(sizeof(itemval)*len);
-  ENSURE_TRUE_MSG(sf->mem   != NULL, "memory allocation failed");  
+  ENSURE_TRUE_MSG(sf->mem   != NULL, "memory allocation failed");
   sf->card    = row_count;
   sf->memlen  = len;
 
@@ -105,7 +105,7 @@ struct setfam *create_setfam(uintmax_t row_count, uintmax_t entry_count, FILE *i
       }
       sp = ep;
     }
-    *m = INFTY; m++; 
+    *m = INFTY; m++;
   }
 
 
@@ -124,4 +124,3 @@ void destroy_setfam(struct setfam *sf)
   free(sf->mem);  sf->mem   = NULL;
   free(sf);       sf        = NULL;
 }
-
