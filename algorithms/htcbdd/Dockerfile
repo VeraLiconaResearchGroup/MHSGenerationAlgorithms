@@ -15,7 +15,6 @@ RUN pip install \
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
 WORKDIR /home/algorithm/src/alg
-RUN make -C cudd-2.5.0
 RUN make
 WORKDIR /home/algorithm/src
 

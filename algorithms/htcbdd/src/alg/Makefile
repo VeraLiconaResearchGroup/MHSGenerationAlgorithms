@@ -25,11 +25,15 @@ OBJ1 = htcbdd.o $(OBJ0)
 
 .c.o:
 	$(CC) $(CFLAGS) $(MYFLAGS) $(INCLUDE) -c $<
-all: htcbdd
+
+all: $(CUDD_DIR) htcbdd
+
 htcbdd: $(OBJ1)
 	$(CC) $(CFLAGS) $(MYFLAGS) -o $@ $(OBJ1) $(LIB)
+
 clean:
 	rm -f *.o *.exe *~ mon.out gmon.out htcbdd
+	$(MAKE) -C $(CUDD_DIR) distclean
 
 htcbdd.o:					my_io_setfam.h bdd_io_setfam.h bdd_interface.h bdd_min.h bdd_hit.h my_hash.h ssort1.h my_def.h rng.h
 my_io_setfam.o:		my_io_setfam.h my_def.h
@@ -40,3 +44,7 @@ my_opcache.o:			my_opcache.h my_def.h
 bdd_extra.o:			bdd_interface.h my_opcache.h my_def.h
 bdd_min.o:				bdd_min.h my_hash.h bdd_interface.h my_def.h
 bdd_hit.o:				bdd_hit.h my_hash.h bdd_interface.h my_def.h
+
+.PHONY: $(CUDD_DIR)
+$(CUDD_DIR):
+	$(MAKE) -C $@
