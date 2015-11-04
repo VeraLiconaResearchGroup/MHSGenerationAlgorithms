@@ -41,10 +41,11 @@ int getfileinfo(uintmax_t *prow_count, itemval *pmaxval, uintmax_t *pentry_count
       }
       if(*ep == SF_DELIMITER) {assert(ep < buf+MAX_ROWLEN); *ep = '\0'; ep++;}
       if(sp != ep) {
-        itemval v = strtoull(sp, NULL, 10) + 1; n++;
-        ENSURE_TRUE_MSG(0 < v && v < INFTY, "invalid value");
+        itemval v = strtoull(sp, NULL, 10); n++;
+        ENSURE_TRUE_MSG(0 <= v && v < INFTY, "invalid value");
         ENSURE_TRUE_MSG(prev < v,           "entries not sorted");
         if(m < v) m = v;
+	prev = v;
       }
       sp  = ep;
     }
