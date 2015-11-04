@@ -149,12 +149,12 @@ namespace agdmhs {
         // Which edges each vertex is critical for
         Hypergraph crit (H.num_edges(), H.num_verts());
 
-        // Which edges are known to be violating
-        bitset violating_vertices (H.num_verts());
-
         // Which edges are uncovered
         bitset uncov (H.num_edges());
         uncov.set(); // Initially full
+
+        // Which vertices are known to be violating
+        bitset violating_vertices (H.num_verts());
 
         // Tranpose of H
         Hypergraph T = H.transpose();
