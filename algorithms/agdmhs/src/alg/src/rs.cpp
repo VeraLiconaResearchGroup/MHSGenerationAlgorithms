@@ -40,18 +40,16 @@ namespace agdmhs {
           Return true if any vertex in S has its first critical edge
           after i.
          */
-        bool bad_edge_found = false;
         hindex w = S.find_first();
-        while (w != bitset::npos and not bad_edge_found) {
+        while (w != bitset::npos) {
             hindex first_crit_edge = crit[w].find_first();
             if (first_crit_edge >= i) {
-                bad_edge_found = true;
-                break;
+                return true;
             }
             w = S.find_next(w);
         }
 
-        return bad_edge_found;
+        return false;
     };
 
     static void rs_extend_or_confirm_set(const Hypergraph& H,
@@ -89,11 +87,13 @@ namespace agdmhs {
             v = e.find_next(v);
         }
 
-        // Loop over vertices in that edge
+        // Loop over vertices in that edge (in reverse order!)
         for (auto& v: search_indices) {
             ++rs_update_loops;
             hsetmap critmark = update_crit_and_uncov(crit, uncov, H, T, S, v);
 
+            // Check whether any vertex in S has its first critical
+            // edge after the search edge
             if (rs_any_edge_critical_after_i(search_edge, S, crit)) {
                 ++rs_critical_fails;
                 restore_crit_and_uncov(crit, uncov, S, critmark, v);
