@@ -121,6 +121,7 @@ def run_benchmarks(alg_list,
                             result = json.load(result_out_file)
                             time_taken = float(result["timeTaken"])
                             transcount = len(result["transversals"])
+                            logging.info("Using cached results for algorithm {0} with {1} threads and cutoff size {2}, run {3}/{4}".format(alg, t, c, i+1, num_tests))
                     except (IOError, ValueError):
                         pass
 
@@ -304,6 +305,8 @@ def main():
                              threads_list,
                              timeout,
                              args.append)
+
+    logging.info("Writing results to file")
 
     # Print the results
     with open(output_data_filename, 'w') as output_data_file:
