@@ -103,6 +103,7 @@ def run_benchmarks(alg_list,
 
                     if num_tries > MAX_TRIES:
                         logging.info("{0} tries failed, so killing".format(num_tries))
+                        timeout_config_pairs.append((t, c))
                         alg_has_timed_out = True
 
                     newname = alg._name
