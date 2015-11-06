@@ -9,3 +9,13 @@ The implementation provided in [src/alg](src/alg) is compiled from Pascal code w
 The source is distributed at the [Hypergraph Dualization Repository](//research.nii.ac.jp/~uno/dualization.html) and the [author's page](//lca.ceid.upatras.gr/~estavrop/transversal/).
 It is provided as-is and without any warranty.
 ***WARNING***: Testing has revealed that this sofwtare does not accurately generate all MHSes.
+
+## Building
+To build the container yourself, run the following from this directory:
+
+    docker build -t compsysmed/agdmhs:latest .
+
+**You do not need to build the container yourself to use the algorithms.**
+You can fetch a prebuilt copy of the container by running the following:
+
+    docker pull compsysmed/agdmhs:latest
