@@ -1,5 +1,7 @@
 # KS algorithm
-This directory contains an Algorun container implementing the KS algorithm for minimal hitting set enumeration.
+This directory contains sources for the [`compsysmed/ks`](//hub.docker.com/r/compsysmed/ks) container.
+It implements the KS algorithm for the minimum hitting set generation problem.
+
 For details of the algorithm, see [_An efficient algorithm for the transversal hypergraph generation_](//doi.org/10.7155/jgaa.00107) by Kavvadias and Stavropoulos.
 
 ## Implementation

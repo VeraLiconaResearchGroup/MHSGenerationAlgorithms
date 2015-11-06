@@ -1,5 +1,7 @@
 # DL algorithm
-This directory contains an Algorun container implementing the DL algorithm for minimal hitting set enumeration.
+This directory contains sources for the [`compsysmed/dl`](//hub.docker.com/r/compsysmed/dl) container.
+It implements the DL algorithm for the minimum hitting set generation problem.
+
 For details of the algorithm, see [_Mining border descriptions of emerging patterns from dataset pairs_](//doi.org/10.1007/s10115-004-0178-1) by Dong and Li.
 
 ## Implementation

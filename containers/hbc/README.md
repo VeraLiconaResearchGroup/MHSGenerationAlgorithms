@@ -1,5 +1,7 @@
 # HBC algorithm
-This directory contains an Algorun container implementing the HBC algorithm "MTMiner" for minimal hitting set enumeration.
+This directory contains sources for the [`compsysmed/hbc`](//hub.docker.com/r/compsysmed/hbc) container.
+It implements the HBC algorithm for the minimum hitting set generation problem.
+
 For details of the algorithm, see [_A data mining formalization to improve hypergraph minimal transversal computation_](//www.infona.pl/resource/bwmeta1.element.baztech-article-BUS5-0014-0020) ([PDF](//cremilleux.users.greyc.fr/papers/FundInfoFinal07.pdf)) by Hébert, Bretto, and Crémilleux.
 
 ## Implementation
