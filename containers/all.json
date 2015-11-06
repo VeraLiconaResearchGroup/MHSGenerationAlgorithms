@@ -133,7 +133,7 @@
         },
         {
             "algName": "ocsanaGreedy",
-            "containerName": "compsysmed/ocsana-greedy",
+            "containerName": "compsysmed/ocsanamhs",
             "cutoff": true
         }
     ]
