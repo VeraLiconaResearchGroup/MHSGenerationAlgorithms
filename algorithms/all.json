@@ -2,68 +2,68 @@
     "containers": [
         {
             "algName": "bmr",
-            "containerName": "agdphd/bmr"
+            "containerName": "compsysmed/bmr"
         },
         {
             "algName": "dl",
-            "containerName": "agdphd/dl"
+            "containerName": "compsysmed/dl"
         },
         {
             "algName": "fka.begk",
-            "containerName": "agdphd/fka-begk"
+            "containerName": "compsysmed/fka-begk"
         },
         {
             "algName": "hbc",
-            "containerName": "agdphd/hbc"
+            "containerName": "compsysmed/hbc"
         },
         {
             "algName": "ks",
-            "containerName": "agdphd/ks"
+            "containerName": "compsysmed/ks"
         },
         {
             "algName": "mhs2",
-            "containerName": "agdphd/mhs2",
+            "containerName": "compsysmed/mhs2",
             "threads": true,
             "cutoff": true,
             "slow": true
         },
         {
             "algName": "partran",
-            "containerName": "agdphd/partran",
+            "containerName": "compsysmed/partran",
             "threads": true,
             "slow": true
         },
         {
             "algName": "mmcs",
-            "containerName": "agdphd/shd",
+            "containerName": "compsysmed/shd",
             "config": {
                 "MODE": "mmcs"
             }
         },
         {
             "algName": "rs",
-            "containerName": "agdphd/shd",
+            "containerName": "compsysmed/shd",
             "config": {
                 "MODE": "rs"
             }
         },
         {
             "algName": "htcbdd",
-            "containerName": "agdphd/htcbdd",
+            "containerName": "compsysmed/htcbdd",
             "config": {
                 "MODE": "toda"
             }
         },
         {
             "algName": "knuth",
-            "containerName": "agdphd/htcbdd",
+            "containerName": "compsysmed/htcbdd",
             "config": {
                 "MODE": "knuth"
             }
         },
         {
             "algName": "bool.iterative",
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "config": {
                 "ALGORITHM_NAME": "bool-iterative"
@@ -71,7 +71,7 @@
         },
         {
             "algName": "hst",
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true,
             "config": {
@@ -80,7 +80,7 @@
         },
         {
             "algName": "hsdag",
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true,
             "config": {
@@ -89,7 +89,7 @@
         },
         {
             "algName": "staccato",
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true,
             "config": {
@@ -98,7 +98,7 @@
         },
         {
             "algName": "pMMCS",
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "threads": true,
             "cutoff": true,
             "config": {
@@ -107,7 +107,7 @@
         },
         {
             "algName": "pRS",
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "threads": true,
             "cutoff": true,
             "config": {
@@ -116,7 +116,7 @@
         },
         {
             "algName": "berge",
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "slow": true,
             "config": {
@@ -125,7 +125,7 @@
         },
         {
             "algName": "bm",
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "threads": true,
             "config": {
                 "ALGORITHM": "bm"
@@ -133,7 +133,7 @@
         },
         {
             "algName": "ocsanaGreedy",
-            "containerName": "agdphd/ocsana-greedy",
+            "containerName": "compsysmed/ocsana-greedy",
             "cutoff": true
         }
     ]
