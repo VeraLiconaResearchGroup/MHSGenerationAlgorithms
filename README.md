@@ -24,7 +24,7 @@ You can read more about the algorithms in the [containers `README`](containers/)
 
 Each of these software packages is wrapped in a [Docker][] container based on the [AlgoRun][] framework.
 You can easily download and run these containers yourself!
-For more information about how to do this (either to test the algorithms on your own inputs or to integrate the algorithms into your research), consult the [`HOWTO`][HOWTO.md].
+For more information about how to do this (either to test the algorithms on your own inputs or to integrate the algorithms into your research), consult the [`HOWTO`](HOWTO.md).
 
 ### Benchmark inputs
 A variety of example inputs are provided in the [`benchmark_inputs`](benchmark_inputs/) folder.
