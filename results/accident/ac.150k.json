@@ -1,28 +1,42 @@
 {
     "algs": [
         {
+            "algName": "htcbdd",
+            "config": {
+                "MODE": "toda"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
+            "algName": "knuth",
+            "config": {
+                "MODE": "knuth"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
             "algName": "bmr",
-            "containerName": "agdphd/bmr"
+            "containerName": "compsysmed/bmr"
         },
         {
             "algName": "dl",
-            "containerName": "agdphd/dl"
+            "containerName": "compsysmed/dl"
         },
         {
-            "algName": "fka_begk",
-            "containerName": "agdphd/fka-begk"
+            "algName": "fka.begk",
+            "containerName": "compsysmed/fka-begk"
         },
         {
             "algName": "hbc",
-            "containerName": "agdphd/hbc"
+            "containerName": "compsysmed/hbc"
         },
         {
             "algName": "ks",
-            "containerName": "agdphd/ks"
+            "containerName": "compsysmed/ks"
         },
         {
             "algName": "mhs2",
-            "containerName": "agdphd/mhs2",
+            "containerName": "compsysmed/mhs2",
             "cutoff": true,
             "slow": true,
             "threads": true
@@ -32,21 +46,21 @@
             "config": {
                 "MODE": "mmcs"
             },
-            "containerName": "agdphd/shd"
+            "containerName": "compsysmed/shd"
         },
         {
             "algName": "rs",
             "config": {
                 "MODE": "rs"
             },
-            "containerName": "agdphd/shd"
+            "containerName": "compsysmed/shd"
         },
         {
-            "algName": "bool_iterative",
+            "algName": "bool.iterative",
             "config": {
                 "ALGORITHM_NAME": "bool-iterative"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true
         },
         {
@@ -54,7 +68,7 @@
             "config": {
                 "ALGORITHM_NAME": "hst"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -63,7 +77,7 @@
             "config": {
                 "ALGORITHM_NAME": "hsdag"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -72,7 +86,7 @@
             "config": {
                 "ALGORITHM_NAME": "staccato"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -81,7 +95,7 @@
             "config": {
                 "ALGORITHM": "pmmcs"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "threads": true
         },
@@ -90,7 +104,7 @@
             "config": {
                 "ALGORITHM": "prs"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "threads": true
         },
@@ -99,7 +113,7 @@
             "config": {
                 "ALGORITHM": "berge"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "slow": true
         },
@@ -108,12 +122,12 @@
             "config": {
                 "ALGORITHM": "bm"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "threads": true
         },
         {
             "algName": "ocsanaGreedy",
-            "containerName": "agdphd/ocsanaGreedy",
+            "containerName": "compsysmed/ocsanaGreedy",
             "cutoff": true
         }
     ],
@@ -178,22 +192,22 @@
             0.05201292037963867,
             0.04770493507385254
         ],
-        "bool_iterative": [
+        "bool.iterative": [
             0.238739013671875,
             0.3210599422454834,
             0.23681998252868652
         ],
-        "bool_iterative-c10": [
+        "bool.iterative-c10": [
             0.31703996658325195,
             0.3162858486175537,
             0.3144969940185547
         ],
-        "bool_iterative-c5": [
+        "bool.iterative-c5": [
             0.2773411273956299,
             0.27716517448425293,
             0.211014986038208
         ],
-        "bool_iterative-c7": [
+        "bool.iterative-c7": [
             0.2368760108947754,
             0.23694396018981934,
             0.23561501502990723
@@ -203,7 +217,7 @@
             0.07472395896911621,
             0.07088303565979004
         ],
-        "fka_begk": [
+        "fka.begk": [
             1.0988078117370605,
             1.1183569431304932,
             1.1408729553222656
@@ -252,6 +266,16 @@
             2.2861149311065674,
             2.254199981689453,
             2.279294967651367
+        ],
+        "htcbdd": [
+            0.4427831172943115,
+            0.39386987686157227,
+            0.34222888946533203
+        ],
+        "knuth": [
+            0.34792613983154297,
+            0.31540608406066895,
+            0.37532806396484375
         ],
         "ks": [
             0.21167707443237305,
@@ -731,592 +755,12 @@
     },
     "timeout_secs": 3600,
     "transversal_counts": {
-        "berge": [
+        "htcbdd": [
             1039,
             1039,
             1039
         ],
-        "berge-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "berge-c5": [
-            974,
-            974,
-            974
-        ],
-        "berge-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "bm": [
-            1039,
-            1039,
-            1039
-        ],
-        "bm-t12": [
-            1039,
-            1039,
-            1039
-        ],
-        "bm-t16": [
-            1039,
-            1039,
-            1039
-        ],
-        "bm-t2": [
-            1039,
-            1039,
-            1039
-        ],
-        "bm-t4": [
-            1039,
-            1039,
-            1039
-        ],
-        "bm-t6": [
-            1039,
-            1039,
-            1039
-        ],
-        "bm-t8": [
-            1039,
-            1039,
-            1039
-        ],
-        "bmr": [
-            1039,
-            1039,
-            1039
-        ],
-        "bool_iterative": [
-            1039,
-            1039,
-            1039
-        ],
-        "bool_iterative-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "bool_iterative-c5": [
-            974,
-            974,
-            974
-        ],
-        "bool_iterative-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "dl": [
-            1039,
-            1039,
-            1039
-        ],
-        "fka_begk": [
-            960,
-            960,
-            960
-        ],
-        "hbc": [
-            1038,
-            1038,
-            1038
-        ],
-        "hsdag": [
-            1039,
-            1039,
-            1039
-        ],
-        "hsdag-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "hsdag-c5": [
-            974,
-            974,
-            974
-        ],
-        "hsdag-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "hst": [
-            1039,
-            1039,
-            1039
-        ],
-        "hst-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "hst-c5": [
-            974,
-            974,
-            974
-        ],
-        "hst-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "ks": [
-            960,
-            960,
-            960
-        ],
-        "mhs2": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-c10": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-c5": [
-            895,
-            895,
-            895
-        ],
-        "mhs2-c7": [
-            958,
-            958,
-            958
-        ],
-        "mhs2-t12": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t12-c10": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t12-c5": [
-            895,
-            895,
-            895
-        ],
-        "mhs2-t12-c7": [
-            958,
-            958,
-            958
-        ],
-        "mhs2-t16": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t16-c10": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t16-c5": [
-            895,
-            895,
-            895
-        ],
-        "mhs2-t16-c7": [
-            958,
-            958,
-            958
-        ],
-        "mhs2-t2": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t2-c10": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t2-c5": [
-            895,
-            895,
-            895
-        ],
-        "mhs2-t2-c7": [
-            958,
-            958,
-            958
-        ],
-        "mhs2-t4": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t4-c10": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t4-c5": [
-            895,
-            895,
-            895
-        ],
-        "mhs2-t4-c7": [
-            958,
-            958,
-            958
-        ],
-        "mhs2-t6": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t6-c10": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t6-c5": [
-            895,
-            895,
-            895
-        ],
-        "mhs2-t6-c7": [
-            958,
-            958,
-            958
-        ],
-        "mhs2-t8": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t8-c10": [
-            960,
-            960,
-            960
-        ],
-        "mhs2-t8-c5": [
-            895,
-            895,
-            895
-        ],
-        "mhs2-t8-c7": [
-            958,
-            958,
-            958
-        ],
-        "mmcs": [
-            1039,
-            1039,
-            1039
-        ],
-        "ocsanaGreedy": [
-            1094,
-            1094,
-            1094
-        ],
-        "ocsanaGreedy-c10": [
-            1094,
-            1094,
-            1094
-        ],
-        "ocsanaGreedy-c5": [
-            847,
-            847,
-            847
-        ],
-        "ocsanaGreedy-c7": [
-            1079,
-            1079,
-            1079
-        ],
-        "pMMCS": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-c5": [
-            974,
-            974,
-            974
-        ],
-        "pMMCS-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pMMCS-t12": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t12-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t12-c5": [
-            974,
-            974,
-            974
-        ],
-        "pMMCS-t12-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pMMCS-t16": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t16-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t16-c5": [
-            974,
-            974,
-            974
-        ],
-        "pMMCS-t16-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pMMCS-t2": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t2-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t2-c5": [
-            974,
-            974,
-            974
-        ],
-        "pMMCS-t2-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pMMCS-t4": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t4-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t4-c5": [
-            974,
-            974,
-            974
-        ],
-        "pMMCS-t4-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pMMCS-t6": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t6-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t6-c5": [
-            974,
-            974,
-            974
-        ],
-        "pMMCS-t6-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pMMCS-t8": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t8-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pMMCS-t8-c5": [
-            974,
-            974,
-            974
-        ],
-        "pMMCS-t8-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pRS": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-c5": [
-            974,
-            974,
-            974
-        ],
-        "pRS-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pRS-t12": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t12-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t12-c5": [
-            974,
-            974,
-            974
-        ],
-        "pRS-t12-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pRS-t16": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t16-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t16-c5": [
-            974,
-            974,
-            974
-        ],
-        "pRS-t16-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pRS-t2": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t2-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t2-c5": [
-            974,
-            974,
-            974
-        ],
-        "pRS-t2-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pRS-t4": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t4-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t4-c5": [
-            974,
-            974,
-            974
-        ],
-        "pRS-t4-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pRS-t6": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t6-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t6-c5": [
-            974,
-            974,
-            974
-        ],
-        "pRS-t6-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "pRS-t8": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t8-c10": [
-            1039,
-            1039,
-            1039
-        ],
-        "pRS-t8-c5": [
-            974,
-            974,
-            974
-        ],
-        "pRS-t8-c7": [
-            1037,
-            1037,
-            1037
-        ],
-        "rs": [
+        "knuth": [
             1039,
             1039,
             1039

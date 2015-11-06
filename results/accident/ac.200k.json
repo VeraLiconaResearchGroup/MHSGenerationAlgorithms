@@ -1,28 +1,42 @@
 {
     "algs": [
         {
+            "algName": "htcbdd",
+            "config": {
+                "MODE": "toda"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
+            "algName": "knuth",
+            "config": {
+                "MODE": "knuth"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
             "algName": "bmr",
-            "containerName": "agdphd/bmr"
+            "containerName": "compsysmed/bmr"
         },
         {
             "algName": "dl",
-            "containerName": "agdphd/dl"
+            "containerName": "compsysmed/dl"
         },
         {
-            "algName": "fka_begk",
-            "containerName": "agdphd/fka-begk"
+            "algName": "fka.begk",
+            "containerName": "compsysmed/fka-begk"
         },
         {
             "algName": "hbc",
-            "containerName": "agdphd/hbc"
+            "containerName": "compsysmed/hbc"
         },
         {
             "algName": "ks",
-            "containerName": "agdphd/ks"
+            "containerName": "compsysmed/ks"
         },
         {
             "algName": "mhs2",
-            "containerName": "agdphd/mhs2",
+            "containerName": "compsysmed/mhs2",
             "cutoff": true,
             "slow": true,
             "threads": true
@@ -32,21 +46,21 @@
             "config": {
                 "MODE": "mmcs"
             },
-            "containerName": "agdphd/shd"
+            "containerName": "compsysmed/shd"
         },
         {
             "algName": "rs",
             "config": {
                 "MODE": "rs"
             },
-            "containerName": "agdphd/shd"
+            "containerName": "compsysmed/shd"
         },
         {
-            "algName": "bool_iterative",
+            "algName": "bool.iterative",
             "config": {
                 "ALGORITHM_NAME": "bool-iterative"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true
         },
         {
@@ -54,7 +68,7 @@
             "config": {
                 "ALGORITHM_NAME": "hst"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -63,7 +77,7 @@
             "config": {
                 "ALGORITHM_NAME": "hsdag"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -72,7 +86,7 @@
             "config": {
                 "ALGORITHM_NAME": "staccato"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -81,7 +95,7 @@
             "config": {
                 "ALGORITHM": "pmmcs"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "threads": true
         },
@@ -90,7 +104,7 @@
             "config": {
                 "ALGORITHM": "prs"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "threads": true
         },
@@ -99,7 +113,7 @@
             "config": {
                 "ALGORITHM": "berge"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "slow": true
         },
@@ -108,12 +122,12 @@
             "config": {
                 "ALGORITHM": "bm"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "threads": true
         },
         {
             "algName": "ocsanaGreedy",
-            "containerName": "agdphd/ocsanaGreedy",
+            "containerName": "compsysmed/ocsanaGreedy",
             "cutoff": true
         }
     ],
@@ -178,22 +192,22 @@
             0.0074079036712646484,
             0.006827831268310547
         ],
-        "bool_iterative": [
+        "bool.iterative": [
             0.043012142181396484,
             0.03657102584838867,
             0.03665804862976074
         ],
-        "bool_iterative-c10": [
+        "bool.iterative-c10": [
             0.03670907020568848,
             0.04299187660217285,
             0.03728985786437988
         ],
-        "bool_iterative-c5": [
+        "bool.iterative-c5": [
             0.04309201240539551,
             0.03604698181152344,
             0.035884857177734375
         ],
-        "bool_iterative-c7": [
+        "bool.iterative-c7": [
             0.03692197799682617,
             0.037277936935424805,
             0.03670692443847656
@@ -203,7 +217,7 @@
             0.008304119110107422,
             0.00507807731628418
         ],
-        "fka_begk": [
+        "fka.begk": [
             0.27156710624694824,
             0.2578921318054199,
             0.26421284675598145
@@ -252,6 +266,16 @@
             0.11182093620300293,
             0.10850787162780762,
             0.11117696762084961
+        ],
+        "htcbdd": [
+            0.39292287826538086,
+            0.38059306144714355,
+            0.3497769832611084
+        ],
+        "knuth": [
+            0.35167407989501953,
+            0.31704092025756836,
+            0.32128405570983887
         ],
         "ks": [
             0.017306804656982422,
@@ -731,612 +755,12 @@
     },
     "timeout_secs": 3600,
     "transversal_counts": {
-        "berge": [
+        "htcbdd": [
             253,
             253,
             253
         ],
-        "berge-c10": [
-            253,
-            253,
-            253
-        ],
-        "berge-c5": [
-            252,
-            252,
-            252
-        ],
-        "berge-c7": [
-            253,
-            253,
-            253
-        ],
-        "bm": [
-            253,
-            253,
-            253
-        ],
-        "bm-t12": [
-            253,
-            253,
-            253
-        ],
-        "bm-t16": [
-            253,
-            253,
-            253
-        ],
-        "bm-t2": [
-            253,
-            253,
-            253
-        ],
-        "bm-t4": [
-            253,
-            253,
-            253
-        ],
-        "bm-t6": [
-            253,
-            253,
-            253
-        ],
-        "bm-t8": [
-            253,
-            253,
-            253
-        ],
-        "bmr": [
-            253,
-            253,
-            253
-        ],
-        "bool_iterative": [
-            253,
-            253,
-            253
-        ],
-        "bool_iterative-c10": [
-            253,
-            253,
-            253
-        ],
-        "bool_iterative-c5": [
-            252,
-            252,
-            252
-        ],
-        "bool_iterative-c7": [
-            253,
-            253,
-            253
-        ],
-        "dl": [
-            253,
-            253,
-            253
-        ],
-        "fka_begk": [
-            238,
-            238,
-            238
-        ],
-        "hbc": [
-            252,
-            252,
-            252
-        ],
-        "hsdag": [
-            253,
-            253,
-            253
-        ],
-        "hsdag-c10": [
-            253,
-            253,
-            253
-        ],
-        "hsdag-c5": [
-            252,
-            252,
-            252
-        ],
-        "hsdag-c7": [
-            253,
-            253,
-            253
-        ],
-        "hst": [
-            253,
-            253,
-            253
-        ],
-        "hst-c10": [
-            253,
-            253,
-            253
-        ],
-        "hst-c5": [
-            252,
-            252,
-            252
-        ],
-        "hst-c7": [
-            253,
-            253,
-            253
-        ],
-        "ks": [
-            238,
-            238,
-            238
-        ],
-        "mhs2": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-c10": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-c5": [
-            237,
-            237,
-            237
-        ],
-        "mhs2-c7": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t12": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t12-c10": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t12-c5": [
-            237,
-            237,
-            237
-        ],
-        "mhs2-t12-c7": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t16": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t16-c10": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t16-c5": [
-            237,
-            237,
-            237
-        ],
-        "mhs2-t16-c7": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t2": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t2-c10": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t2-c5": [
-            237,
-            237,
-            237
-        ],
-        "mhs2-t2-c7": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t4": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t4-c10": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t4-c5": [
-            237,
-            237,
-            237
-        ],
-        "mhs2-t4-c7": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t6": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t6-c10": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t6-c5": [
-            237,
-            237,
-            237
-        ],
-        "mhs2-t6-c7": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t8": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t8-c10": [
-            238,
-            238,
-            238
-        ],
-        "mhs2-t8-c5": [
-            237,
-            237,
-            237
-        ],
-        "mhs2-t8-c7": [
-            238,
-            238,
-            238
-        ],
-        "mmcs": [
-            253,
-            253,
-            253
-        ],
-        "ocsanaGreedy": [
-            294,
-            294,
-            294
-        ],
-        "ocsanaGreedy-c10": [
-            294,
-            294,
-            294
-        ],
-        "ocsanaGreedy-c5": [
-            285,
-            285,
-            285
-        ],
-        "ocsanaGreedy-c7": [
-            294,
-            294,
-            294
-        ],
-        "pMMCS": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-c10": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-c5": [
-            252,
-            252,
-            252
-        ],
-        "pMMCS-c7": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t12": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t12-c10": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t12-c5": [
-            252,
-            252,
-            252
-        ],
-        "pMMCS-t12-c7": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t16": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t16-c10": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t16-c5": [
-            252,
-            252,
-            252
-        ],
-        "pMMCS-t16-c7": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t2": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t2-c10": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t2-c5": [
-            252,
-            252,
-            252
-        ],
-        "pMMCS-t2-c7": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t4": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t4-c10": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t4-c5": [
-            252,
-            252,
-            252
-        ],
-        "pMMCS-t4-c7": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t6": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t6-c10": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t6-c5": [
-            252,
-            252,
-            252
-        ],
-        "pMMCS-t6-c7": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t8": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t8-c10": [
-            253,
-            253,
-            253
-        ],
-        "pMMCS-t8-c5": [
-            252,
-            252,
-            252
-        ],
-        "pMMCS-t8-c7": [
-            253,
-            253,
-            253
-        ],
-        "pRS": [
-            253,
-            253,
-            253
-        ],
-        "pRS-c10": [
-            253,
-            253,
-            253
-        ],
-        "pRS-c5": [
-            252,
-            252,
-            252
-        ],
-        "pRS-c7": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t12": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t12-c10": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t12-c5": [
-            252,
-            252,
-            252
-        ],
-        "pRS-t12-c7": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t16": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t16-c10": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t16-c5": [
-            252,
-            252,
-            252
-        ],
-        "pRS-t16-c7": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t2": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t2-c10": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t2-c5": [
-            252,
-            252,
-            252
-        ],
-        "pRS-t2-c7": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t4": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t4-c10": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t4-c5": [
-            252,
-            252,
-            252
-        ],
-        "pRS-t4-c7": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t6": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t6-c10": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t6-c5": [
-            252,
-            252,
-            252
-        ],
-        "pRS-t6-c7": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t8": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t8-c10": [
-            253,
-            253,
-            253
-        ],
-        "pRS-t8-c5": [
-            252,
-            252,
-            252
-        ],
-        "pRS-t8-c7": [
-            253,
-            253,
-            253
-        ],
-        "rs": [
-            253,
-            253,
-            253
-        ],
-        "staccato": [
-            253,
-            253,
-            253
-        ],
-        "staccato-c10": [
-            253,
-            253,
-            253
-        ],
-        "staccato-c5": [
-            253,
-            253,
-            253
-        ],
-        "staccato-c7": [
+        "knuth": [
             253,
             253,
             253

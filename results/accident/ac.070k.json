@@ -1,28 +1,42 @@
 {
     "algs": [
         {
+            "algName": "htcbdd",
+            "config": {
+                "MODE": "toda"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
+            "algName": "knuth",
+            "config": {
+                "MODE": "knuth"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
             "algName": "bmr",
-            "containerName": "agdphd/bmr"
+            "containerName": "compsysmed/bmr"
         },
         {
             "algName": "dl",
-            "containerName": "agdphd/dl"
+            "containerName": "compsysmed/dl"
         },
         {
-            "algName": "fka_begk",
-            "containerName": "agdphd/fka-begk"
+            "algName": "fka.begk",
+            "containerName": "compsysmed/fka-begk"
         },
         {
             "algName": "hbc",
-            "containerName": "agdphd/hbc"
+            "containerName": "compsysmed/hbc"
         },
         {
             "algName": "ks",
-            "containerName": "agdphd/ks"
+            "containerName": "compsysmed/ks"
         },
         {
             "algName": "mhs2",
-            "containerName": "agdphd/mhs2",
+            "containerName": "compsysmed/mhs2",
             "cutoff": true,
             "slow": true,
             "threads": true
@@ -32,21 +46,21 @@
             "config": {
                 "MODE": "mmcs"
             },
-            "containerName": "agdphd/shd"
+            "containerName": "compsysmed/shd"
         },
         {
             "algName": "rs",
             "config": {
                 "MODE": "rs"
             },
-            "containerName": "agdphd/shd"
+            "containerName": "compsysmed/shd"
         },
         {
-            "algName": "bool_iterative",
+            "algName": "bool.iterative",
             "config": {
                 "ALGORITHM_NAME": "bool-iterative"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true
         },
         {
@@ -54,7 +68,7 @@
             "config": {
                 "ALGORITHM_NAME": "hst"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -63,7 +77,7 @@
             "config": {
                 "ALGORITHM_NAME": "hsdag"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -72,7 +86,7 @@
             "config": {
                 "ALGORITHM_NAME": "staccato"
             },
-            "containerName": "agdphd/pymbd",
+            "containerName": "compsysmed/pymbd",
             "cutoff": true,
             "slow": true
         },
@@ -81,7 +95,7 @@
             "config": {
                 "ALGORITHM": "pmmcs"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "threads": true
         },
@@ -90,7 +104,7 @@
             "config": {
                 "ALGORITHM": "prs"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "threads": true
         },
@@ -99,7 +113,7 @@
             "config": {
                 "ALGORITHM": "berge"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "cutoff": true,
             "slow": true
         },
@@ -108,12 +122,12 @@
             "config": {
                 "ALGORITHM": "bm"
             },
-            "containerName": "agdphd/agdmhs",
+            "containerName": "compsysmed/agdmhs",
             "threads": true
         },
         {
             "algName": "ocsanaGreedy",
-            "containerName": "agdphd/ocsanaGreedy",
+            "containerName": "compsysmed/ocsanaGreedy",
             "cutoff": true
         }
     ],
@@ -178,22 +192,22 @@
             3.4162750244140625,
             3.436000108718872
         ],
-        "bool_iterative": [
+        "bool.iterative": [
             492.0168390274048,
             494.8259119987488,
             493.7154929637909
         ],
-        "bool_iterative-c10": [
+        "bool.iterative-c10": [
             489.1853709220886,
             489.3573889732361,
             489.517529964447
         ],
-        "bool_iterative-c5": [
+        "bool.iterative-c5": [
             111.03769516944885,
             110.9507520198822,
             110.98853397369385
         ],
-        "bool_iterative-c7": [
+        "bool.iterative-c7": [
             334.2154269218445,
             334.6732659339905,
             335.106018781662
@@ -203,7 +217,7 @@
             17.57054114341736,
             17.34981894493103
         ],
-        "fka_begk": [
+        "fka.begk": [
             321.5974118709564,
             322.03826999664307,
             321.27041721343994
@@ -252,6 +266,16 @@
             590.384644985199,
             599.9441208839417,
             594.2085230350494
+        ],
+        "htcbdd": [
+            0.7887179851531982,
+            0.8584320545196533,
+            0.8274431228637695
+        ],
+        "knuth": [
+            1.34437894821167,
+            1.3104629516601562,
+            1.3509960174560547
         ],
         "ks": [
             0.34980010986328125,
@@ -731,507 +755,12 @@
     },
     "timeout_secs": 3600,
     "transversal_counts": {
-        "bmr": [
+        "htcbdd": [
             17486,
             17486,
             17486
         ],
-        "bool_iterative": [
-            17486,
-            17486,
-            17486
-        ],
-        "bool_iterative-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "bool_iterative-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "bool_iterative-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "dl": [
-            17486,
-            17486,
-            17486
-        ],
-        "fka_begk": [
-            17408,
-            17408,
-            17408
-        ],
-        "hbc": [
-            17485,
-            17485,
-            17485
-        ],
-        "hsdag-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "hst": [
-            17486,
-            17486,
-            17486
-        ],
-        "hst-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "hst-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "hst-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "ks": [
-            259,
-            259,
-            259
-        ],
-        "mhs2": [
-            17408,
-            17408,
-            17408
-        ],
-        "mhs2-c10": [
-            17375,
-            17375,
-            17375
-        ],
-        "mhs2-c5": [
-            7602,
-            7602,
-            7602
-        ],
-        "mhs2-c7": [
-            15071,
-            15071,
-            15071
-        ],
-        "mhs2-t12": [
-            17408,
-            17408,
-            17408
-        ],
-        "mhs2-t12-c10": [
-            17375,
-            17375,
-            17375
-        ],
-        "mhs2-t12-c5": [
-            7602,
-            7602,
-            7602
-        ],
-        "mhs2-t12-c7": [
-            15071,
-            15071,
-            15071
-        ],
-        "mhs2-t16": [
-            17408,
-            17408,
-            17408
-        ],
-        "mhs2-t16-c10": [
-            17375,
-            17375,
-            17375
-        ],
-        "mhs2-t16-c5": [
-            7602,
-            7602,
-            7602
-        ],
-        "mhs2-t16-c7": [
-            15071,
-            15071,
-            15071
-        ],
-        "mhs2-t2": [
-            17408,
-            17408,
-            17408
-        ],
-        "mhs2-t2-c10": [
-            17375,
-            17375,
-            17375
-        ],
-        "mhs2-t2-c5": [
-            7602,
-            7602,
-            7602
-        ],
-        "mhs2-t2-c7": [
-            15071,
-            15071,
-            15071
-        ],
-        "mhs2-t4": [
-            17408,
-            17408,
-            17408
-        ],
-        "mhs2-t4-c10": [
-            17375,
-            17375,
-            17375
-        ],
-        "mhs2-t4-c5": [
-            7602,
-            7602,
-            7602
-        ],
-        "mhs2-t4-c7": [
-            15071,
-            15071,
-            15071
-        ],
-        "mhs2-t6": [
-            17408,
-            17408,
-            17408
-        ],
-        "mhs2-t6-c10": [
-            17375,
-            17375,
-            17375
-        ],
-        "mhs2-t6-c5": [
-            7602,
-            7602,
-            7602
-        ],
-        "mhs2-t6-c7": [
-            15071,
-            15071,
-            15071
-        ],
-        "mhs2-t8": [
-            17408,
-            17408,
-            17408
-        ],
-        "mhs2-t8-c10": [
-            17375,
-            17375,
-            17375
-        ],
-        "mhs2-t8-c5": [
-            7602,
-            7602,
-            7602
-        ],
-        "mhs2-t8-c7": [
-            15071,
-            15071,
-            15071
-        ],
-        "mmcs": [
-            17486,
-            17486,
-            17486
-        ],
-        "ocsanaGreedy-c5": [
-            3579,
-            3579,
-            3579
-        ],
-        "pMMCS": [
-            17486,
-            17486,
-            17486
-        ],
-        "pMMCS-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pMMCS-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pMMCS-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pMMCS-t12": [
-            17486,
-            17486,
-            17486
-        ],
-        "pMMCS-t12-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pMMCS-t12-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pMMCS-t12-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pMMCS-t16": [
-            17486,
-            17486,
-            17486
-        ],
-        "pMMCS-t16-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pMMCS-t16-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pMMCS-t16-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pMMCS-t2": [
-            17486,
-            17486,
-            17486
-        ],
-        "pMMCS-t2-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pMMCS-t2-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pMMCS-t2-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pMMCS-t4": [
-            17486,
-            17486,
-            17486
-        ],
-        "pMMCS-t4-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pMMCS-t4-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pMMCS-t4-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pMMCS-t6": [
-            17486,
-            17486,
-            17486
-        ],
-        "pMMCS-t6-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pMMCS-t6-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pMMCS-t6-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pMMCS-t8": [
-            17486,
-            17486,
-            17486
-        ],
-        "pMMCS-t8-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pMMCS-t8-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pMMCS-t8-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pRS": [
-            17486,
-            17486,
-            17486
-        ],
-        "pRS-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pRS-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pRS-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pRS-t12": [
-            17486,
-            17486,
-            17486
-        ],
-        "pRS-t12-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pRS-t12-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pRS-t12-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pRS-t16": [
-            17486,
-            17486,
-            17486
-        ],
-        "pRS-t16-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pRS-t16-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pRS-t16-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pRS-t2": [
-            17486,
-            17486,
-            17486
-        ],
-        "pRS-t2-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pRS-t2-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pRS-t2-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pRS-t4": [
-            17486,
-            17486,
-            17486
-        ],
-        "pRS-t4-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pRS-t4-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pRS-t4-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pRS-t6": [
-            17486,
-            17486,
-            17486
-        ],
-        "pRS-t6-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pRS-t6-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pRS-t6-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "pRS-t8": [
-            17486,
-            17486,
-            17486
-        ],
-        "pRS-t8-c10": [
-            17453,
-            17453,
-            17453
-        ],
-        "pRS-t8-c5": [
-            7680,
-            7680,
-            7680
-        ],
-        "pRS-t8-c7": [
-            15149,
-            15149,
-            15149
-        ],
-        "rs": [
+        "knuth": [
             17486,
             17486,
             17486
