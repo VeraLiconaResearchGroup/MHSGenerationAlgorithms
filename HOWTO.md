@@ -6,7 +6,7 @@ Docker is available for all major operating systems; consult the Docker [install
 ## Input and output format
 All of the containers use a standardized JSON input format.
 The format is very simple.
-It has only one key, `sets`, whose value is a list of lists of integers giving the sets to be hit.
+It has only one key, `sets`, whose value is a list of lists of positive integers giving the sets to be hit.
 For example, to represent the input sets [[1, 2, 5], [2, 3, 4], [1, 3]], you could use the following JSON file:
 
     {
@@ -18,6 +18,10 @@ For example, to represent the input sets [[1, 2, 5], [2, 3, 4], [1, 3]], you cou
     }
 
 The output file will include a copy of `sets` as well as two new keys: `transversals`, which gives the hitting sets in the same format, and `timeTaken`, which gives the running time of the algorithm as a float.
+
+**NOTE**: many of these algorithms assume that the set indices are "packed" into [1, 2, …, n].
+For maximum performance, you should pre-process your inputs to avoid unnecessarily large index values.
+(For example, if you have five indices, they should be [1, 2, 3, 4, 5], not [7, 4, 55, 19243, 1].)
 
 ## Working with individual algorithm containers
 Once you have Docker installed, you can download and run individual containers easily.
