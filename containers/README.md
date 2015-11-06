@@ -5,19 +5,23 @@ For full details, see our [paper][].
 
 The listing below is sorted taxonomically, rather than according to which container provides each algorithm; information about the containers can be found in their respective directories.
 
+Some of these algorithms support 'cutoff' enumeration—that is, searching for MHSes of size no larger than some specified bound.
 
 ## Edge iteration
 ### Berge
+*(Supports cutoff)*
 A sequential algorithm based on an algebraic decomposition of the input hypergraph.
 First published in 1984 by Berge in _Hypergraphs: combinatorics of finite sets_.
 An implementation in C++ by A. Gainer-Dewar is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
 
 ### HS-DAG
+*(Supports cutoff)*
 A corrected version of Reiter's algorithm, published in [_A correction to the algorithm in Reiter's theory of diagnosis_](//dx.doi.org/10.1016/0004-3702(89)90079-9) by Greiner, Smith, and Wilkerson.
 An implementation in Python by T. Quaritsch and I. Pill is available as part of PyMBD, which is distributed as a [zip bundle](//modiaforted.ist.tugraz.at/downloads/pymbd.zip) from Pill's website.
 The implementation is provided in the [`compsysmed/pymbd`](//hub.docker.com/r/compsysmed/pymbd) container in the [`pymbd`](pymbd/) directory under the terms of the authors' license.
 
 ### HST
+*(Supports cutoff)*
 A corrected version of Reiter's algorithm, published in [_A variant of Reiter's hitting-set algorithm_](//dx.doi.org/10.1016/S0020-0190(00)00166-6) by Wotawa.
 An implementation in Python by T. Quaritsch and I. Pill is available as part of PyMBD, which is distributed as a [zip bundle](//modiaforted.ist.tugraz.at/downloads/pymbd.zip) from Pill's website.
 The implementation is provided in the [`compsysmed/pymbd`](//hub.docker.com/r/compsysmed/pymbd) container in the [`pymbd`](pymbd/) directory under the terms of the authors' license.
@@ -47,11 +51,13 @@ An implementation in C++ of the original, unmodified algorithm is provided in th
 ***WARNING***: Testing has revealed that the BEGK software does not accurately generate all MHSes.
 
 ### BOOL
+*(Supports cutoff)*
 A divide-and-conquer algorithm introduced in [_The computation of hitting sets: review and new algorithms_](//dx.doi.org/10.1016/S0020-0190(02)00506-9) by Lin and Jiang.
 An implementation in Python by T. Quaritsch and I. Pill is available as part of PyMBD, which is distributed as a [zip bundle](//modiaforted.ist.tugraz.at/downloads/pymbd.zip) from Pill's website.
 The implementation is provided in the [`compsysmed/pymbd`](//hub.docker.com/r/compsysmed/pymbd) container in the [`pymbd`](pymbd/) directory under the terms of the authors' license.
 
 ### STACCATO
+*(Supports cutoff)*
 A divide-and-conquer approximation algorithm, published in _A low-cost approximate minimal hitting set algorithm and its application to model-based diagnosis_ ([PDF](//haslab.uminho.pt/ruimaranhao/files/sara09.pdf)) by Abreu and Gemund.
 An implementation in Python by T. Quaritsch and I. Pill is available as part of PyMBD, which is distributed as a [zip bundle](//modiaforted.ist.tugraz.at/downloads/pymbd.zip) from Pill's website.
 The implementation is provided in the [`compsysmed/pymbd`](//hub.docker.com/r/compsysmed/pymbd) container in the [`pymbd`](pymbd/) directory under the terms of the authors' license.
@@ -73,29 +79,34 @@ Introduced in [Hypergraph transversal computation with binary decision diagrams]
 An implementation in C by Toda is available from his [website](//www.sd.is.uec.ac.jp/toda/htcbdd.html) and is provided in the [`compsysmed/htcbdd`](//hub.docker.com/r/compsysmed/htcbdd) container under the terms of the GPLv3 license.
 
 ### MHS²
+*(Supports cutoff)*
 A parallel algorithm from _An efficient distributed algorithm for computing minimal hitting sets_ ([PDF](//dx-2014.ist.tugraz.at/papers/DX14_Mon_PM_S1_paper1.pdf)) by Cardoso and Abreu.
 An implementation in C++ by those authors is available from their [GitHub repository](//github.com/npcardoso/MHS2) and is provided in the [`compsysmed/mhs2`](//hub.docker.com/r/compsysmed/mhs2) container in the [`mhs2`](mhs2/) directory under the terms of the GPLv2 license.
 
 ## Transversal buildup
 ### HBC
+*(Supports cutoff)*
 A vertex-wise algorithm inspired by ideas from data mining and published in [_A data mining formalization to improve hypergraph minimal transversal computation_](//www.infona.pl/resource/bwmeta1.element.baztech-article-BUS5-0014-0020) ([PDF](//cremilleux.users.greyc.fr/papers/FundInfoFinal07.pdf)) by Hébert, Bretto, and Crémilleux.
 An implementation in C++, written by C. Hébert and now maintained by F. Rioult, is available as [MtMiner](//forge.greyc.fr/projects/kdariane/wiki/Mtminer) and is provided in the [`compsysmed/hbc`](//hub.docker.com/r/compsysmed/hbc) container in the [`hbc`](hbc/) directory by permission from the authors.
 
 ***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
 
 ### OCSANA-Greedy
+*(Supports cutoff)*
 A vertex-wise "greedy" algorithm published in [_OCSANA: optimal combinations of interventions from network analysis_](//doi.org/10.1093/bioinformatics/btt195).
 An implementation in Java by M. Kordi, originally written for a refactoring of [OCSANA](//bioinfo-out.curie.fr/projects/ocsana/OCSANA.html), is provided in the [`compsysmed/ocsana`](//hub.docker.com/r/compsysmed/ocsana) container in the [`ocsana`](ocsana/) directory.
 
 ### MMCS
+*(pMMCS supports cutoff)*
 Highly performant algorithm published in [_Efficient algorithms for dualizing large-scale hypergraphs_](//doi.org/10.1016/j.dam.2014.01.012) in 2014 by Murakami and Uno.
 Those authors provide a C implementation at the [Hypergraph Dualization Repository](hdr), which is redistributed here in the in the [`compsysmed/shd`](//hub.docker.com/r/compsysmed/shd) container in the [`shd`](shd/) directory by permission from the authors.
-An implementation in C++ which takes advantage of multiple cores using OpenMP and supports efficient 'cutoff' enumeration is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
+An implementation in C++ which takes advantage of multiple cores using OpenMP is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
 
 ### RS
+*(pRS supports cutoff)*
 Highly performant algorithm published in [_Efficient algorithms for dualizing large-scale hypergraphs_](//doi.org/10.1016/j.dam.2014.01.012) in 2014 by Murakami and Uno.
 Those authors provide a C implementation at the [Hypergraph Dualization Repository](hdr), which is redistributed here in the in the [`compsysmed/shd`](//hub.docker.com/r/compsysmed/shd) container in the [`shd`](shd/) directory by permission from the authors.
-An implementation in C++ which takes advantage of multiple cores using OpenMP and supports efficient 'cutoff' enumeration is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
+An implementation in C++ which takes advantage of multiple cores using OpenMP is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
 
 ## Full cover
 ### BM
