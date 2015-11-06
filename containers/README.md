@@ -62,6 +62,16 @@ An implementation in Cilk++ by those authors is available from the BPASlib proje
 
 ***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
 
+### KNUTH
+An algorithm based on ZDD representations of hypergraphs or boolean functions.
+Introduced as solution to exercise 237 of §7.1.4 of Volume 4a of *The Art of Computer Programming* (1st ed.) by Donald E. Knuth.
+An implementation in C by the author of [Hypergraph transversal computation with binary decision diagrams](//doi.org/10.1007/978-3-642-38527-8_10) is available from his [website](//www.sd.is.uec.ac.jp/toda/htcbdd.html) and is provided in the [`compsysmed/htcbdd`](//hub.docker.com/r/compsysmed/htcbdd) container under the terms of the GPLv3 license.
+
+### HTC-BDD
+An improved version of `KNUTH` which uses both BDDs and ZDDs.
+Introduced in [Hypergraph transversal computation with binary decision diagrams](//doi.org/10.1007/978-3-642-38527-8_10) by Takahesi Toda.
+An implementation in C by Toda is available from his [website](//www.sd.is.uec.ac.jp/toda/htcbdd.html) and is provided in the [`compsysmed/htcbdd`](//hub.docker.com/r/compsysmed/htcbdd) container under the terms of the GPLv3 license.
+
 ### MHS²
 A parallel algorithm from _An efficient distributed algorithm for computing minimal hitting sets_ ([PDF](//dx-2014.ist.tugraz.at/papers/DX14_Mon_PM_S1_paper1.pdf)) by Cardoso and Abreu.
 An implementation in C++ by those authors is available from their [GitHub repository](//github.com/npcardoso/MHS2) and is provided in the [`compsysmed/mhs2`](//hub.docker.com/r/compsysmed/mhs2) container in the [`mhs2`](mhs2/) directory under the terms of the GPLv2 license.
