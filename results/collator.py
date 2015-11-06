@@ -203,7 +203,6 @@ def main():
     parser.add_argument("output_file_basename", help="Base name for output files")
     parser.add_argument("input_files", help="Input file(s) to collate", nargs="+")
     parser.add_argument("-r", "--reverse_data_sort", action="store_true", help="Sort data sets in reverse lex order")
-    parser.add_argument("-t", "--title", help="Title for plot")
 
     # Process the arguments
     args = parser.parse_args()
