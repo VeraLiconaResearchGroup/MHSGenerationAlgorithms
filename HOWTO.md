@@ -57,6 +57,11 @@ We have provided the [`benchmark.py`](benchmark.py) script to make this easier.
 The script can run a single input through any number of algorithms in any number of containers, with whatever parameter values interest you.
 See the help text of `benchmark.py` for details.
 
+### Sanity-checking results
+After a run of `benchmark.py`, you will have many result JSON files representing the outputs of your chosen algorithms.
+We provide the [`result_checker.py`](result_checker.py) script to help you sanity-check these results.
+It will detect inconsistencies among the algorithms by checking whether, for example, all runs with the same cutoff size yielded the same number of transversals.
+See the help text of `result_checker.py` for details.
 
 [docker]: //docker.io "Docker"
 [algorun]: //algorun.org "Algorun"
