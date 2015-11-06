@@ -13,9 +13,9 @@ It is provided as-is and without any warranty.
 ## Building
 To build the container yourself, run the following from this directory:
 
-    docker build -t compsysmed/agdmhs:latest .
+    docker build -t compsysmed/ks:latest .
 
 **You do not need to build the container yourself to use the algorithms.**
 You can fetch a prebuilt copy of the container by running the following:
 
-    docker pull compsysmed/agdmhs:latest
+    docker pull compsysmed/ks:latest

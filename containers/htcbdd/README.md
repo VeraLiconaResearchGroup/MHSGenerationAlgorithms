@@ -19,12 +19,12 @@ To maximize efficiency, you should be sure that the vertices of your hypergraph 
 ## Building
 To build the container yourself, run the following from this directory:
 
-    docker build -t compsysmed/agdmhs:latest .
+    docker build -t compsysmed/htcbdd:latest .
 
 **You do not need to build the container yourself to use the algorithms.**
 You can fetch a prebuilt copy of the container by running the following:
 
-    docker pull compsysmed/agdmhs:latest
+    docker pull compsysmed/htcbdd:latest
 
 ## License
 Most of the code in this directory is available under the terms of the GPLv3 license.
