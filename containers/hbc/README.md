@@ -6,3 +6,13 @@ For details of the algorithm, see [_A data mining formalization to improve hyper
 The implementation provided in [src/alg](src/alg) is compiled from C++ code written by Céline Hébert and available from the MTMiner project [website](//forge.greyc.fr/projects/kdariane/wiki/Mtminer).
 It is provide as-is and without warranty.
 ***WARNING***: Testing has revealed that this sofwtare does not accurately generate all MHSes.
+
+## Building
+To build the container yourself, run the following from this directory:
+
+    docker build -t compsysmed/hbc:latest .
+
+**You do not need to build the container yourself to use the algorithms.**
+You can fetch a prebuilt copy of the container by running the following:
+
+    docker pull compsysmed/hbc:latest
