@@ -135,6 +135,10 @@
             "algName": "ocsanaGreedy",
             "containerName": "compsysmed/ocsanamhs",
             "cutoff": true
+        },
+        {
+            "algName": "primdecomp",
+            "containerName": "compsysmed/primdecomp"
         }
     ]
 }

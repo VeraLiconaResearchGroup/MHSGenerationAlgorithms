@@ -1,0 +1,13 @@
+{
+    "algo_name": "PrimDecomp",
+    "algo_summary": "Algebraic calculation of MHSes",
+    "algo_description": "Computes minimal hitting sets using an algebraic formulation. Specifically, we construct a monomial ideal with one generating monomial for each edge to hit, then compute its associated primes, which correspond to MHSes. This is implemented in Macaulay2.",
+    "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS", "parallel"],
+    "algo_authors": [
+    ],
+    "algo_exec": "./mhs",
+    "algo_output_filename": "out.dat",
+    "algo_parameters": {
+    },
+    "algo_image": ""
+}

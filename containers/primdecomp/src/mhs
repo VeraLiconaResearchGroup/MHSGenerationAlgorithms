@@ -1,0 +1,136 @@
+#!/usr/bin/env python
+
+# MHS algorithm runner: Monomial ideal primary decomposition (M2)
+# Copyright Vera-Licona Research Group (C) 2015
+# Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
+
+# This file is part of MHSGenerationAlgorithms.
+
+# MHSGenerationAlgorithms is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+#
+# MHSGenerationAlgorithms is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+import simplejson as json
+import jsonschema
+import argparse
+import tempfile
+import timeit
+import sys
+import os
+
+def input_file_lines(edges):
+    # Build a Macaulay 2 script to compute the MHSes of edges using
+    # the Alexander Dual method.
+
+    # Set up M2 helper methods
+    yield "makeVars = method(TypicalValue => List)"
+    yield "makeVars(ZZ) := (n) -> apply(0..n, i -> value (\"x\"|i))"
+
+    num_verts = max(vert for edge in edges for vert in edge)
+    yield "k = QQ[makeVars {0}]".format(num_verts)
+
+    # Generate monomial ideal from edges
+    yield "I = monomialIdeal("
+
+    for index, edge in enumerate(edges):
+        edge_as_monomial = " * ".join(map(lambda n: "x{0}".format(n), edge))
+        if index != len(edges) - 1:
+            yield "\t" + edge_as_monomial + ","
+        else:
+            yield "\t" + edge_as_monomial
+
+    yield ")"
+
+    # Run calculation
+    yield "P = associatedPrimes I"
+    yield "scan(P, J -> outfile << J << endl)"
+
+def output_file_sets(outFile):
+    # Get the transversals from an M2 output file
+    for line in outFile:
+        # Lines look like this: 'monomialIdeal (x1, x14)' or 'monomialIdeal x3'
+        # We strip off the 'monomialIdeal' part:
+        header, set_tuple_string = line.split(" ", 1)
+
+        # Then drop the parents from the rest, if present
+        set_list_string = set_tuple_string.translate(None, '()')
+
+        # Then find the indices of the terms
+        set_indices = [int(term[1:]) for term in set_list_string.split(", ")]
+        yield set_indices
+
+def main():
+    # Set up argument processing
+    parser = argparse.ArgumentParser(description='MHS runner: AGDMHS')
+
+    # Note: the help text will show input_file in the wrong place per AlgoRun, but it will still work
+    parser.add_argument("input_file", help="Input file to process")
+    parser.add_argument("-f", dest="output_file", default="out.dat", help="Output destination")
+
+    args = parser.parse_args()
+
+    # Configure path and validation
+    script_dir = sys.path[0]
+    input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
+    output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
+
+    # Read the input file
+    with open(args.input_file) as input_file:
+        input_json = json.load(input_file)
+
+    # Validate the input
+    with open(input_schema_path) as input_schema_file:
+        input_schema = json.load(input_schema_file)
+        jsonschema.validate(input_json, input_schema)
+
+    # Set up temporary files for input and output
+    with tempfile.NamedTemporaryFile() as temp_input_file:
+        with tempfile.NamedTemporaryFile() as temp_output_file:
+            temp_input_file.write("outfile = openOut \"{0}\"\n".format(temp_output_file.name))
+            temp_input_file.write("allowableThreads = 1\n")
+
+            for line in input_file_lines(input_json["sets"]):
+                temp_input_file.write(line + "\n")
+            temp_input_file.flush()
+
+            # Set up the algorithm call
+            alg_call_parts = ['M2', '--script', temp_input_file.name]
+
+            # Call the algorithm
+            time_taken = timeit.timeit(stmt="subprocess.check_call({0}, cwd='{1}')".format(alg_call_parts, script_dir),
+                                       setup="import subprocess",
+                                       number=1)
+
+            # Process the results
+            transversals = list(output_file_sets(temp_output_file))
+
+            results = input_json
+            results["guaranteedMinimal"] = True
+            results["guaranteedComplete"] = True
+            results["transversals"] = transversals
+            results["timeTaken"] = time_taken
+
+            print "Finished run in " + str(time_taken) + " s."
+
+            # Write the results to the output file
+            with open(args.output_file, 'w') as output_file:
+                # Pretty-print the output
+                json.dump(results,
+                          output_file,
+                          indent=4,
+                          separators=(',', ': '),
+                          iterable_as_array = True)
+
+if __name__ == "__main__":
+    main()
+
+### Emacs configuration
+# Local Variables:
+# mode: python
+# End:

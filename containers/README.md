@@ -28,16 +28,16 @@ The implementation is provided in the [`compsysmed/pymbd`](//hub.docker.com/r/co
 
 ### BMR
 An improved Berge's algorithm published in [_A fast algorithm for computing hypergraph transversals and its application in mining emerging patterns_](//doi.org/10.1109/ICDM.2003.1250958).
-An implementation in C by K. Murakami is available from the [Hypergraph Dualization Repository](hdr) and is provided in the [`compsysmed/bmr`](//hub.docker.com/r/compsysmed/bmr) container in the [`bmr`](bmr/) directory by permission from the authors.
+An implementation in C by K. Murakami is available from the [Hypergraph Dualization Repository][hdr] and is provided in the [`compsysmed/bmr`](//hub.docker.com/r/compsysmed/bmr) container in the [`bmr`](bmr/) directory by permission from the authors.
 
 ### DL
 An improved Berge's algorithm published in [_Mining border descriptions of emerging patterns from dataset pairs_](//doi.org/10.1007/s10115-004-0178-1) by Dong and Li.
-An implementation in C by K. Murakami is available from the [Hypergraph Dualization Repository](hdr) and is provided in the [`compsysmed/dl`](//hub.docker.com/r/compsysmed/dl) container in the [`dl`](dl/) directory by permission from the authors.
+An implementation in C by K. Murakami is available from the [Hypergraph Dualization Repository][hdr] and is provided in the [`compsysmed/dl`](//hub.docker.com/r/compsysmed/dl) container in the [`dl`](dl/) directory by permission from the authors.
 
 ### KS
 A variation of Berge's algorithm which searches depth first and thus avoids the need to store large intermediate hypergraphs in memory.
 Published in [_An efficient algorithm for the transversal hypergraph generation_](//doi.org/10.7155/jgaa.00107) by Kavvadias and Stavroupoulos.
-A Pascal implementation by D. Kavvadias and E. Stavropoulos is available from the [Hypergraph Dualization Repository](hdr) and the [author's page](//lca.ceid.upatras.gr/~estavrop/transversal/) and is provided in the [`compsysmed/ks`](//hub.docker.com/r/compsysmed/ks) container in the [`ks`](ks/) directory by permission from the authors.
+A Pascal implementation by D. Kavvadias and E. Stavropoulos is available from the [Hypergraph Dualization Repository][hdr] and the [author's page](//lca.ceid.upatras.gr/~estavrop/transversal/) and is provided in the [`compsysmed/ks`](//hub.docker.com/r/compsysmed/ks) container in the [`ks`](ks/) directory by permission from the authors.
 
 ***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
 
@@ -45,7 +45,7 @@ A Pascal implementation by D. Kavvadias and E. Stavropoulos is available from th
 ### FK-A
 The A algorithm from [_On the complexity of dualization of monotone disjunctive normal forms_](//doi.org/10.1006/jagm.1996.0062), Fredman, M. and Khachiyan, L, as improved in [_An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation_](//doi.org/10.1.1.85.6762), E. Boros et al.
 Has the best known asymptotic bounds on runtime of any serial algorithm with a public implementation.
-An implementation in compiled C is available from the [Hypergraph Dualization Repository](hdr) and is provided in the [`compsysmed/ks`](//hub.docker.com/r/compsysmed/ks) container in the [`ks`](ks/) directory by permission from the authors.
+An implementation in compiled C is available from the [Hypergraph Dualization Repository][hdr] and is provided in the [`compsysmed/ks`](//hub.docker.com/r/compsysmed/ks) container in the [`ks`](ks/) directory by permission from the authors.
 An implementation in C++ of the original, unmodified algorithm is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
 
 ***WARNING***: Testing has revealed that the BEGK software does not accurately generate all MHSes.
@@ -99,13 +99,13 @@ An implementation in Java by M. Kordi, originally written for a refactoring of [
 ### MMCS
 *(pMMCS supports cutoff)*
 Highly performant algorithm published in [_Efficient algorithms for dualizing large-scale hypergraphs_](//doi.org/10.1016/j.dam.2014.01.012) in 2014 by Murakami and Uno.
-Those authors provide a C implementation at the [Hypergraph Dualization Repository](hdr), which is redistributed here in the in the [`compsysmed/shd`](//hub.docker.com/r/compsysmed/shd) container in the [`shd`](shd/) directory by permission from the authors.
+Those authors provide a C implementation at the [Hypergraph Dualization Repository][hdr], which is redistributed here in the in the [`compsysmed/shd`](//hub.docker.com/r/compsysmed/shd) container in the [`shd`](shd/) directory by permission from the authors.
 An implementation in C++ which takes advantage of multiple cores using OpenMP is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
 
 ### RS
 *(pRS supports cutoff)*
 Highly performant algorithm published in [_Efficient algorithms for dualizing large-scale hypergraphs_](//doi.org/10.1016/j.dam.2014.01.012) in 2014 by Murakami and Uno.
-Those authors provide a C implementation at the [Hypergraph Dualization Repository](hdr), which is redistributed here in the in the [`compsysmed/shd`](//hub.docker.com/r/compsysmed/shd) container in the [`shd`](shd/) directory by permission from the authors.
+Those authors provide a C implementation at the [Hypergraph Dualization Repository][hdr], which is redistributed here in the in the [`compsysmed/shd`](//hub.docker.com/r/compsysmed/shd) container in the [`shd`](shd/) directory by permission from the authors.
 An implementation in C++ which takes advantage of multiple cores using OpenMP is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
 
 ## Full cover
@@ -114,16 +114,10 @@ A "global parallel" algorithm based on a full cover decomposition of the input h
 Published in [_A fast and simple parallel algorithm for the monotone duality problem_](//doi.org/10.1007/978-3-642-02927-1_17) by E. Boros and K. Makino.
 An implementation in C++ using OpenMP by A. Gainer-Dewar is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
 
+## Other
+### Primary decomposition
+A method based on computational algebra.
+An implementation in Python and Macaulay2 is provided in the [`compsysmed/primdecomp`](//hub.docker.com/r/compsysmed/primdecomp) container in the [`primdecomp`](primdecomp/) directory.
+
 [hdr]: //research.nii.ac.jp/~uno/dualization.html
-[agdmhs]: agdmhs/
-[bmr]: bmr/
-[dl]: dl/
-[fka-begk]: fka-begk/
-[hbc]: hbc/
-[ks]: ks/
-[mhs2]: mhs2/
-[ocsana]: ocsana/
-[partran]: partran/
-[pymbd]: pymbd/
-[shd]: shd
 [paper]: TODO

@@ -325,6 +325,8 @@ def main():
     with open(output_data_filename, 'w') as output_data_file:
         json.dump(results, output_data_file, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
 
+    logging.info("Benchmark complete!")
+
 if __name__ == "__main__":
     main()
 
