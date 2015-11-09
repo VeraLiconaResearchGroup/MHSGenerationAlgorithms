@@ -41,7 +41,7 @@ See each file for details.
 (In particular, code written by AGD for this project is typically released under the GPL 3.0, while upstream algorithm code is distributed under a variety of licenses.)
 
 ## Contact
-This repository is a project of the [Vera-Licona Research Group][compsysmed] was assembled by [Andrew Gainer-Dewar][agdphd].
+This repository is a project of the [Vera-Licona Research Group][compsysmed] and was assembled by [Andrew Gainer-Dewar][agdphd].
 
 [docker]: //docker.io "Docker"
 [algorun]: //algorun.org "Algorun"
