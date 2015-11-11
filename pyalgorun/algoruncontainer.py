@@ -81,7 +81,7 @@ class AlgorunContainer:
 
         # Configure port mapping
         port_map = {ALGORUN_PORT: ('',)}
-        host_config = docker.utils.create_host_config(port_bindings = port_map)
+        host_config = docker_client.create_host_config(port_bindings = port_map)
 
         # Create the container
         try:
