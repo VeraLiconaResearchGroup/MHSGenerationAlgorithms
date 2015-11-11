@@ -24,19 +24,39 @@ import numpy
 import os
 from collections import defaultdict
 
-cutoff_algs = ["berge",
-               "hs_dag",
-               "hst",
-               "bool_iterative",
-               "staccato",
-               "mhs2",
-               "hbc",
-               "pMMCS",
-               "pRS"]
+sorted_alglist = ["mmcs",
+                  "rs",
+                  "pMMCS",
+                  "pRS",
+                  "hbc",
+                  "bmr",
+                  "htcbdd",
+                  "knuth",
+                  "mhs2",
+                  "dl",
+                  "fka-begk",
+                  "bool.iterative",
+                  "hst",
+                  "hsdag",
+                  "berge",
+                  "ocsanaGreedy",
+                  "bm",
+                  "staccato"]
 
-thread_algs = ["mhs2",
-               "pMMCS",
+cutoff_algs = ["pMMCS",
                "pRS",
+               "mhs2",
+               "bool",
+               "hst",
+               "hsdag",
+               "berge",
+               "ocsanaGreedy",
+               "staccato"
+]
+
+thread_algs = ["pMMCS",
+               "pRS",
+               "mhs2",
                "bm"]
 
 omit_algs = ['ks',
@@ -125,7 +145,7 @@ def generate_full_csv(data4d, basename, reverse_data_sort):
     print "Processing base case"
 
      # Extract the data we want
-    data = data4d.ix[:,:,1,0].T.dropna(axis='columns', how='all')
+    data = data4d.ix[:,:,1,0].T.dropna(axis='columns', how='all').filter(items = sorted_alglist, axis=1)
 
     # Sort the input sets lexicographically
     data.sort_index(ascending = not reverse_data_sort,
