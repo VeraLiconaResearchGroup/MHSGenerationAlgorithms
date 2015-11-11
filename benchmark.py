@@ -234,7 +234,8 @@ def main():
     args = parser.parse_args()
 
     # Set up logging
-    log_format = '%(levelname)s [%(asctime)s] %(message)s'
+    infile_basename = os.path.splitext(os.path.basename(args.input_data_file))[0]
+    log_format = '{0}: [%(asctime)-15s] %(message)s'.format(infile_basename)
 
     if args.verbose == 0:
         log_level = logging.WARNING
@@ -245,7 +246,6 @@ def main():
 
     logging.basicConfig(format = log_format, level = log_level)
 
-    infile_basename = os.path.splitext(os.path.basename(args.input_data_file))[0]
     logfile_path = "{0}/{1}.log".format(args.output_dir, infile_basename)
 
     try:
