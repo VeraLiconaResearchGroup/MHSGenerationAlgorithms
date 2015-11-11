@@ -1,0 +1,981 @@
+{
+    "algs": [
+        {
+            "algName": "bmr",
+            "containerName": "compsysmed/bmr"
+        },
+        {
+            "algName": "dl",
+            "containerName": "compsysmed/dl"
+        },
+        {
+            "algName": "fka.begk",
+            "containerName": "compsysmed/fka-begk"
+        },
+        {
+            "algName": "hbc",
+            "containerName": "compsysmed/hbc"
+        },
+        {
+            "algName": "ks",
+            "containerName": "compsysmed/ks"
+        },
+        {
+            "algName": "mhs2",
+            "containerName": "compsysmed/mhs2",
+            "cutoff": true,
+            "slow": true,
+            "threads": true
+        },
+        {
+            "algName": "partran",
+            "containerName": "compsysmed/partran",
+            "slow": true,
+            "threads": true
+        },
+        {
+            "algName": "mmcs",
+            "config": {
+                "MODE": "mmcs"
+            },
+            "containerName": "compsysmed/shd"
+        },
+        {
+            "algName": "rs",
+            "config": {
+                "MODE": "rs"
+            },
+            "containerName": "compsysmed/shd"
+        },
+        {
+            "algName": "htcbdd",
+            "config": {
+                "MODE": "toda"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
+            "algName": "knuth",
+            "config": {
+                "MODE": "knuth"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
+            "algName": "bool.iterative",
+            "config": {
+                "ALGORITHM_NAME": "bool-iterative"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true
+        },
+        {
+            "algName": "hst",
+            "config": {
+                "ALGORITHM_NAME": "hst"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "hsdag",
+            "config": {
+                "ALGORITHM_NAME": "hsdag"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "staccato",
+            "config": {
+                "ALGORITHM_NAME": "staccato"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "pMMCS",
+            "config": {
+                "ALGORITHM": "pmmcs"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "cutoff": true,
+            "threads": true
+        },
+        {
+            "algName": "pRS",
+            "config": {
+                "ALGORITHM": "prs"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "cutoff": true,
+            "threads": true
+        },
+        {
+            "algName": "berge",
+            "config": {
+                "ALGORITHM": "berge"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "bm",
+            "config": {
+                "ALGORITHM": "bm"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "threads": true
+        },
+        {
+            "algName": "ocsanaGreedy",
+            "containerName": "compsysmed/ocsanamhs",
+            "cutoff": true
+        }
+    ],
+    "runtimes": {
+        "berge": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "berge-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "berge-c5": [
+            5.219138145446777,
+            5.176638841629028,
+            5.177983999252319
+        ],
+        "berge-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t16": [
+            Infinity
+        ],
+        "bm-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bmr": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bool.iterative": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bool.iterative-c10": [
+            Infinity
+        ],
+        "bool.iterative-c5": [
+            1.1549370288848877,
+            1.239995002746582,
+            1.2323849201202393
+        ],
+        "bool.iterative-c7": [
+            42.183743953704834,
+            41.47344899177551,
+            43.077064990997314
+        ],
+        "dl": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "fka.begk": [
+            Infinity
+        ],
+        "hbc": [
+            Infinity
+        ],
+        "hsdag": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hsdag-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hsdag-c5": [
+            0.8417439460754395,
+            0.8403208255767822,
+            0.8517320156097412
+        ],
+        "hsdag-c7": [
+            1218.2285091876984,
+            1222.3738238811493,
+            1213.5970120429993
+        ],
+        "hst": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hst-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hst-c5": [
+            27.10020899772644,
+            26.87383508682251,
+            26.92582893371582
+        ],
+        "hst-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "htcbdd": [
+            Infinity
+        ],
+        "knuth": [
+            Infinity
+        ],
+        "ks": [
+            Infinity
+        ],
+        "mhs2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-c5": [
+            650.8383979797363,
+            649.5665760040283,
+            649.8051478862762
+        ],
+        "mhs2-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t12-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t12-c5": [
+            96.72035193443298,
+            97.61498093605042,
+            98.29171299934387
+        ],
+        "mhs2-t12-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t16-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t16-c5": [
+            85.15566992759705,
+            84.98719787597656,
+            85.5625741481781
+        ],
+        "mhs2-t16-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t2-c5": [
+            340.76421189308167,
+            341.4590148925781,
+            340.24267983436584
+        ],
+        "mhs2-t2-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t4-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t4-c5": [
+            184.9070179462433,
+            184.34185218811035,
+            184.0787250995636
+        ],
+        "mhs2-t4-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t6-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t6-c5": [
+            131.00143718719482,
+            130.2437708377838,
+            130.92061495780945
+        ],
+        "mhs2-t6-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t8-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t8-c5": [
+            108.13563203811646,
+            106.16136193275452,
+            110.04117584228516
+        ],
+        "mhs2-t8-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mmcs": [
+            Infinity
+        ],
+        "ocsanaGreedy": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "ocsanaGreedy-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "ocsanaGreedy-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "ocsanaGreedy-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-c5": [
+            0.10237503051757812,
+            0.09587216377258301,
+            0.07448410987854004
+        ],
+        "pMMCS-c7": [
+            1.085202932357788,
+            1.0730791091918945,
+            1.07694411277771
+        ],
+        "pMMCS-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t12-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t12-c5": [
+            0.04510998725891113,
+            0.04626584053039551,
+            0.06294107437133789
+        ],
+        "pMMCS-t12-c7": [
+            0.2804269790649414,
+            0.299968957901001,
+            0.2970390319824219
+        ],
+        "pMMCS-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t16-c10": [
+            Infinity
+        ],
+        "pMMCS-t16-c5": [
+            0.08042287826538086,
+            0.03551197052001953,
+            0.04816007614135742
+        ],
+        "pMMCS-t16-c7": [
+            0.27194690704345703,
+            0.2618248462677002,
+            0.2698180675506592
+        ],
+        "pMMCS-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t2-c5": [
+            0.07042407989501953,
+            0.09229922294616699,
+            0.06644797325134277
+        ],
+        "pMMCS-t2-c7": [
+            0.8009719848632812,
+            0.799536943435669,
+            0.8160350322723389
+        ],
+        "pMMCS-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t4-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t4-c5": [
+            0.053546905517578125,
+            0.051177024841308594,
+            0.04407310485839844
+        ],
+        "pMMCS-t4-c7": [
+            0.45572614669799805,
+            0.4311997890472412,
+            0.467803955078125
+        ],
+        "pMMCS-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t6-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t6-c5": [
+            0.05554389953613281,
+            0.04035496711730957,
+            0.0468449592590332
+        ],
+        "pMMCS-t6-c7": [
+            0.3406798839569092,
+            0.3986351490020752,
+            0.3206779956817627
+        ],
+        "pMMCS-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t8-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t8-c5": [
+            0.05045485496520996,
+            0.043209075927734375,
+            0.03629803657531738
+        ],
+        "pMMCS-t8-c7": [
+            0.27968907356262207,
+            0.3086428642272949,
+            0.30574989318847656
+        ],
+        "pRS": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-c5": [
+            0.0949850082397461,
+            0.07253813743591309,
+            0.08326101303100586
+        ],
+        "pRS-c7": [
+            2.2265539169311523,
+            2.245493173599243,
+            2.21871280670166
+        ],
+        "pRS-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t12-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t12-c5": [
+            0.05935096740722656,
+            0.04445695877075195,
+            0.06125211715698242
+        ],
+        "pRS-t12-c7": [
+            0.6444058418273926,
+            0.5521831512451172,
+            0.5800659656524658
+        ],
+        "pRS-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t16-c10": [
+            Infinity
+        ],
+        "pRS-t16-c5": [
+            0.05380606651306152,
+            0.05850386619567871,
+            0.040750980377197266
+        ],
+        "pRS-t16-c7": [
+            0.5377810001373291,
+            0.5366580486297607,
+            0.5859720706939697
+        ],
+        "pRS-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t2-c5": [
+            0.03153204917907715,
+            0.05032491683959961,
+            0.04208707809448242
+        ],
+        "pRS-t2-c7": [
+            1.3891611099243164,
+            1.3784899711608887,
+            1.36061692237854
+        ],
+        "pRS-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t4-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t4-c5": [
+            0.04338502883911133,
+            0.03870892524719238,
+            0.04358696937561035
+        ],
+        "pRS-t4-c7": [
+            0.8151059150695801,
+            0.8603711128234863,
+            0.8179159164428711
+        ],
+        "pRS-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t6-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t6-c5": [
+            0.03661704063415527,
+            0.03216099739074707,
+            0.0398252010345459
+        ],
+        "pRS-t6-c7": [
+            0.6234538555145264,
+            0.6908690929412842,
+            0.6683549880981445
+        ],
+        "pRS-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t8-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t8-c5": [
+            0.04363512992858887,
+            0.03497481346130371,
+            0.05123782157897949
+        ],
+        "pRS-t8-c7": [
+            0.6029040813446045,
+            0.5640840530395508,
+            0.6033039093017578
+        ],
+        "partran": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t16": [
+            Infinity
+        ],
+        "partran-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "rs": [
+            Infinity
+        ],
+        "staccato": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "staccato-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "staccato-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "staccato-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ]
+    },
+    "timeout_secs": 3600,
+    "transversal_counts": {
+        "berge-c5": [
+            88,
+            88,
+            88
+        ],
+        "bool.iterative-c5": [
+            88,
+            88,
+            88
+        ],
+        "bool.iterative-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "hsdag-c5": [
+            88,
+            88,
+            88
+        ],
+        "hsdag-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "hst-c5": [
+            88,
+            88,
+            88
+        ],
+        "mhs2-c5": [
+            88,
+            88,
+            88
+        ],
+        "mhs2-t12-c5": [
+            88,
+            88,
+            88
+        ],
+        "mhs2-t16-c5": [
+            88,
+            88,
+            88
+        ],
+        "mhs2-t2-c5": [
+            88,
+            88,
+            88
+        ],
+        "mhs2-t4-c5": [
+            88,
+            88,
+            88
+        ],
+        "mhs2-t6-c5": [
+            88,
+            88,
+            88
+        ],
+        "mhs2-t8-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pMMCS-t12-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-t12-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pMMCS-t16-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-t16-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pMMCS-t2-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-t2-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pMMCS-t4-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-t4-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pMMCS-t6-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-t6-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pMMCS-t8-c5": [
+            88,
+            88,
+            88
+        ],
+        "pMMCS-t8-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pRS-c5": [
+            88,
+            88,
+            88
+        ],
+        "pRS-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pRS-t12-c5": [
+            88,
+            88,
+            88
+        ],
+        "pRS-t12-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pRS-t16-c5": [
+            88,
+            88,
+            88
+        ],
+        "pRS-t16-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pRS-t2-c5": [
+            88,
+            88,
+            88
+        ],
+        "pRS-t2-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pRS-t4-c5": [
+            88,
+            88,
+            88
+        ],
+        "pRS-t4-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pRS-t6-c5": [
+            88,
+            88,
+            88
+        ],
+        "pRS-t6-c7": [
+            26436,
+            26436,
+            26436
+        ],
+        "pRS-t8-c5": [
+            88,
+            88,
+            88
+        ],
+        "pRS-t8-c7": [
+            26436,
+            26436,
+            26436
+        ]
+    }
+}
