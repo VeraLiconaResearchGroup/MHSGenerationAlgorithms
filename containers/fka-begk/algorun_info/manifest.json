@@ -1,7 +1,7 @@
 {
     "algo_name": "FK",
     "algo_summary": "FK algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"//doi.org/10.1006/jagm.1996.0062\">On the complexity of dualization of monotone disjunctive normal forms</a>, Fredman, M. and Khachiyan, L. Implementation details in <a href=\"//doi.org/10.1016/j.dam.2006.04.012\">An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation</a>, Khachiyan, L. et al. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes.",
+    "algo_description": "Introduced in <a href=\"//doi.org/10.1006/jagm.1996.0062\">On the complexity of dualization of monotone disjunctive normal forms</a>, Fredman, M. and Khachiyan, L. Implementation details in <a href=\"//doi.org/10.1016/j.dam.2006.04.012\">An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation</a>, Khachiyan, L. et al.",
     "algo_website": "//rutcor.rutgers.edu/~boros/IDM/DualizationCode.html",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [

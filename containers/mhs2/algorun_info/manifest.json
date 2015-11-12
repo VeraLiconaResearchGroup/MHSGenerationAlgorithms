@@ -1,7 +1,7 @@
 {
     "algo_name": "MHS2",
     "algo_summary": "MHS² algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in \"An efficient distributed algorithm for computing minimal hitting sets\" (<a href=\"//dx-2014.ist.tugraz.at/papers/DX14_Mon_PM_S1_paper1.pdf\">PDF</a>) by Cardoso and Abreu. Can be run in multiple threads. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes.",
+    "algo_description": "Introduced in \"An efficient distributed algorithm for computing minimal hitting sets\" (<a href=\"//dx-2014.ist.tugraz.at/papers/DX14_Mon_PM_S1_paper1.pdf\">PDF</a>) by Cardoso and Abreu. Can be run in multiple threads.",
     "algo_website": "https://github.com/npcardoso/MHS2",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS", "parallel"],
     "algo_authors": [

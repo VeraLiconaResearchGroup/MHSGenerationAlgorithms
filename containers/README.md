@@ -39,16 +39,12 @@ A variation of Berge's algorithm which searches depth first and thus avoids the 
 Published in [_An efficient algorithm for the transversal hypergraph generation_](//doi.org/10.7155/jgaa.00107) by Kavvadias and Stavroupoulos.
 A Pascal implementation by D. Kavvadias and E. Stavropoulos is available from the [Hypergraph Dualization Repository][hdr] and the [author's page](//lca.ceid.upatras.gr/~estavrop/transversal/) and is provided in the [`compsysmed/ks`](//hub.docker.com/r/compsysmed/ks) container in the [`ks`](ks/) directory by permission from the authors.
 
-***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
-
 ## Divide and conquer
 ### FK-A
 The A algorithm from [_On the complexity of dualization of monotone disjunctive normal forms_](//doi.org/10.1006/jagm.1996.0062), Fredman, M. and Khachiyan, L, as improved in [_An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation_](//doi.org/10.1.1.85.6762), E. Boros et al.
 Has the best known asymptotic bounds on runtime of any serial algorithm with a public implementation.
 An implementation in compiled C is available from the [Hypergraph Dualization Repository][hdr] and is provided in the [`compsysmed/ks`](//hub.docker.com/r/compsysmed/ks) container in the [`ks`](ks/) directory by permission from the authors.
 An implementation in C++ of the original, unmodified algorithm is provided in the [`compsysmed/agdmhs`](//hub.docker.com/r/compsysmed/agdmhs) container in the [`agdmhs`](agdmhs/) directory.
-
-***WARNING***: Testing has revealed that the BEGK software does not accurately generate all MHSes.
 
 ### BOOL
 *(Supports cutoff)*
@@ -89,12 +85,12 @@ An implementation in C++ by those authors is available from their [GitHub reposi
 A vertex-wise algorithm inspired by ideas from data mining and published in [_A data mining formalization to improve hypergraph minimal transversal computation_](//www.infona.pl/resource/bwmeta1.element.baztech-article-BUS5-0014-0020) ([PDF](//cremilleux.users.greyc.fr/papers/FundInfoFinal07.pdf)) by Hébert, Bretto, and Crémilleux.
 An implementation in C++, written by C. Hébert and now maintained by F. Rioult, is available as [MtMiner](//forge.greyc.fr/projects/kdariane/wiki/Mtminer) and is provided in the [`compsysmed/hbc`](//hub.docker.com/r/compsysmed/hbc) container in the [`hbc`](hbc/) directory by permission from the authors.
 
-***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
-
 ### OCSANA-Greedy
 *(Supports cutoff)*
 A vertex-wise "greedy" algorithm published in [_OCSANA: optimal combinations of interventions from network analysis_](//doi.org/10.1093/bioinformatics/btt195).
 An implementation in Java by M. Kordi, originally written for a refactoring of [OCSANA](//bioinfo-out.curie.fr/projects/ocsana/OCSANA.html), is provided in the [`compsysmed/ocsana`](//hub.docker.com/r/compsysmed/ocsana) container in the [`ocsana`](ocsana/) directory.
+
+***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
 
 ### MMCS
 *(pMMCS supports cutoff)*

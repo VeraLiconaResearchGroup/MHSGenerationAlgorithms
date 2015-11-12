@@ -5,6 +5,7 @@ combinations of interventions from network analysis,](//dx.doi.org/10.1093/bioin
 
 ## Implementation
 The implementation in [src/alg](src/alg) is Java code written by Misagh Kordi and copyright of the Vera-Licona Research Group.
+***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
 
 ## Building
 To build the container yourself, run the following from this directory:

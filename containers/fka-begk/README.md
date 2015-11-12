@@ -7,7 +7,6 @@ For details of the algorithm, see [_On the complexity of dualization of monotone
 ## Implementation
 The implementation provided in [src/alg](src/alg) is compiled from C code written by K. Elbassioni and distributed at the website of [Endre Boros](//rutcor.rutgers.edu/~boros/IDM/DualizationCode.html).
 It is included here by permission of the author and is provided as-is and without warranty.
-***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
 
 ## Building
 To build the container yourself, run the following from this directory:

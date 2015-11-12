@@ -8,7 +8,6 @@ Implementation of the [MHS2](https://github.com/npcardoso/MHS2) parallel approxi
 ## Implementation
 The implementation provided in [src/alg](src/alg) is C++ code written by Nunu Cardoso and distributed at the project's [Github repository](//github.com/npcardoso/MHS2).
 It is distributed here without modification under the terms of the GPL3; see the [README](src/alg/README.md) for details.
-***WARNING***: Testing has revealed that this sofwtare does not accurately generate all MHSes.
 
 ## Building
 To build the container yourself, run the following from this directory:
