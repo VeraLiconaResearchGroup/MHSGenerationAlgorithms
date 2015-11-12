@@ -19,7 +19,9 @@ As a result, many algorithms have been developed to generate minimal hitting set
 
 ## The containers
 However, researchers in different domains are not always aware of the large literature on the subject, and so highly-performant algorithms from one domain may not be used by researchers in another.
-We have assembled a collection of software implementations of seventeen algorithms which reflect the long history and remarkable breadth of research in this area.
+In addition, the existing survey literature tends to focus on the problem of *recognizing* the collection of minimal hitting sets (rather than generating it), and much attention is dedicated to asymptotic and worst-case analysis rather than practical performance.
+
+To help the researcher who wants to actually *compute* MHSes from real data, we have assembled a collection of software implementations of seventeen algorithms which reflect the long history and remarkable breadth of research in this area.
 You can read more about the algorithms in the [containers `README`](containers/).
 
 Each of these software packages is wrapped in a [Docker][] container based on the [AlgoRun][] framework.
