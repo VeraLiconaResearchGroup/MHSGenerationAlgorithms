@@ -30,7 +30,7 @@ For more information about how to do this (either to test the algorithms on your
 
 ### Benchmark inputs
 A variety of example inputs are provided in the [`benchmark_inputs`](benchmark_inputs/) folder.
-Check the `README.md` file in each subdirectory for more information about the different data sets.
+Check the [README.md](benchmark_inputs/README.md) file for more information about these data sets.
 
 ### Benchmark results
 We have performed a number of performance benchmarks on all of the algorithms using the provided inputs.
