@@ -17,5 +17,5 @@
     "algo_parameters": {
         "THREADS": "1"
     },
-    "algo_image": ""
+    "algo_image": "compsysmed/partran"
 }

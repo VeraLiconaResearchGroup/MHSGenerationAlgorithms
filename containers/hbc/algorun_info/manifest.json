@@ -20,5 +20,5 @@
     ],
     "algo_exec": "./mhs",
     "algo_output_filename": "out.dat",
-    "algo_image": ""
+    "algo_image": "compsysmed/hbc"
 }

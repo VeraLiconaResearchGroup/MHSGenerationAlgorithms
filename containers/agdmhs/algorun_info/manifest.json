@@ -19,5 +19,5 @@
         "THREADS": "1",
         "CUTOFF_SIZE": "0"
     },
-    "algo_image": ""
+    "algo_image": "compsysmed/agdmhs"
 }
