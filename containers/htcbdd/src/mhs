@@ -17,7 +17,6 @@
 # General Public License for more details.
 
 import simplejson as json
-import jsonschema
 import argparse
 import tempfile
 import timeit
@@ -36,19 +35,12 @@ args = parser.parse_args()
 # Fetch the relevant environment variables
 mode = os.environ.get("MODE", "toda")
 
-# Configure path and validation
+# Configure path
 script_dir = sys.path[0]
-input_schema_path = os.path.join(script_dir, "data", "input_schema.json")
-output_schema_path = os.path.join(script_dir, "data", "output_schema.json")
 
 # Read the input file
 with open(args.input_file) as input_file:
     input_json = json.load(input_file)
-
-# Validate the input
-with open(input_schema_path) as input_schema_file:
-    input_schema = json.load(input_schema_file)
-    jsonschema.validate(input_json, input_schema)
 
 # Set up temporary files for input and output
 with tempfile.NamedTemporaryFile() as temp_input_file:

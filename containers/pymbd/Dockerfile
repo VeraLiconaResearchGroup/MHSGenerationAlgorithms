@@ -12,7 +12,6 @@ RUN apt-get update \
 
 RUN pip install \
     blist \
-    jsonschema \
     python-graph-core \
     simplejson
 

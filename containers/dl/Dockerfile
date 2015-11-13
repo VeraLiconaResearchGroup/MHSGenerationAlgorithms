@@ -9,7 +9,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/
 
 RUN pip install \
-    jsonschema \
     simplejson
 
 # Fetch and build the code

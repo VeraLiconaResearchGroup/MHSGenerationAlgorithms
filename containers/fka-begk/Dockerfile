@@ -12,7 +12,6 @@ RUN dpkg --add-architecture i386 && \
     && rm -rf /var/lib/apt/lists/
 
 RUN pip install \
-    jsonschema \
     simplejson
 
 # Fetch and build the code
