@@ -1,6 +1,10 @@
 {
     "algs": [
         {
+            "algName": "primdecomp",
+            "containerName": "compsysmed/primdecomp"
+        },
+        {
             "algName": "htcbdd",
             "config": {
                 "MODE": "toda"
@@ -727,6 +731,11 @@
             0.2708408832550049,
             0.2570180892944336
         ],
+        "primdecomp": [
+            272.8489649295807,
+            272.56669211387634,
+            272.63094902038574
+        ],
         "rs": [
             0.23080086708068848,
             0.22310900688171387,
@@ -755,12 +764,7 @@
     },
     "timeout_secs": 3600,
     "transversal_counts": {
-        "htcbdd": [
-            7617,
-            7617,
-            7617
-        ],
-        "knuth": [
+        "primdecomp": [
             7617,
             7617,
             7617
