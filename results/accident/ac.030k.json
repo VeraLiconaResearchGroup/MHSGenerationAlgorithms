@@ -1,0 +1,784 @@
+{
+    "algs": [
+        {
+            "algName": "bmr",
+            "containerName": "compsysmed/bmr"
+        },
+        {
+            "algName": "dl",
+            "containerName": "compsysmed/dl"
+        },
+        {
+            "algName": "fka.begk",
+            "containerName": "compsysmed/fka-begk"
+        },
+        {
+            "algName": "hbc",
+            "containerName": "compsysmed/hbc"
+        },
+        {
+            "algName": "ks",
+            "containerName": "compsysmed/ks"
+        },
+        {
+            "algName": "mhs2",
+            "containerName": "compsysmed/mhs2",
+            "cutoff": true,
+            "slow": true,
+            "threads": true
+        },
+        {
+            "algName": "partran",
+            "containerName": "compsysmed/partran",
+            "slow": true,
+            "threads": true
+        },
+        {
+            "algName": "mmcs",
+            "config": {
+                "MODE": "mmcs"
+            },
+            "containerName": "compsysmed/shd"
+        },
+        {
+            "algName": "rs",
+            "config": {
+                "MODE": "rs"
+            },
+            "containerName": "compsysmed/shd"
+        },
+        {
+            "algName": "htcbdd",
+            "config": {
+                "MODE": "toda"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
+            "algName": "knuth",
+            "config": {
+                "MODE": "knuth"
+            },
+            "containerName": "compsysmed/htcbdd"
+        },
+        {
+            "algName": "bool.iterative",
+            "config": {
+                "ALGORITHM_NAME": "bool-iterative"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true
+        },
+        {
+            "algName": "hst",
+            "config": {
+                "ALGORITHM_NAME": "hst"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "hsdag",
+            "config": {
+                "ALGORITHM_NAME": "hsdag"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "staccato",
+            "config": {
+                "ALGORITHM_NAME": "staccato"
+            },
+            "containerName": "compsysmed/pymbd",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "pMMCS",
+            "config": {
+                "ALGORITHM": "pmmcs"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "cutoff": true,
+            "threads": true
+        },
+        {
+            "algName": "pRS",
+            "config": {
+                "ALGORITHM": "prs"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "cutoff": true,
+            "threads": true
+        },
+        {
+            "algName": "berge",
+            "config": {
+                "ALGORITHM": "berge"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "cutoff": true,
+            "slow": true
+        },
+        {
+            "algName": "bm",
+            "config": {
+                "ALGORITHM": "bm"
+            },
+            "containerName": "compsysmed/agdmhs",
+            "threads": true
+        },
+        {
+            "algName": "ocsanaGreedy",
+            "containerName": "compsysmed/ocsanamhs",
+            "cutoff": true
+        },
+        {
+            "algName": "primdecomp",
+            "containerName": "compsysmed/primdecomp"
+        }
+    ],
+    "runtimes": {
+        "berge": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "berge-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "berge-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "berge-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bm-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bmr": [
+            Infinity
+        ],
+        "bool.iterative": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bool.iterative-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bool.iterative-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "bool.iterative-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "dl": [
+            Infinity
+        ],
+        "fka.begk": [
+            Infinity
+        ],
+        "hbc": [
+            Infinity
+        ],
+        "hsdag": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hsdag-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hsdag-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hsdag-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hst": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hst-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hst-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "hst-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "htcbdd": [
+            Infinity
+        ],
+        "knuth": [
+            Infinity
+        ],
+        "ks": [
+            Infinity
+        ],
+        "mhs2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t12-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t12-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t12-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t16-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t16-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t16-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t2-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t2-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t4-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t4-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t4-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t6-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t6-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t6-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t8-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t8-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mhs2-t8-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "mmcs": [
+            Infinity
+        ],
+        "ocsanaGreedy": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "ocsanaGreedy-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "ocsanaGreedy-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "ocsanaGreedy-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t12-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t12-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t12-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t16-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t16-c5": [
+            Infinity
+        ],
+        "pMMCS-t16-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t2-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t2-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t4-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t4-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t4-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t6-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t6-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t6-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t8-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t8-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pMMCS-t8-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t12-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t12-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t12-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t16-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t16-c5": [
+            Infinity
+        ],
+        "pRS-t16-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t2-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t2-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t2-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t4-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t4-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t4-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t6-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t6-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t6-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t8-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t8-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "pRS-t8-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t12": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t16": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t2": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t4": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t6": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "partran-t8": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "primdecomp": [
+            Infinity
+        ],
+        "rs": [
+            Infinity
+        ],
+        "staccato": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "staccato-c10": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "staccato-c5": [
+            Infinity,
+            Infinity,
+            Infinity
+        ],
+        "staccato-c7": [
+            Infinity,
+            Infinity,
+            Infinity
+        ]
+    },
+    "timeout_secs": 3600,
+    "transversal_counts": {}
+}
