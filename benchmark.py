@@ -151,7 +151,7 @@ def run_benchmarks(alg_list,
                             time_taken = float(result["timeTaken"])
                             transcount = len(result["transversals"])
                             with open(result_out_filename, 'w') as result_outfile:
-                                json.dump(result, result_outfile, indent=4, separators=(',', ': '), sort_keys = True) # Pretty-print the output
+                                json.dump(result, result_outfile, separators=(',', ': '), sort_keys = True) # Pretty-print the output
                         except (pyalgorun.AlgorunTimeout):
                             logging.info("Run {0} failed to complete in {1} sec.".format(newname, timeout))
                             timeout_config_pairs.append((t, c))
@@ -229,6 +229,7 @@ def main():
     parser.add_argument('-v', '--verbose', action="count", default=0, help="Print verbose logs (may be used multiple times)")
     parser.add_argument('-s', '--slow', action="store_true", help="Include slow algorithms (be careful!)")
     parser.add_argument('-a', '--append', action="store_true", help="Append results to existing file, replacing repeated algorithms (otherwise, overwrite!)")
+    parser.add_argument('-b', '--bigfiles_dir', default=None, help="Directory to store big files")
 
     # Process the arguments
     args = parser.parse_args()
@@ -253,6 +254,16 @@ def main():
     except OSError:
         if not os.path.isdir(args.output_dir):
             raise
+
+    if (args.bigfiles_dir is not None):
+        bigfiles_dir = args.bigfiles_dir
+        try:
+            os.makedirs(bigfiles_dir)
+        except OSError:
+            if not os.path.isdir(args.output_dir):
+                raise
+    else:
+        bigfiles_dir = args.output_dir
 
     logfile_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logfile_handler = logging.FileHandler(logfile_path)
@@ -300,19 +311,13 @@ def main():
     # Process filenames
     output_data_filename = "{0}/{1}.json".format(args.output_dir, infile_basename)
 
-    alg_results_dirname = "{0}/alg-output/".format(args.output_dir)
-    try:
-        os.makedirs(alg_results_dirname)
-    except OSError:
-        if not os.path.isdir(alg_results_dirname):
-            raise
 
     # Run the benchmarks
     results = run_benchmarks(alg_list,
                              args.docker_base_url,
                              args.input_data_file,
                              output_data_filename,
-                             alg_results_dirname,
+                             bigfiles_dir,
                              args.num_tests,
                              cutoff_list,
                              threads_list,
