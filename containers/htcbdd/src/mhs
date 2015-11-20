@@ -83,11 +83,16 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
 
         # Write the results to the output file
         with open(args.output_file, 'w') as output_file:
-            # Pretty-print the output
+            # Pretty-print the output, but only if it isn't too big
+            if temp_input_file.tell() < 1024*1024: # Check whether result data file is more than 1MB
+                indent_level = 4
+            else:
+                indent_level = None
+
             json.dump(results,
                       output_file,
-                      indent=4,
-                      separators=(',', ': '),
+                      indent = indent_level,
+                      separators = (',', ': '),
                       iterable_as_array = True)
 
 ### Emacs configuration

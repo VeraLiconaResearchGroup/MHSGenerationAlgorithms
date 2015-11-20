@@ -83,12 +83,17 @@ results['algName'] = algarg
 
 # Write the results to the output file
 with open(args.output_file, 'w') as output_file:
-    # Pretty-print the output
-    json.dump(results,
-              output_file,
-              indent=4,
-              separators=(',', ': '),
-              iterable_as_array = True)
+    # Pretty-print the output, but only if it isn't too big
+    if len(formatted_hs) < 1024: # Check whether fewer than 1k MHSes
+        indent_level = 4
+    else:
+        indent_level = None
+
+        json.dump(results,
+                  output_file,
+                  indent = indent_level,
+                  separators = (',', ': '),
+                  iterable_as_array = True)
 
 ### Emacs configuration
 # Local Variables:
