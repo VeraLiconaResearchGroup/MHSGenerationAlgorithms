@@ -13,7 +13,7 @@ An input file represents a collection of sets whose minimal hitting sets are to 
 (Equivalently, the file represents the edges of a hypergraph whose transversal hypergraph is to be constructed.)
 `mhs` MUST accept input files which are valid JSON and contain the following key/value pairs:
 
-* `edges`: a nonempty array of nonempty arrays of positive integers.
+* `sets`: a nonempty array of nonempty arrays of positive integers.
   Each of these arrays represents a set to be hit or an edge of the hypergraph.
   Each integer in a set is an *index*.
   The indices MAY appear in any order within a set, and the sets MAY appear in any order.
