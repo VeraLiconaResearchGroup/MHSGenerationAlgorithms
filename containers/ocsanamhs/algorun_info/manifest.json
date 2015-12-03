@@ -1,4 +1,5 @@
 {
+    "manifest_version": "1.1",
     "algo_name": "OCSANA-Greedy",
     "algo_summary": "Greedy algorithm from OCSANA",
     "algo_description": "A greedy algorithm for finding minimal hitting sets. Introduced in <a href=\"//doi.org/10.1093/bioinformatics/btt195\">OCSANA: optimal combinations of interventions from network analysis</a> by Vera-Licona, Bonnet, Barillot, and Zinovyev. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes.",
@@ -13,7 +14,9 @@
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat",
+    "algo_input_stream": "file",
+    "algo_output_stream": "out.dat",
+    "input_type": "compsysmed:mhs",
     "algo_parameters": {
         "CUTOFF_SIZE": "0"
     },

@@ -1,4 +1,5 @@
 {
+    "manifest_version": "1.1",
     "algo_name": "DL",
     "algo_summary": "DL algorithm for minimal hitting set computations",
     "algo_description": "Introduced in <a href=\"//doi.org/10.1007/s10115-004-0178-1\">Mining border descriptions of emerging patterns from dataset pairs</a> by Dong and Li.",
@@ -12,6 +13,8 @@
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat",
+    "algo_input_stream": "file",
+    "algo_output_stream": "out.dat",
+    "input_type": "compsysmed:mhs",
     "algo_image": "compsysmed/dl"
 }

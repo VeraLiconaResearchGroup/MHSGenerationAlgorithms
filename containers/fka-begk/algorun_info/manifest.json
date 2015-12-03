@@ -1,22 +1,29 @@
 {
-    "algo_name": "FK",
-    "algo_summary": "FK algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"//doi.org/10.1006/jagm.1996.0062\">On the complexity of dualization of monotone disjunctive normal forms</a>, Fredman, M. and Khachiyan, L. Implementation details in <a href=\"//doi.org/10.1016/j.dam.2006.04.012\">An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation</a>, Khachiyan, L. et al.",
-    "algo_website": "//rutcor.rutgers.edu/~boros/IDM/DualizationCode.html",
+    "manifest_version": "1.1",
+    "algo_name": "FK-A",
+    "algo_summary": "FK-A algorithm for minimal hitting set computations",
+    "algo_description": "Introduced in <a href=\"//doi.org/10.1006/jagm.1996.0062\">On the complexity -of dualization of monotone disjunctive normal forms</a>, Fredman, M. and Khachiyan, L. Implementation details in <a href=\"//doi.org/10.1016/j.dam.2006.04.012\">An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation</a>, Khachiyan, L. et al.",
+    "algo_website": "http://rutcor.rutgers.edu/~boros/IDM/DualizationCode.html",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [
         {
             "name": "Endre Boros",
             "email": "boros@rutcor.rutgers.edu",
-            "organization": "RUTCOR"
+            "personal_website": "",
+            "organization": "RUTCOR",
+            "org_website": "rutcor.rutgers.edu"
         },
         {
             "name": "Khaled Elbassioni",
             "email" : "elbassio@people.mpi-inf.mpg.de",
-            "organization": "Max-Planck-Institut für Informatik"
+            "organization": "Max-Planck-Institut für Informatik",
+            "personal_website": "",
+            "org_website": "www.mpi-inf.mpg.de"
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat",
+    "algo_input_stream": "file",
+    "algo_output_stream": "out.dat",
+    "input_type": "compsysmed:mhs",
     "algo_image": "compsysmed/fka-begk"
 }

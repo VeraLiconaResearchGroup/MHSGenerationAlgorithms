@@ -1,4 +1,5 @@
 {
+    "manifest_version": "1.1",
     "algo_name": "SHD",
     "algo_summary": "SHD algorithm for minimal hitting set computations",
     "algo_description": "Introduced in <a href=\"//doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno. Can be run in 'mmcs' or 'rs' mode.",
@@ -14,7 +15,9 @@
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat",
+    "algo_input_stream": "file",
+    "algo_output_stream": "out.dat",
+    "input_type": "compsysmed:mhs",
     "algo_parameters": {
         "CUTOFF_SIZE": "0",
         "MODE": "mmcs"

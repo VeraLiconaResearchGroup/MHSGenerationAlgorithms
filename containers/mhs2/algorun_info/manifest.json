@@ -1,4 +1,5 @@
 {
+    "manifest_version": "1.1",
     "algo_name": "MHS2",
     "algo_summary": "MHS² algorithm for minimal hitting set computations",
     "algo_description": "Introduced in \"An efficient distributed algorithm for computing minimal hitting sets\" (<a href=\"//dx-2014.ist.tugraz.at/papers/DX14_Mon_PM_S1_paper1.pdf\">PDF</a>) by Cardoso and Abreu. Can be run in multiple threads.",
@@ -14,7 +15,9 @@
         }
     ],
     "algo_exec": "./mhs",
-    "algo_output_filename": "out.dat",
+    "algo_input_stream": "file",
+    "algo_output_stream": "out.dat",
+    "input_type": "compsysmed:mhs",
     "algo_parameters": {
         "THREADS": "1",
         "CUTOFF_SIZE": "0"
