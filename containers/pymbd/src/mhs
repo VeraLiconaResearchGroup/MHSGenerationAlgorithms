@@ -72,7 +72,7 @@ MBDresult = problem.compute_with_description(description, alg, prune=True, cache
 # Process the results
 hs = MBDresult.get_diagnoses()
 stats = MBDresult.get_stats()
-formatted_hs = (list(h) for h in hs)
+formatted_hs = [list(h) for h in hs]
 total_time = float(stats['total_time'])
 results = input_json
 results['transversals'] = formatted_hs
@@ -89,11 +89,11 @@ with open(args.output_file, 'w') as output_file:
     else:
         indent_level = None
 
-        json.dump(results,
-                  output_file,
-                  indent = indent_level,
-                  separators = (',', ': '),
-                  iterable_as_array = True)
+    json.dump(results,
+              output_file,
+              indent = indent_level,
+              separators = (',', ': '),
+              iterable_as_array = True)
 
 ### Emacs configuration
 # Local Variables:
