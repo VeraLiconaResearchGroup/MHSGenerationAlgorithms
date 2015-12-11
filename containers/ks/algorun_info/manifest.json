@@ -2,7 +2,7 @@
     "manifest_version": "1.1",
     "algo_name": "KS",
     "algo_summary": "KS algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"//doi.org/10.7155/jgaa.00107\">An efficient algorithm for the transversal hypergraph generation</a> by Kavvadias and Stavropoulos.",
+    "algo_description": "Introduced in <a href=\"//doi.org/10.7155/jgaa.00107\">An efficient algorithm for the transversal hypergraph generation</a> by Kavvadias and Stavropoulos. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/ks\">Github page</a>.",
     "algo_website": "http://lca.ceid.upatras.gr/~estavrop/transversal/",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [

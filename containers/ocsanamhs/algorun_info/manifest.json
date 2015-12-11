@@ -2,7 +2,7 @@
     "manifest_version": "1.1",
     "algo_name": "OCSANA-Greedy",
     "algo_summary": "Greedy algorithm from OCSANA",
-    "algo_description": "A greedy algorithm for finding minimal hitting sets. Introduced in <a href=\"//doi.org/10.1093/bioinformatics/btt195\">OCSANA: optimal combinations of interventions from network analysis</a> by Vera-Licona, Bonnet, Barillot, and Zinovyev. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes.",
+    "algo_description": "A greedy algorithm for finding minimal hitting sets. Introduced in <a href=\"//doi.org/10.1093/bioinformatics/btt195\">OCSANA: optimal combinations of interventions from network analysis</a> by Vera-Licona, Bonnet, Barillot, and Zinovyev. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/ocsanamhs\">Github page</a>.",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [
         {
