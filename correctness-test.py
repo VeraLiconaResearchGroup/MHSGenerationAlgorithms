@@ -91,7 +91,7 @@ for alg in alg_collection:
             result_str = alg.run_alg(args.test_data_file, 600)
             result = json.loads(result_str)
         except ValueError:
-            errormessage = "Algorithm {0} returned invalid JSON: {1}".format(newname, algresult)
+            errormessage = "Algorithm {0} returned invalid JSON: {1}".format(newname, result_str)
             raise RuntimeError(errormessage)
 
         # Store the transversals as sets in a set for easy equality testing

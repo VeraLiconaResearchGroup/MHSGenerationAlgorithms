@@ -103,8 +103,6 @@ def main():
             transversals = list(output_file_sets(temp_output_file))
 
             results = input_json
-            results["guaranteedMinimal"] = True
-            results["guaranteedComplete"] = True
             results["transversals"] = transversals
             results["timeTaken"] = time_taken
 

@@ -87,12 +87,10 @@ def main():
 
             # Process the results
             temp_output_file.seek(0)
-            transversal_lines = temp_output_file.readlines()[:-1]
+            transversal_lines = temp_output_file.readlines()
             lineprocessor = lambda line: [i+1 for (i, c) in enumerate(line) if c=='1']
             transversals = map(lineprocessor, transversal_lines)
             results = input_json
-            results["guaranteedMinimal"] = True
-            results["guaranteedComplete"] = True
             results["transversals"] = transversals
             results["timeTaken"] = time_taken
 

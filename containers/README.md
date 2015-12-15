@@ -80,9 +80,10 @@ You can run this container online on the [Algorun server](http://pymbd.algorun.o
 
 ### ParTran
 A parallel algorithm using a Berge-like calculation on divided subhypergraphs, published in [_Parallel computation of the minimal elements of a poset_](//doi.org/10.1145/1837210.1837221) by Leiserson et al.
-An implementation in Cilk++ by those authors is available from the BPASlib project's [webpage](//bpaslib.org) and is provided in the [`compsysmed/partran`](//hub.docker.com/r/compsysmed/partran) container in the [`partran`](partran/) directory under the terms of the authors' license.
+An implementation in Cilk++ by those authors is available from the BPASlib project's [webpage](//bpaslib.org).
 
-***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
+The implementation is provided in the [`compsysmed/partran`](//hub.docker.com/r/compsysmed/partran) container in the [`partran`](partran/) directory under the terms of the authors' license.
+You can run this container online on the [Algorun server](http://partran.algorun.org).
 
 ### KNUTH
 An algorithm based on ZDD representations of hypergraphs or boolean functions.

@@ -75,8 +75,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         lineprocessor = lambda line: [i for (i, c) in enumerate(line.split(), start=1) if c=='1']
         transversals = (lineprocessor(line) for line in temp_output_file)
         results = input_json
-        results["guaranteedMinimal"] = True
-        results["guaranteedComplete"] = True
         results["transversals"] = transversals
         results["timeTaken"] = time_taken
 

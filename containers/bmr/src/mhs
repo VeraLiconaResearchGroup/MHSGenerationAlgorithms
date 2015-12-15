@@ -59,8 +59,6 @@ with tempfile.NamedTemporaryFile() as temp_input_file:
         temp_output_file.seek(0)
         transversals = (map(int, line.split()) for line in temp_output_file)
         results = input_json
-        results["guaranteedMinimal"] = True
-        results["guaranteedComplete"] = True
         results["transversals"] = transversals
         results["timeTaken"] = time_taken
 

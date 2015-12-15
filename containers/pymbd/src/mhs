@@ -77,8 +77,6 @@ total_time = float(stats['total_time'])
 results = input_json
 results['transversals'] = formatted_hs
 results['timeTaken'] = total_time
-results['guaranteedMinimal'] = False
-results['guaranteedComplete'] = True
 results['algName'] = algarg
 
 # Write the results to the output file
