@@ -45,9 +45,9 @@ See each file for details.
 ## Contact
 This repository is a project of the [Vera-Licona Research Group][compsysmed] and was assembled by [Andrew Gainer-Dewar][agdphd].
 
-[docker]: //docker.io "Docker"
-[algorun]: //algorun.org "Algorun"
-[jsonschema]: //pypi.python.org/pypi/jsonschema "Python-jsonschema"
-[compsysmed]: //compsysmed.org
-[agdphd]: //github.com/agdphd
-[paper]: TODO
+[docker]: http://docker.io "Docker"
+[algorun]: http://algorun.org "Algorun"
+[jsonschema]: http://pypi.python.org/pypi/jsonschema "Python-jsonschema"
+[compsysmed]: http://compsysmed.org
+[agdphd]: http://github.com/agdphd
+[paper]: http://arxiv.org/abs/1601.02939
