@@ -3,7 +3,7 @@ This repository contains a collection of implemented algorithms for solving the 
 We provide easy-to-use [AlgoRun][] containers for these algorithms, so you don't have to worry about compiling anything.
 
 ## The minimal hitting set generation problem
-Consider a family *H* of sets *E₁*, *E₂*, … *Eₙ*.
+Consider a family *H* of sets *E₁*, *E₂*, … *En*.
 A **hitting set** of *H* is a set *S* with the property that *S* intersects every one of the *E*s.
 A **minimal hitting set** is a hitting set which cannot be made smaller without losing this property.
 The **minimal hitting set generation problem** is to compute all the minimal hitting sets of the given family *H*.
