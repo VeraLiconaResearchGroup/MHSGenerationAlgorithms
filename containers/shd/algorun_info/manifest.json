@@ -1,5 +1,5 @@
 {
-    "manifest_version": "1.1",
+    "manifest_version": "1.3",
     "algo_name": "SHD",
     "algo_summary": "SHD algorithm for minimal hitting set computations",
     "algo_description": "Introduced in <a href=\"//doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno. Can be run in 'mmcs' or 'rs' mode. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/shd\">Github page</a>.",
@@ -14,10 +14,18 @@
             "org_website": "//www.nii.jp"
         }
     ],
+    "algo_packager": {
+        "name": "Andrew Gainer-Dewar, Ph.D.",
+        "email": "andrew.gainer.dewar@gmail.com",
+        "personal_website": "https://github.com/agdphd",
+        "organization": "UConn Health Center for Quantitative Medicine",
+        "org_website": "cqm.uchc.edu"
+    },
     "algo_exec": "./mhs",
     "algo_input_stream": "file",
     "algo_output_stream": "out.dat",
-    "input_type": "compsysmed:mhs",
+    "input_type": "algorun:mhs-in",
+    "output_type": "algorun:mhs-out",
     "algo_parameters": {
         "CUTOFF_SIZE": "0",
         "MODE": "mmcs"

@@ -1,5 +1,5 @@
 {
-    "manifest_version": "1.1",
+    "manifest_version": "1.3",
     "algo_name": "AGDMHS",
     "algo_summary": "C++ implementations of various MHS algorithms",
     "algo_description": "Available algorithms: <ul><li><code>pmmcs</code>: parallelized version of the MMCS algorithm. Serial version introduced in <a href=\"//doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno.</li><li><code>prs</code>: parallelized version of the RS algorithm. Serial version introduced in <a href=\"//doi.org/10.1016/j.dam.2014.01.012\">Efficient algorithms for dualizing large-scale hypergraphs</a> by Murakami and Uno.</li><li><code>fka</code>: the A algorithm from <a href=\"//doi.org/10.1006/jagm.1996.0062\">On the complexity of dualization of monotone disjunctive normal forms</a>, Fredman, M. and Khachiyan, L.</li><li><code>berge</code>: sequential algorithm, widely published, i.e. in <i>Hypergraphs: combinatorics of finite sets</i>, C. Berge, 1984.</li><li><code>bm</code>: global parallel algorithm from <a href=\"//doi.org/10.1007/978-3-642-02927-1_17\">A fast and simple parallel algorithm for the monotone duality problem</a> by E. Boros and K. Makino.</li></ul>Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/agdmhs\">Github page</a>.",
@@ -13,10 +13,18 @@
             "org_website": "cqm.uchc.edu"
         }
     ],
+    "algo_packager": {
+            "name": "Andrew Gainer-Dewar, Ph.D.",
+            "email": "andrew.gainer.dewar@gmail.com",
+            "personal_website": "https://github.com/agdphd",
+            "organization": "UConn Health Center for Quantitative Medicine",
+            "org_website": "cqm.uchc.edu"
+    },
     "algo_exec": "./mhs",
     "algo_input_stream": "file",
     "algo_output_stream": "out.dat",
-    "input_type": "compsysmed:mhs",
+    "input_type": "algorun:mhs-in",
+    "output_type": "algorun:mhs-out",
     "algo_parameters": {
         "ALGORITHM": "pmmcs",
         "THREADS": "1",

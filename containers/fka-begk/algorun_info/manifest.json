@@ -1,5 +1,5 @@
 {
-    "manifest_version": "1.1",
+    "manifest_version": "1.3",
     "algo_name": "FK-A",
     "algo_summary": "FK-A algorithm for minimal hitting set computations",
     "algo_description": "Introduced in <a href=\"//doi.org/10.1006/jagm.1996.0062\">On the complexity -of dualization of monotone disjunctive normal forms</a>, Fredman, M. and Khachiyan, L. Implementation details in <a href=\"//doi.org/10.1016/j.dam.2006.04.012\">An efficient implementation of a quasi-polynomial algorithm for generating hypergraph transversals and its application in joint generation</a>, Khachiyan, L. et al. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/fka-begk\">Github page</a>.",
@@ -21,9 +21,17 @@
             "org_website": "www.mpi-inf.mpg.de"
         }
     ],
+    "algo_packager": {
+            "name": "Andrew Gainer-Dewar, Ph.D.",
+            "email": "andrew.gainer.dewar@gmail.com",
+            "personal_website": "https://github.com/agdphd",
+            "organization": "UConn Health Center for Quantitative Medicine",
+            "org_website": "cqm.uchc.edu"
+    },
     "algo_exec": "./mhs",
     "algo_input_stream": "file",
     "algo_output_stream": "out.dat",
-    "input_type": "compsysmed:mhs",
+    "input_type": "algorun:mhs-in",
+    "output_type": "algorun:mhs-out",
     "algo_image": "compsysmed/fka-begk"
 }
