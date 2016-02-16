@@ -90,14 +90,14 @@ An algorithm based on ZDD representations of hypergraphs or boolean functions.
 Introduced as solution to exercise 237 of §7.1.4 of Volume 4a of *The Art of Computer Programming* (1st ed.) by Donald E. Knuth.
 
 An implementation in C by the author of [Hypergraph transversal computation with binary decision diagrams](//doi.org/10.1007/978-3-642-38527-8_10) is available from his [website](//www.sd.is.uec.ac.jp/toda/htcbdd.html) and is provided in the [`compsysmed/htcbdd`](//hub.docker.com/r/compsysmed/htcbdd) container under the terms of the GPLv3 license.
-You can run this container online on the [Algorun server](http://htcbdd.algorun.org).
+This container is not hosted on the AlgoRun server due to resource constraints.
 
 ### HTC-BDD
 An improved version of `KNUTH` which uses both BDDs and ZDDs.
 Introduced in [Hypergraph transversal computation with binary decision diagrams](//doi.org/10.1007/978-3-642-38527-8_10) by Takahesi Toda.
 
 An implementation in C by Toda is available from his [website](//www.sd.is.uec.ac.jp/toda/htcbdd.html) and is provided in the [`compsysmed/htcbdd`](//hub.docker.com/r/compsysmed/htcbdd) container under the terms of the GPLv3 license.
-You can run this container online on the [Algorun server](http://htcbdd.algorun.org).
+This container is not hosted on the AlgoRun server due to resource constraints.
 
 ### MHS²
 *(Supports cutoff)*
@@ -120,6 +120,7 @@ A vertex-wise "greedy" algorithm published in [_OCSANA: optimal combinations of 
 An implementation in Java by M. Kordi, originally written for a refactoring of [OCSANA](//bioinfo-out.curie.fr/projects/ocsana/OCSANA.html), is provided in the [`compsysmed/ocsana`](//hub.docker.com/r/compsysmed/ocsana) container in the [`ocsana`](ocsana/) directory.
 
 ***WARNING***: Testing has revealed that this software does not accurately generate all MHSes.
+Accordingly, this container is not hosted on the AlgoRun server.
 
 ### MMCS
 *(pMMCS supports cutoff)*
