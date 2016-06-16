@@ -22,7 +22,7 @@ However, researchers in different domains are not always aware of the large lite
 In addition, the existing survey literature tends to focus on the problem of *recognizing* the collection of minimal hitting sets (rather than generating it), and much attention is dedicated to asymptotic and worst-case analysis rather than practical performance.
 
 To help the researcher who wants to actually *compute* MHSes from real data, we have assembled a collection of software implementations of seventeen algorithms which reflect the long history and remarkable breadth of research in this area.
-You can read more about the algorithms in the [containers `README`](containers/).
+You can read more about the algorithms in the [containers `README`](containers/) and about running them in the [AlgoRun `README`](containers/algorun.md).
 
 Each of these software packages is wrapped in a [Docker][] container based on the [AlgoRun][] framework.
 You can easily download and run these containers yourself!
