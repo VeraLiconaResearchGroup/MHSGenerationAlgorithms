@@ -2,7 +2,7 @@
     "manifest_version": "1.3",
     "algo_name": "DL",
     "algo_summary": "DL algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"//doi.org/10.1007/s10115-004-0178-1\">Mining border descriptions of emerging patterns from dataset pairs</a> by Dong and Li. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/dl\">Github page</a>.",
+    "algo_description": "See the <a href=\"http://github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/blob/master/containers/algorun.md\">documentation</a> for inputs and outputs and the original <a href=\"http://github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/agdmhs\">container source code</a> on GitHub.<br />Introduced in <a href=\"//doi.org/10.1007/s10115-004-0178-1\">Mining border descriptions of emerging patterns from dataset pairs</a> by Dong and Li. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/dl\">Github page</a>.",
     "algo_website": "http://research.nii.ac.jp/~uno/code/shd.html",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [

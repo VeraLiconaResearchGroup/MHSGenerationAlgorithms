@@ -2,7 +2,7 @@
     "manifest_version": "1.3",
     "algo_name": "ParTran",
     "algo_summary": "ParTran algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"http://doi.org/10.1145/1837210.1837221\">Parallel computation of the minimal elements of a poset</a>. Can be run in multiple threads. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/partran\">Github page</a>.",
+    "algo_description": "See the <a href=\"http://github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/blob/master/containers/algorun.md\">documentation</a> for inputs and outputs and the original <a href=\"http://github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/agdmhs\">container source code</a> on GitHub.<br />Introduced in <a href=\"http://doi.org/10.1145/1837210.1837221\">Parallel computation of the minimal elements of a poset</a>. Can be run in multiple threads. <b><i>WARNING</i></b>: Testing has revealed that this sofwtare does not accurately generate all MHSes. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/partran\">Github page</a>.",
     "algo_website": "http://bpaslib.org",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS", "parallel"],
     "algo_authors": [

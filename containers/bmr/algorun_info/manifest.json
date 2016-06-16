@@ -2,7 +2,7 @@
     "manifest_version": "1.3",
     "algo_name": "BMR",
     "algo_summary": "BMR algorithm for minimal hitting set computations",
-    "algo_description": "Introduced in <a href=\"//doi.org/10.1109/ICDM.2003.1250958\">A fast algorithm for computing hypergraph transversals and its application in mining emerging patterns</a> by Bailey, Manoukian, and Ramamohanarao. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/bmr\">Github page</a>.",
+    "algo_description": "See the <a href=\"http://github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/blob/master/containers/algorun.md\">documentation</a> for inputs and outputs and the original <a href=\"http://github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/agdmhs\">container source code</a> on GitHub.<br />Introduced in <a href=\"//doi.org/10.1109/ICDM.2003.1250958\">A fast algorithm for computing hypergraph transversals and its application in mining emerging patterns</a> by Bailey, Manoukian, and Ramamohanarao. Container sources available at the CompSysMed group <a href=\"//github.com/VeraLiconaResearchGroup/MHSGenerationAlgorithms/tree/master/containers/bmr\">Github page</a>.",
     "algo_website": "http://www.computer.org/csdl/proceedings/icdm/2003/1978/00/19780485.pdf",
     "algo_keywords": ["minimum hitting set", "hypergraph transversal", "MHS"],
     "algo_authors": [
