@@ -1,12 +1,15 @@
 # Using `AGDMHS` as a library
+## MHS algorithms
 The algorithms in this repository are suitable for inclusion in other projects as a library.
-Each algorithm is provided as a public free function in the `agdmhs` namespace.
-For example, the algorithm `mmcs` has the following signature:
+Each algorithm is provided as a class in the `agdmhs` namespace extending the `MHSAlgorithm` purely virtual class.
+Each provides a method `transversal` with the following signature:
 
-    Hypergraph mmcs_transversal(const Hypergraph& H,
-                                const size_t num_threads,
-                                const size_t cutoff_size)
+    Hypergraph transversal(const Hypergraph& H)
 
+Some of the algorithms support multiple threads, and some of them support cutoff enumeration.
+See the constructors for details.
+
+## Hypergraphs
 We provide the `Hypergraph` class for working with hypergraphs.
 Internally, it represents each edge as a Boost [`dynamic_bitset`][bitset].
 

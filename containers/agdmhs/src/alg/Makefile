@@ -1,10 +1,21 @@
 SRC := $(wildcard src/*.cpp)
 OBJ := $(SRC:.cpp=.o)
+
+BINSRC := $(wildcard src/bin-*.cpp)
+BINOBJ := $(BINSRC:.cpp=.o)
+
+TESTSRC := $(wildcard test/*.cpp)
+TESTOBJ := $(TESTSRC:.cpp=.o)
+
+LIBOBJ := $(OBJ)
+LIBOBJ := $(filter-out $(BINOBJ),$(LIBOBJ))
+LIBOBJ := $(filter-out $(TESTOBJ),$(LIBOBJ))
+
 DEP := $(SRC:.cpp=.P)
-BIN = agdmhs
+HDR := $(wildcard src/*.h)
 
 # C++ compiler flags
-CXXFLAGS += --std=c++11
+CXXFLAGS += --std=c++14
 CXXFLAGS += -fPIC
 CXXFLAGS += -fopenmp
 CXXFLAGS += -Wall
@@ -29,7 +40,14 @@ profile: all
 debug: CXXFLAGS += -O0 -g3
 debug: all
 
-agdmhs: $(OBJ)
+BIN = agdmhs
+TEST = agdmhs-test
+all: $(OBJ) $(BIN) $(TEST)
+
+agdmhs: $(LIBOBJ) $(BINOBJ)
+	$(CXX) $(LDFLAGS) $(CXXFLAGS) $(INCLUDES) $^ -o $@ $(LIBS)
+
+agdmhs-test: $(LIBOBJ) $(TESTOBJ)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) $^ -o $@ $(LIBS)
 
 %.o: %.cpp
@@ -40,4 +58,5 @@ agdmhs: $(OBJ)
 	rm -f $*.d
 
 clean:
-	-rm -vf $(EXEC) $(OBJ) $(DEP) $(BIN)
+	-rm -vf $(EXEC) $(OBJ) $(TESTOBJ) $(DEP) $(BIN) $(TEST)
+

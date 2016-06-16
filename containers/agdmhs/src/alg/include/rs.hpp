@@ -19,13 +19,34 @@
 #ifndef _RS__H
 #define _RS__H
 
-#include <boost/dynamic_bitset.hpp>
-
 #include "hypergraph.hpp"
-#include "shd-base.hpp"
+#include "shd-algorithm.hpp"
+
+#include <atomic>
 
 namespace agdmhs {
-    Hypergraph rs_transversal(const Hypergraph& H, const size_t num_threads = 0, const size_t cutoff_size = 0);
+    struct RSCounters {
+        std::atomic<unsigned> mhses_found {0};
+        std::atomic<unsigned> iterations {0};
+        std::atomic<unsigned> violators {0};
+        std::atomic<unsigned> critical_fails {0};
+        std::atomic<unsigned> update_loops {0};
+        std::atomic<unsigned> tasks_waiting {0};
+    };
+
+    class RSAlgorithm: public SHDAlgorithm {
+        unsigned num_threads;
+        unsigned cutoff_size;
+        bool count_only;
+
+    public:
+        RSAlgorithm (unsigned num_threads, unsigned cutoff_size, bool count_only = false);
+        Hypergraph transversal (const Hypergraph& H) const override;
+
+    private:
+        void extend_or_confirm_set (const Hypergraph& H, const Hypergraph& T, RSCounters& counters, Hypergraph::EdgeQueue& hitting_sets, Hypergraph::Edge& S, Hypergraph& crit, Hypergraph::Edge& uncov, const Hypergraph::Edge& violating_vertices) const;
+        static bool any_edge_critical_after_i (Hypergraph::EdgeIndex i, const Hypergraph::Edge& S, const Hypergraph& crit);
+    };
 }
 
 #endif

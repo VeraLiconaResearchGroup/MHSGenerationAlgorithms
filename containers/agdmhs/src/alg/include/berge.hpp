@@ -20,12 +20,19 @@
 #define _BERGE__H
 
 #include "hypergraph.hpp"
-
-#include <boost/dynamic_bitset.hpp>
+#include "mhs-algorithm.hpp"
 
 namespace agdmhs {
-    Hypergraph berge_transversal(const Hypergraph& H,
-                                 const size_t cutoff_size = 0);
+    class BergeAlgorithm: public MHSAlgorithm {
+        unsigned cutoff_size;
+
+    public:
+        BergeAlgorithm (unsigned cutoff_size = 0);
+        Hypergraph transversal (const Hypergraph& H) const override;
+
+    private:
+        Hypergraph update_transversals_with_edge (const Hypergraph& transversals, const Hypergraph::Edge& edge) const;
+    };
 }
 
 #endif

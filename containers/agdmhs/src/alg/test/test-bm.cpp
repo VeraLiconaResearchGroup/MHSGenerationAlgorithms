@@ -1,6 +1,7 @@
 /**
-   C++ implementation of the FK-A algorithm
-   Copyright Vera-Licona Research Group (C) 2015
+   Test cases for Boros and Makino's parallel algorithm
+
+   Copyright Vera-Licona Research Group (C) 2016
    Author: Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
    This file is part of MHSGenerationAlgorithms.
@@ -16,21 +17,15 @@
    General Public License for more details.
 **/
 
-#ifndef _FKA__H
-#define _FKA__H
+#include "bm.hpp"
+#include "catch.hpp"
 
-#include "fk-algorithm.hpp"
-#include "hypergraph.hpp"
+TEST_CASE ("BM: Simple hypergraph, full enumeration") {
+    agdmhs::ParBMAlgorithm alg;
 
-namespace agdmhs {
-    class FKAlgorithmA: public FKAlgorithm {
-    public:
-        FKAlgorithmA ();
-        Hypergraph transversal (const Hypergraph& H) const override;
+    agdmhs::Hypergraph H ("example-input.dat");
+    agdmhs::Hypergraph T = alg.transversal(H);
 
-    private:
-        static Hypergraph::Edge find_omit_set (const Hypergraph& F, const Hypergraph& G);
-    };
+    REQUIRE(T.num_verts() == 6);
+    REQUIRE(T.num_edges() == 5);
 }
-
-#endif

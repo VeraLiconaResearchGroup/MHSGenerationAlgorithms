@@ -17,10 +17,8 @@
 **/
 
 #include "berge.hpp"
-
+#include "mhs-algorithm.hpp"
 #include "hypergraph.hpp"
-
-#include <boost/dynamic_bitset.hpp>
 
 #define BOOST_LOG_DYN_LINK 1 // Fix an issue with dynamic library loading
 #include <boost/log/core.hpp>
@@ -28,52 +26,61 @@
 #include <boost/log/expressions.hpp>
 
 namespace agdmhs {
-    void berge_update_transversals_with_edge(Hypergraph& G,
-                                             const bitset& edge,
-                                             const size_t cutoff_size) {
-        // Update transversals in G to reflect the given edge
-        // Note: this updates G in place!
-        assert(G.num_verts() == edge.size());
+    BergeAlgorithm::BergeAlgorithm (unsigned cutoff_size):
+        cutoff_size(cutoff_size)
+    {};
+
+
+    /**
+     * Update a set of transversals to reflect a new edge
+     *
+     * @param T  the known transversals (modified in-place!)
+     * @param edge  the new edge
+     * @return the new transversals
+     **/
+    Hypergraph BergeAlgorithm::update_transversals_with_edge (const Hypergraph& transversals,
+                                                              const Hypergraph::Edge& edge) const {
+        assert(transversals.num_verts() == edge.size());
 
         // Generate a new hypergraph with a singleton edge
         // for each vertex in the given edge
-        Hypergraph newedges (edge.size());
+        Hypergraph new_edges (edge.size());
 
-        hindex vertex = edge.find_first();
-        while (vertex != bitset::npos) {
-            bitset newedge (edge.size());
+        Hypergraph::EdgeIndex vertex = edge.find_first();
+        while (vertex != Hypergraph::Edge::npos) {
+            Hypergraph::Edge newedge (edge.size());
             newedge.set(vertex);
-            newedges.add_edge(newedge);
+            new_edges.add_edge(newedge);
             vertex = edge.find_next(vertex);
         }
 
-        if (G.num_edges() == 0) {
+        // Build the new transversals
+        if (transversals.num_edges() == 0) {
             // If G is empty, these new edges are all we need
-            G = newedges;
+            return new_edges;
         } else {
             // Otherwise, take the wedge of G with the new edges and minimize
             if (cutoff_size != 0) {
-                G = G.edge_wedge_cutoff(newedges, cutoff_size, true);
+                return transversals.edge_wedge_cutoff(new_edges, cutoff_size, true);
             } else {
-                G = G.edge_wedge(newedges, true);
+                return transversals.edge_wedge(new_edges, true);
             }
         }
     }
 
-    Hypergraph berge_transversal(const Hypergraph& H,
-                                 const size_t cutoff_size) {
+    Hypergraph BergeAlgorithm::transversal (const Hypergraph& H) const {
         BOOST_LOG_TRIVIAL(debug) << "Starting Berge. Hypergraph has "
                                  << H.num_verts() << " vertices and "
                                  << H.num_edges() << " edges.";
 
-        Hypergraph G (H.num_verts());
-        for (hindex i = 0; i < H.num_edges(); ++i) {
+        Hypergraph transversals (H.num_verts());
+        for (unsigned i = 0; i < H.num_edges(); ++i) {
             BOOST_LOG_TRIVIAL(debug) << "Considering edge " << i;
-            bitset edge = H[i];
-            berge_update_transversals_with_edge(G, edge, cutoff_size);
-            BOOST_LOG_TRIVIAL(debug) << "|G| = " << G.num_edges();
+            Hypergraph::Edge edge = H[i];
+            transversals = update_transversals_with_edge(transversals, edge);
+            BOOST_LOG_TRIVIAL(debug) << "|T| = " << transversals.num_edges();
         }
 
-        return G;
+        return transversals;
     }
 }

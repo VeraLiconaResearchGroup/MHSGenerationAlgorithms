@@ -19,13 +19,32 @@
 #ifndef _MMCS__H
 #define _MMCS__H
 
-#include <boost/dynamic_bitset.hpp>
-
 #include "hypergraph.hpp"
-#include "shd-base.hpp"
+#include "shd-algorithm.hpp"
+
+#include <atomic>
 
 namespace agdmhs {
-    Hypergraph mmcs_transversal(const Hypergraph& H, const size_t num_threads = 0, const size_t cutoff_size = 0);
+    struct MMCSCounters {
+        std::atomic<unsigned> mhses_found {0};
+        std::atomic<unsigned> iterations {0};
+        std::atomic<unsigned> violators {0};
+        std::atomic<unsigned> update_loops {0};
+        std::atomic<unsigned> tasks_waiting {0};
+    };
+
+    class MMCSAlgorithm: public SHDAlgorithm {
+        unsigned num_threads;
+        unsigned cutoff_size;
+        bool count_only;
+
+    public:
+        MMCSAlgorithm (unsigned num_threads, unsigned cutoff_size, bool count_only = false);
+        Hypergraph transversal (const Hypergraph& H) const override;
+
+    private:
+        void extend_or_confirm_set (const Hypergraph& H, const Hypergraph& T, MMCSCounters& counters, Hypergraph::EdgeQueue& hitting_sets, Hypergraph::Edge& S, Hypergraph::Edge& CAND, Hypergraph& crit, Hypergraph::Edge& uncov) const;
+    };
 }
 
 #endif

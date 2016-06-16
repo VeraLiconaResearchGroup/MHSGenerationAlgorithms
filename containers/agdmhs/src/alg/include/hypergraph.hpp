@@ -31,11 +31,6 @@
 namespace agdmhs {
     namespace fs = boost::filesystem;
 
-    typedef boost::dynamic_bitset<> bitset;
-    typedef std::vector<bitset> bsvector;
-    typedef bitset::size_type hindex;
-    typedef moodycamel::ConcurrentQueue<bitset> bsqueue;
-
     class minimality_violated_exception: public std::exception {
         virtual const char* what() const throw() {
             return "A non-minimal edge was added.";
@@ -44,43 +39,46 @@ namespace agdmhs {
 
     class Hypergraph {
     public:
+        using Edge = boost::dynamic_bitset<>;
+        using EdgeVector = std::vector<Edge>;
+        using EdgeQueue = moodycamel::ConcurrentQueue<Edge>;
+        using EdgeIndex = Edge::size_type;
 
-        Hypergraph(size_t num_verts = 0, size_t num_edges = 0);
+        Hypergraph(unsigned num_verts = 0, unsigned num_edges = 0);
         Hypergraph(const fs::path& input_file);
-        Hypergraph(const bsvector& edges);
+        Hypergraph(const EdgeVector& edges);
 
-        size_t num_verts() const;
-        size_t num_edges() const;
+        unsigned num_verts() const;
+        unsigned num_edges() const;
 
-        void add_edge(const bitset& edge, bool test_simplicity = false);
-        void reserve_edge_capacity(const size_t n_edges);
-        Hypergraph edge_vee(const Hypergraph& G, const bool do_minimize = true) const;
-        Hypergraph edge_wedge(const Hypergraph& G, const bool do_minimize = true) const;
-        Hypergraph edge_wedge_cutoff(const Hypergraph& G, const size_t cutoff_size, const bool do_minimize = true) const;
-        Hypergraph contraction(const bitset& S, const bool do_minimize = true) const;
-        Hypergraph restriction(const bitset& S) const;
-        bitset& operator[] (const hindex edge);
-        const bitset& operator[] (const hindex edge) const;
+        void add_edge(const Edge& edge, bool test_simplicity = false);
+        void reserve_edge_capacity(unsigned n_edges);
+        Hypergraph edge_vee(const Hypergraph& G, bool do_minimize = true) const;
+        Hypergraph edge_wedge(const Hypergraph& G, bool do_minimize = true) const;
+        Hypergraph edge_wedge_cutoff(const Hypergraph& G, unsigned cutoff_size, bool do_minimize = true) const;
+        Hypergraph contraction(const Edge& S, bool do_minimize = true) const;
+        Hypergraph restriction(const Edge& S) const;
+        Edge& operator[] (EdgeIndex edge_index);
+        const Edge& operator[] (EdgeIndex edge_index) const;
 
         void write_to_file(const fs::path& output_file) const;
         Hypergraph minimization() const;
         Hypergraph transpose() const;
-        bitset verts_covered() const;
-        std::vector<hindex> vertex_degrees() const;
-        bitset vertices_with_degree_above_threshold(const float degree_threshold) const;
-        bitset edges_containing_vertex(const hindex& vertex) const;
-        bool is_transversed_by(const bitset& S) const;
-        bool has_edge_covered_by(const bitset& S) const;
+        Edge verts_covered() const;
+        std::vector<unsigned> vertex_degrees() const;
+        Edge vertices_with_degree_above_threshold(const float degree_threshold) const;
+        Edge edges_containing_vertex(EdgeIndex vertex_index) const;
+        bool is_transversed_by(const Edge& S) const;
+        bool has_edge_covered_by(const Edge& S) const;
 
-        typedef std::vector<bitset>::const_iterator Hciterator;
-        Hciterator begin() const {return _edges.cbegin();};
-        Hciterator end() const {return _edges.cend();};
+        EdgeVector::const_iterator begin() const {return _edges.cbegin();};
+        EdgeVector::const_iterator end() const {return _edges.cend();};
 
         friend std::ostream& operator<<(std::ostream& os, const Hypergraph& H);
 
     protected:
-        size_t _n_verts;
-        bsvector _edges;
+        unsigned _n_verts;
+        EdgeVector _edges;
     };
 }
 
