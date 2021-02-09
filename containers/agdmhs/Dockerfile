@@ -5,6 +5,7 @@ MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 # Add any algorithm dependencies here
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+    build-essential \
     libboost-log-dev \
     libboost-program-options-dev \
     libboost-system-dev \
