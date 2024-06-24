@@ -17,6 +17,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/
 
 RUN pip install \
+    setuptools
+
+RUN easy_install \
     simplejson
 
 # Fetch and build the code
