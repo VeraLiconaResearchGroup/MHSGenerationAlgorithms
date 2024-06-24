@@ -16,11 +16,8 @@ RUN apt-get update \
     python-pip \
     && rm -rf /var/lib/apt/lists/
 
-RUN pip install \
-    setuptools
-
-RUN easy_install \
-    simplejson
+#RUN pip install \
+#    simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
