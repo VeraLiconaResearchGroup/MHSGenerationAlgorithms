@@ -25,7 +25,7 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v6
         with:
-          context: ./containers/agdmhs
+          context: "{{defaultContext}}:containers/agdmhs"
           push: true
           tags: deepimpact/agdmhs:${{ github.sha }}
 
