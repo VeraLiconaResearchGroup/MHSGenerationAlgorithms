@@ -14,10 +14,14 @@ RUN apt-get update \
     libboost-system-dev \
     python-dev \
     python-pip \
+    git \
     && rm -rf /var/lib/apt/lists/
 
-#RUN pip install \
-#    simplejson
+RUN git clone https://github.com/simplejson/simplejson \
+    && cd simplejson \
+    && python setup.py install \
+    && cd .. \
+    && rm -rf simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
