@@ -21,7 +21,7 @@ RUN apt-get update \
 
 RUN git clone https://github.com/simplejson/simplejson \
     && cd simplejson \
-    && git checkout v3.10.0 \
+    && git checkout v3.11.0 \
     && python setup.py install \
     && cd .. \
     && rm -rf simplejson
