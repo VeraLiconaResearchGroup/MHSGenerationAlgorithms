@@ -10,7 +10,7 @@ MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    build-essential \
+#    build-essential \
     libboost-log-dev \
     libboost-program-options-dev \
     libboost-system-dev \
