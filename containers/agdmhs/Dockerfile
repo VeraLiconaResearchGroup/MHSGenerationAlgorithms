@@ -3,17 +3,28 @@ FROM algorun/algorun:latest
 MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 # Add any algorithm dependencies here
+
+## VERY HACKY. Do not recommend.
+#RUN touch /etc/apt/apt.conf.d/99verify-peer.conf \
+#    && echo >>/etc/apt/apt.conf.d/99verify-peer.conf "Acquire { https::Verify-Peer false }"
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+    build-essential \
     libboost-log-dev \
     libboost-program-options-dev \
     libboost-system-dev \
     python-dev \
     python-pip \
+    git \
     && rm -rf /var/lib/apt/lists/
 
-RUN pip install \
-    simplejson
+RUN git clone https://github.com/simplejson/simplejson \
+    && cd simplejson \
+    && git checkout v3.11.0 \
+    && python setup.py install \
+    && cd .. \
+    && rm -rf simplejson
 
 # Fetch and build the code
 COPY ./src /home/algorithm/src/
