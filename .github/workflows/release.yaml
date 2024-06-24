@@ -27,5 +27,5 @@ jobs:
         with:
           context: ./containers/agdmhs
           push: true
-          tags: deepimpact/agdmhs:${GITHUB_SHA}
+          tags: deepimpact/agdmhs:${{ GITHUB_SHA }}
 
