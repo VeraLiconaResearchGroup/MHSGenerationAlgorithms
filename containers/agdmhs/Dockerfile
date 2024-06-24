@@ -10,7 +10,7 @@ MAINTAINER Andrew Gainer-Dewar, Ph.D. <andrew.gainer.dewar@gmail.com>
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-#    build-essential \
+    build-essential \
     libboost-log-dev \
     libboost-program-options-dev \
     libboost-system-dev \
@@ -21,7 +21,7 @@ RUN apt-get update \
 
 RUN git clone https://github.com/simplejson/simplejson \
     && cd simplejson \
-#    && git checkout v3.0.0 \
+    && git checkout v3.10.0 \
     && python setup.py install \
     && cd .. \
     && rm -rf simplejson
